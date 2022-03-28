@@ -134,6 +134,7 @@ export class AccessibleDropdownComponent {
       ...optionModel,
       checked: false,
     }));
+    this.filterInputElementRef.focus();
   }
 
   handleUnselectAllButtonKeyUp(event: KeyboardEvent) {
