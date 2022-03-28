@@ -1,0 +1,18 @@
+{
+  "extends": "@nrwl/workspace/presets/core.json",
+  "npmScope": "adg-components",
+  "affected": {
+    "defaultBase": "main"
+  },
+  "cli": {
+    "defaultCollection": "@nxext/stencil"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "root": "packages/adg-components",
+  "sourceRoot": "packages/adg-components/src",
+  "projectType": "library",
+  "generators": {
+    "@nxext/stencil:component": {
+      "style": "css"
+    }
+  },
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nxext/stencil:test",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "projectType": "library",
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
+      }
+    },
+    "build": {
+      "executor": "@nxext/stencil:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "projectType": "library",
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
+      },
+      "configurations": {
+        "production": {
+          "dev": false,
+          "prod": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nxext/stencil:serve",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "projectType": "library",
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
+      }
+    },
+    "e2e": {
+      "executor": "@nxext/stencil:e2e",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "projectType": "library",
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": "packages/adg-components/**/*.{ts,tsx}"
+      }
+    }
+  }
+}
