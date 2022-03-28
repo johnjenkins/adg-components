@@ -199,13 +199,6 @@ export class AccessibleDropdownComponent {
         ? { ...optionModel, checked: !optionModel.checked }
         : optionModel
     );
-    // if (event?.target) {
-    //   elems.widgetContainer.dispatchEvent(
-    //     new CustomEvent(`option-${event.target.checked ? '' : 'un'}selected`, {
-    //       detail: event.target.value,
-    //     }),
-    //   );
-    // }
   }
 
   handleKeyUp(event: KeyboardEvent) {
@@ -223,7 +216,6 @@ export class AccessibleDropdownComponent {
             numberOfArrowSelectableElems
           );
           let currentElem = arrowSelectableElems[j];
-          console.log(j, currentElem);
           if (!currentElem.hidden) {
             if (currentElem === this.filterInputElementRef) {
               currentElem.select();
@@ -297,7 +289,6 @@ export class AccessibleDropdownComponent {
   }
 
   render() {
-    console.log('form', this.el.getAttributeNames());
     return (
       <div class="widget--container" onKeyUp={(ev) => this.handleKeyUp(ev)}>
         <label htmlFor="hobbies" class="widget--filter-label" data-inline-block>
