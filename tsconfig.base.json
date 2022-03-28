@@ -15,10 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@adg-components/adg-components": ["dist/packages/adg-components"],
-      "@adg-components/adg-components/loader": [
-        "dist/packages/adg-components/loader"
-      ]
+      "@adg-widgets/adg-widgets": ["dist/packages/adg-widgets"],
+      "@adg-widgets/adg-widgets/loader": ["dist/packages/adg-widgets/loader"]
     }
   },
   "exclude": ["node_modules", "tmp"]

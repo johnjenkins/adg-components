@@ -1,6 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "adg-components": "packages/adg-components"
+    "adg-widgets": "packages/adg-widgets"
   }
 }

@@ -2,6 +2,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property            | Attribute             | Description | Type       | Default |
@@ -12,6 +13,7 @@
 | `roleAlert`         | `role-alert`          |             | `boolean`  | `false` |
 | `showInstructions`  | `show-instructions`   |             | `boolean`  | `false` |
 
----
 
-_Built with [StencilJS](https://stenciljs.com/)_
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*
