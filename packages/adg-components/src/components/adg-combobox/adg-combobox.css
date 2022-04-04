@@ -193,6 +193,7 @@
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: hidden;
+  z-index: 100;
 }
 
 .adg-combobox--available-options-list {

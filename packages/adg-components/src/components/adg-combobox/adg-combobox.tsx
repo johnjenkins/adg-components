@@ -17,13 +17,19 @@ interface OptionModel {
   hidden: boolean;
 }
 
+let nextUniqueId = 0;
+
 @Component({
   tag: 'adg-combobox',
   styleUrl: 'adg-combobox.css',
-  shadow: true,
+  shadow: false,
   assetsDirs: ['assets'],
 })
 export class AdgComboboxComponent {
+  private _id = `adg-combobox-${nextUniqueId++}`;
+  private _inputId = `${this._id}--input`;
+  private _optionsSelectedId = `${this._id}--options-selected`;
+
   connectedCallback() {
     this.setupLiveRegion();
 
@@ -39,6 +45,7 @@ export class AdgComboboxComponent {
 
   @Element() el: HTMLElement;
 
+  @Prop() formControlName = this._id;
   @Prop() filterLabel = '';
   @Prop() options: string[] = [];
 
@@ -299,7 +306,7 @@ export class AdgComboboxComponent {
         onKeyUp={(ev) => this.handleKeyUp(ev)}
       >
         <label
-          htmlFor="hobbies"
+          htmlFor={this._inputId}
           class="adg-combobox--filter-label"
           data-inline-block
         >
@@ -320,13 +327,14 @@ export class AdgComboboxComponent {
           >
             <input
               class="adg-combobox--filter-input"
-              id="hobbies"
+              id={this._inputId}
+              name={this.formControlName}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
               autocomplete="off"
               placeholder="Enter filter term"
-              aria-describedby="hobbies-x-options-selected"
+              aria-describedby={this._optionsSelectedId}
               onInput={(ev) => this.handleFilterInputChange(ev)}
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
               onClick={() => this.handleFilterInputClick()}
@@ -341,7 +349,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleUnselectAllButtonKeyUp(ev)}
             hidden={this.selectedOptionModels.length === 0}
           >
-            <span id="hobbies-x-options-selected">
+            <span id={this._optionsSelectedId}>
               <span class="adg-combobox--x-selected-count">
                 {this.selectedOptionModels.length}
               </span>
@@ -377,7 +385,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span data-visually-hidden>Available Hobbies:</span>
+              <span data-visually-hidden>Available {this.filterLabel}:</span>
               <span
                 class="adg-combobox--x-of-y-for-filter-text"
                 data-live-region

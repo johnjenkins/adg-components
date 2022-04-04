@@ -24,20 +24,24 @@
 
     <hr />
 
-    <form>
-      <adg-combobox></adg-combobox>
+    <form action="/foo" method="post">
+      <adg-combobox id="hobbiesCombobox"></adg-combobox>
+      <br />
+      <adg-combobox id="coloursCombobox"></adg-combobox>
+      <button type="submit">submit</button>
     </form>
 
     <hr />
 
     <p>
-      <button>Focusable element after</button>
+      <button id="buttonAfter">Focusable element after</button>
     </p>
 
     <script>
-      const adgCombobox = document.querySelector('adg-combobox');
-      adgCombobox.filterLabel = 'Hobbies';
-      adgCombobox.options = [
+      const hobbiesCombobox = document.querySelector('#hobbiesCombobox');
+      hobbiesCombobox.formControlName = 'hobbies';
+      hobbiesCombobox.filterLabel = 'Hobbies';
+      hobbiesCombobox.options = [
         'Soccer',
         'Badminton',
         'Movies',
@@ -51,6 +55,26 @@
         'Sleeping',
         'Programming',
       ];
+      const coloursCombobox = document.querySelector('#coloursCombobox');
+      coloursCombobox.formControlName = 'colours';
+      coloursCombobox.filterLabel = 'Colours';
+      coloursCombobox.options = [
+        'Black',
+        'Blue',
+        'Brown',
+        'Green',
+        'Grey',
+        'Orange',
+        'Pink',
+        'Red',
+        'White',
+        'Yellow',
+      ];
+      const buttonAfter = document.querySelector('#buttonAfter');
+      buttonAfter.addEventListener('click', () => {
+        const form = document.querySelector('form');
+        console.log('foop', form.elements[0].value);
+      });
     </script>
   </body>
 </html>
