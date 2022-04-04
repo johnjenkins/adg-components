@@ -1,5 +1,5 @@
 {
-  "name": "@adg-widgets/adg-widgets",
+  "name": "@adg-components/adg-components",
   "version": "0.0.1",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.js",
@@ -8,7 +8,7 @@
   "types": "./dist/types/index.d.ts",
   "collection": "./dist/collection/collection-manifest.json",
   "collection:main": "./dist/collection/index.js",
-  "unpkg": "./dist/adg-widgets/adg-widgets.js",
+  "unpkg": "./dist/adg-components/adg-components.js",
   "files": [
     "dist/",
     "loader/"

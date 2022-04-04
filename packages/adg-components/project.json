@@ -1,6 +1,6 @@
 {
-  "root": "packages/adg-widgets",
-  "sourceRoot": "packages/adg-widgets/src",
+  "root": "packages/adg-components",
+  "sourceRoot": "packages/adg-components/src",
   "projectType": "library",
   "generators": {
     "@nxext/stencil:component": {
@@ -14,9 +14,9 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "projectType": "library",
-        "tsConfig": "packages/adg-widgets/tsconfig.lib.json",
-        "configPath": "packages/adg-widgets/stencil.config.ts",
-        "outputPath": "dist/packages/adg-widgets"
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
       }
     },
     "build": {
@@ -24,9 +24,9 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "projectType": "library",
-        "tsConfig": "packages/adg-widgets/tsconfig.lib.json",
-        "configPath": "packages/adg-widgets/stencil.config.ts",
-        "outputPath": "dist/packages/adg-widgets"
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
       },
       "configurations": {
         "production": {
@@ -40,9 +40,9 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "projectType": "library",
-        "tsConfig": "packages/adg-widgets/tsconfig.lib.json",
-        "configPath": "packages/adg-widgets/stencil.config.ts",
-        "outputPath": "dist/packages/adg-widgets"
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
       }
     },
     "e2e": {
@@ -50,16 +50,16 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "projectType": "library",
-        "tsConfig": "packages/adg-widgets/tsconfig.lib.json",
-        "configPath": "packages/adg-widgets/stencil.config.ts",
-        "outputPath": "dist/packages/adg-widgets"
+        "tsConfig": "packages/adg-components/tsconfig.lib.json",
+        "configPath": "packages/adg-components/stencil.config.ts",
+        "outputPath": "dist/packages/adg-components"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": "packages/adg-widgets/**/*.{ts,tsx}"
+        "lintFilePatterns": "packages/adg-components/**/*.{ts,tsx}"
       }
     }
   }

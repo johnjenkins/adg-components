@@ -1,11 +1,11 @@
 {
-  "name": "adg-widgets",
+  "name": "adg-components",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "nx build adg-widgets",
-    "start": "nx serve adg-widgets"
+    "build": "nx build adg-components",
+    "start": "nx serve adg-components"
   },
   "devDependencies": {
     "@nrwl/cli": "13.9.5",
