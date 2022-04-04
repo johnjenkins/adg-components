@@ -18,12 +18,12 @@ interface OptionModel {
 }
 
 @Component({
-  tag: 'accessible-dropdown',
-  styleUrl: 'accessible-dropdown.css',
+  tag: 'adg-combobox',
+  styleUrl: 'adg-combobox.css',
   shadow: true,
   assetsDirs: ['assets'],
 })
-export class AccessibleDropdownComponent {
+export class AdgComboboxComponent {
   connectedCallback() {
     this.setupLiveRegion();
 
@@ -269,7 +269,11 @@ export class AccessibleDropdownComponent {
   openOptionsContainer() {
     if (!this.isOptionsContainerOpen) {
       this.isOptionsContainerOpen = true;
-      // Some screen readers do not announce the changed `aria-expanded` attribute. So we give them some additional fodder to announce, namely the instructions. We append them with a little delay so each and every screen reader realises that the live region was changed and hence needs to be announced.
+      // Some screen readers do not announce the changed `aria-expanded`
+      // attribute. So we give them some additional fodder to announce,
+      // namely the instructions. We append them with a little delay so each
+      // and every screen reader realises that the live region was changed and
+      // hence needs to be announced.
       setTimeout(() => {
         this.showInstructions = true;
       }, 200);
@@ -290,25 +294,32 @@ export class AccessibleDropdownComponent {
 
   render() {
     return (
-      <div class="widget--container" onKeyUp={(ev) => this.handleKeyUp(ev)}>
-        <label htmlFor="hobbies" class="widget--filter-label" data-inline-block>
+      <div
+        class="adg-combobox--container"
+        onKeyUp={(ev) => this.handleKeyUp(ev)}
+      >
+        <label
+          htmlFor="hobbies"
+          class="adg-combobox--filter-label"
+          data-inline-block
+        >
           {this.filterLabel}
         </label>
         <span
           class={{
-            'widget--filter-and-options-container': true,
-            'widget--open': this.isOptionsContainerOpen,
+            'adg-combobox--filter-and-options-container': true,
+            'adg-combobox--open': this.isOptionsContainerOpen,
           }}
           ref={(el) => (this.filterAndOptionsContainerElementRef = el)}
           data-inline-block
         >
           <span
-            class="widget--filter-container"
+            class="adg-combobox--filter-container"
             data-inline-block
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <input
-              class="widget--filter-input"
+              class="adg-combobox--filter-input"
               id="hobbies"
               type="text"
               role="combobox"
@@ -323,7 +334,7 @@ export class AccessibleDropdownComponent {
             />
           </span>
           <button
-            class="widget--unselect-all-button"
+            class="adg-combobox--unselect-all-button"
             type="button"
             ref={(el) => (this.unselectAllButtonElementRef = el)}
             onClick={() => this.handleUnselectAllButtonClick()}
@@ -331,12 +342,12 @@ export class AccessibleDropdownComponent {
             hidden={this.selectedOptionModels.length === 0}
           >
             <span id="hobbies-x-options-selected">
-              <span class="widget--x-selected-count">
+              <span class="adg-combobox--x-selected-count">
                 {this.selectedOptionModels.length}
               </span>
               <span data-visually-hidden>
                 {this.filterLabel} selected:
-                <span class="widget--x-selected-labels">
+                <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(',')}
                 </span>
                 ,
@@ -345,13 +356,13 @@ export class AccessibleDropdownComponent {
             <img src={getAssetPath(`./assets/clear.svg`)} alt="unselect all" />
           </button>
           <button
-            class="widget--toggle-options-button"
+            class="adg-combobox--toggle-options-button"
             type="button"
             onClick={() => this.handleToggleOptionsButtonClicked()}
           >
             <img
               src={getAssetPath(`./assets/close.svg`)}
-              class="widget--toggle-options-button-icon"
+              class="adg-combobox--toggle-options-button-icon"
               alt={
                 (this.openOptionsContainer ? 'Close' : 'Open') +
                 ' ' +
@@ -361,14 +372,14 @@ export class AccessibleDropdownComponent {
             />
           </button>
           <fieldset
-            class="widget--available-options-container"
+            class="adg-combobox--available-options-container"
             hidden={!this.isOptionsContainerOpen}
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
-            <legend class="widget--available-options-legend">
+            <legend class="adg-combobox--available-options-legend">
               <span data-visually-hidden>Available Hobbies:</span>
               <span
-                class="widget--x-of-y-for-filter-text"
+                class="adg-combobox--x-of-y-for-filter-text"
                 data-live-region
                 aria-live={this.ariaLiveAssertive ? 'assertive' : null}
                 role={this.roleAlert ? 'alert' : null}
@@ -381,17 +392,17 @@ export class AccessibleDropdownComponent {
                   </span>
                 ) : null}
                 {this.showInstructions ? (
-                  <span class="widget--instructions" data-visually-hidden>
+                  <span class="adg-combobox--instructions" data-visually-hidden>
                     (enter question mark for help)
                   </span>
                 ) : null}
               </span>
             </legend>
-            <ol class="widget--available-options-list">
+            <ol class="adg-combobox--available-options-list">
               {this.optionModels.map((option, i) => (
                 <li
                   key={option.value}
-                  class="widget--available-options-list-item"
+                  class="adg-combobox--available-options-list-item"
                   hidden={option.hidden}
                   ref={(el) => this.availableOptionsListItems.push(el)}
                 >
@@ -418,14 +429,14 @@ export class AccessibleDropdownComponent {
           </fieldset>
         </span>
 
-        <fieldset class="widget--selected-options-container">
+        <fieldset class="adg-combobox--selected-options-container">
           <legend data-visually-hidden>Selected {this.filterLabel}</legend>
 
-          <ol class="widget--selected-options-list">
+          <ol class="adg-combobox--selected-options-list">
             {this.selectedOptionModels.map((option, i) => (
               <li>
                 <button
-                  class="widget--selected-options-button"
+                  class="adg-combobox--selected-options-button"
                   type="button"
                   ref={(el) => this.optionSelectedButtons.push(el)}
                   onClick={() =>

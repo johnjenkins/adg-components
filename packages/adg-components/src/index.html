@@ -25,7 +25,7 @@
     <hr />
 
     <form>
-      <accessible-dropdown></accessible-dropdown>
+      <adg-combobox></adg-combobox>
     </form>
 
     <hr />
@@ -35,11 +35,9 @@
     </p>
 
     <script>
-      const accessibleDropdownElement = document.querySelector(
-        'accessible-dropdown'
-      );
-      accessibleDropdownElement.filterLabel = 'Hobbies';
-      accessibleDropdownElement.options = [
+      const adgCombobox = document.querySelector('adg-combobox');
+      adgCombobox.filterLabel = 'Hobbies';
+      adgCombobox.options = [
         'Soccer',
         'Badminton',
         'Movies',

@@ -31,15 +31,15 @@
   display: inherit;
 }
 
-.widget--filter-label {
+.adg-combobox--filter-label {
   width: 100px;
 }
 
-.widget--filter-label::after {
+.adg-combobox--filter-label::after {
   content: ':';
 }
 
-.widget--filter-input {
+.adg-combobox--filter-input {
   box-sizing: border-box;
   width: 160px;
   border: 1px solid #000;
@@ -51,28 +51,30 @@
   caret-color: red;
 }
 
-.widget--filter-and-options-container {
+.adg-combobox--filter-and-options-container {
   position: relative;
 }
 
-.widget--filter-and-options-container:not(.widget--open) .widget--filter-input {
+.adg-combobox--filter-and-options-container:not(.adg-combobox--open)
+  .adg-combobox--filter-input {
   border-bottom-left-radius: 6px;
 }
 
-.widget--filter-input:hover {
+.adg-combobox--filter-input:hover {
   outline: 1px solid red;
 }
 
-.widget--filter-input:focus {
+.adg-combobox--filter-input:focus {
   background-color: rgb(255, 235, 235);
 }
 
-.widget--filter-input:focus,
-.widget--filter-and-options-container:focus-within .widget--filter-input {
+.adg-combobox--filter-input:focus,
+.adg-combobox--filter-and-options-container:focus-within
+  .adg-combobox--filter-input {
   outline: 1px solid red;
 }
 
-.widget--unselect-all-button {
+.adg-combobox--unselect-all-button {
   position: absolute;
   border: 0;
   background-color: transparent;
@@ -83,24 +85,24 @@
   border-radius: 8px;
 }
 
-.widget--x-selected-count {
+.adg-combobox--x-selected-count {
   font-size: 75%;
   font-weight: bold;
   padding-left: 4px;
 }
 
-.widget--unselect-all-button img {
+.adg-combobox--unselect-all-button img {
   vertical-align: middle;
 }
 
-.widget--unselect-all-button:focus,
-.widget--unselect-all-button:hover {
+.adg-combobox--unselect-all-button:focus,
+.adg-combobox--unselect-all-button:hover {
   outline: 1px solid red;
   cursor: pointer;
   background-color: rgb(255, 212, 212);
 }
 
-.widget--toggle-options-button {
+.adg-combobox--toggle-options-button {
   height: 24px;
   border: 1px solid #000;
   margin-left: -1px;
@@ -108,77 +110,77 @@
   border-top-right-radius: 6px;
 }
 
-.widget--selected-options-button:focus {
+.adg-combobox--selected-options-button:focus {
   outline: none;
 }
 
-.widget--toggle-options-button:hover,
-.widget--toggle-options-button:focus {
+.adg-combobox--toggle-options-button:hover,
+.adg-combobox--toggle-options-button:focus {
   cursor: pointer;
   outline: none;
 }
 
-.widget--toggle-options-button img,
-.widget--selected-options-button img {
+.adg-combobox--toggle-options-button img,
+.adg-combobox--selected-options-button img {
   border-radius: 8px;
 }
 
-.widget--toggle-options-button:hover img,
-.widget--toggle-options-button:focus img,
-.widget--selected-options-button:hover img,
-.widget--selected-options-button:focus img {
+.adg-combobox--toggle-options-button:hover img,
+.adg-combobox--toggle-options-button:focus img,
+.adg-combobox--selected-options-button:hover img,
+.adg-combobox--selected-options-button:focus img {
   outline: 1px solid red;
   background-color: rgb(255, 212, 212);
 }
 
-.widget--filter-and-options-container:not(.widget--open)
-  .widget--toggle-options-button {
+.adg-combobox--filter-and-options-container:not(.adg-combobox--open)
+  .adg-combobox--toggle-options-button {
   border-bottom-right-radius: 6px;
 }
 
-.widget--filter-and-options-container:not(.widget--open)
-  .widget--toggle-options-button
+.adg-combobox--filter-and-options-container:not(.adg-combobox--open)
+  .adg-combobox--toggle-options-button
   img {
   transform: rotate(180deg);
 }
 
-.widget--selected-options-container {
+.adg-combobox--selected-options-container {
   margin-top: 1em;
   border: 0;
   padding: 0;
 }
 
-.widget--selected-options-list {
+.adg-combobox--selected-options-list {
   margin: 0;
   padding: 0;
   overflow: hidden;
   color: transparent; /* To hide the bullet point numbers (1., 2., etc.) visually, but let screen readers announce them. */
 }
 
-.widget--selected-options-list li {
+.adg-combobox--selected-options-list li {
   float: left; /* TODO: Rather use flexbox here? */
   margin-right: 0.5em;
 }
 
-.widget--selected-options-button {
+.adg-combobox--selected-options-button {
   border-radius: 6px;
   border: 1px solid #000;
   padding: 2px 4px;
 }
 
-.widget--selected-options-button img {
+.adg-combobox--selected-options-button img {
   vertical-align: bottom;
 }
 
-.widget--selected-options-button:hover {
+.adg-combobox--selected-options-button:hover {
   cursor: pointer;
 }
 
-.widget--selected-options-button img {
+.adg-combobox--selected-options-button img {
   vertical-align: bottom;
 }
 
-.widget--available-options-container {
+.adg-combobox--available-options-container {
   margin: 0;
   border: 1px solid #000;
   padding: 0;
@@ -193,14 +195,14 @@
   overflow: hidden;
 }
 
-.widget--available-options-list {
+.adg-combobox--available-options-list {
   color: transparent; /* To hide the bullet point numbers (1., 2., etc.) visually, but let screen readers announce them. */
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.widget--available-options-list label {
+.adg-combobox--available-options-list label {
   color: #000;
   padding: 2 4px;
   width: 100%;
@@ -208,26 +210,26 @@
   border-left: 4px solid transparent; /* For high contrast mode */
 }
 
-.widget--available-options-list input:focus {
+.adg-combobox--available-options-list input:focus {
   outline: none;
 }
 
-.widget--available-options-list input:hover {
+.adg-combobox--available-options-list input:hover {
   cursor: pointer;
 }
 
-.widget--available-options-list label:focus-within,
-.widget--available-options-list label:hover {
+.adg-combobox--available-options-list label:focus-within,
+.adg-combobox--available-options-list label:hover {
   background-color: rgb(255, 167, 167);
   cursor: pointer;
   border-left-color: #000;
 }
 
-.widget--available-options-list input:checked + span {
+.adg-combobox--available-options-list input:checked + span {
   font-weight: bold;
 }
 
-.widget--available-options-list input:checked + span .check {
+.adg-combobox--available-options-list input:checked + span .check {
   content: ' ';
   display: inline-block;
   margin-left: 0.25em;
@@ -237,7 +239,7 @@
   background: url(./build/assets/check.svg);
 }
 
-.widget--available-options-legend {
+.adg-combobox--available-options-legend {
   background-color: #000;
   color: #fff;
   border: 1px solid #000;
