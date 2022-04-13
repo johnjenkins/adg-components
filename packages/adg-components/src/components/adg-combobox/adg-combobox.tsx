@@ -2,6 +2,7 @@ import {
   Component,
   getAssetPath,
   h,
+  Listen,
   Prop,
   State,
   Element,
@@ -32,15 +33,7 @@ export class AdgComboboxComponent {
 
   connectedCallback() {
     this.setupLiveRegion();
-
-    document.addEventListener('click', this.handleDocumentClick.bind(this));
-    document.addEventListener('keyup', this.handleDocumentKeyUp.bind(this));
     this.watchOptionsHandler(this.options);
-  }
-
-  disconnectedCallback() {
-    document.removeEventListener('click', this.handleDocumentClick.bind(this));
-    document.removeEventListener('keyup', this.handleDocumentKeyUp.bind(this));
   }
 
   @Element() el: HTMLElement;
@@ -97,6 +90,7 @@ export class AdgComboboxComponent {
     }
   }
 
+  @Listen('click', { target: 'document' })
   handleDocumentClick(event: MouseEvent) {
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
@@ -105,6 +99,7 @@ export class AdgComboboxComponent {
     }
   }
 
+  @Listen('keyup', { target: 'document' })
   handleDocumentKeyUp(event: KeyboardEvent) {
     if (
       event.key === 'Tab' &&
