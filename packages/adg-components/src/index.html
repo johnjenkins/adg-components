@@ -22,9 +22,20 @@
       <button>Focusable element before</button>
     </p>
 
+    <fieldset>
+      <label>
+        apples
+        <input type="radio" name="fruit" value="apples" />
+      </label>
+      <label>
+        bananas
+        <input type="radio" name="fruit" value="bananas" />
+      </label>
+    </fieldset>
+
     <hr />
 
-    <form action="/foo" method="post">
+    <form action="/" method="post">
       <adg-combobox id="hobbiesCombobox"></adg-combobox>
       <br />
       <adg-combobox id="coloursCombobox"></adg-combobox>
@@ -39,6 +50,7 @@
 
     <script>
       const hobbiesCombobox = document.querySelector('#hobbiesCombobox');
+      hobbiesCombobox.multi = true;
       hobbiesCombobox.formControlName = 'hobbies';
       hobbiesCombobox.filterLabel = 'Hobbies';
       hobbiesCombobox.options = [
@@ -73,7 +85,6 @@
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {
         const form = document.querySelector('form');
-        console.log('foop', form.elements[0].value);
       });
     </script>
   </body>

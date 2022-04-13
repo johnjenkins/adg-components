@@ -10,6 +10,7 @@
 | `ariaLiveAssertive` | `aria-live-assertive` |             | `boolean`  | `false`    |
 | `filterLabel`       | `filter-label`        |             | `string`   | `''`       |
 | `formControlName`   | `form-control-name`   |             | `string`   | `this._id` |
+| `multi`             | `multi`               |             | `boolean`  | `false`    |
 | `options`           | --                    |             | `string[]` | `[]`       |
 | `roleAlert`         | `role-alert`          |             | `boolean`  | `false`    |
 | `showInstructions`  | `show-instructions`   |             | `boolean`  | `false`    |
