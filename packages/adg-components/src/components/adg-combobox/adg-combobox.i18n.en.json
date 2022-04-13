@@ -1,8 +1,7 @@
 {
   "input_placeholder": "Enter filter term",
   "empty_filter": "empty filter",
-  "filter": "Filter",
-  "options": "Options",
-  "close": "Close",
-  "open": "Open"
+  "filter": "Filter \"$(filterTerm)\"",
+  "close": "Close $(filterLabel) Options",
+  "open": "Open $(filterLabel) Options"
 }

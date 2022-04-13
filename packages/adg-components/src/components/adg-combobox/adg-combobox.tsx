@@ -8,7 +8,7 @@ import {
   Watch,
 } from '@stencil/core';
 
-import { getLocaleComponentStrings } from '../../utils/locale';
+import { Translator } from '../../utils/locale';
 
 
 const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
@@ -47,7 +47,7 @@ export class AdgComboboxComponent {
   }
 
   @Element() el: HTMLElement;
-  strings: any;
+  $t: any;
 
   @Prop() formControlName = this._id;
   @Prop() filterLabel = '';
@@ -93,9 +93,12 @@ export class AdgComboboxComponent {
   availableOptionsListItems: HTMLLIElement[] = [];
   optionSelectedButtons: HTMLButtonElement[] = [];
 
+  constructor() {
+  }
+
   async componentWillLoad(): Promise<void> {
-    this.strings = await getLocaleComponentStrings(this.el);
-    this.filterTermText = this.strings.empty_filter;
+    this.$t = await Translator(this.el)
+    this.filterTermText = this.$t('empty_filter');
   }
 
   setupLiveRegion() {
@@ -165,8 +168,8 @@ export class AdgComboboxComponent {
     const filterTerm = targetElement.value.toLowerCase();
     this.filterTermText =
       filterTerm.trim() === ''
-        ? this.strings.empty_filter
-        : `${this.strings.filter} "${filterTerm}"`;
+        ? this.$t('empty_filter')
+        : this.$t('filter', { filterTerm });
 
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
@@ -344,7 +347,7 @@ export class AdgComboboxComponent {
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
               autocomplete="off"
-              placeholder={this.strings.input_placeholder}
+              placeholder={this.$t('input_placeholder')}
               aria-describedby={this._optionsSelectedId}
               onInput={(ev) => this.handleFilterInputChange(ev)}
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
@@ -382,16 +385,7 @@ export class AdgComboboxComponent {
             <img
               src={getAssetPath(`./assets/close.svg`)}
               class="adg-combobox--toggle-options-button-icon"
-              alt={
-                (this.openOptionsContainer
-                  ? this.strings.close
-                  : this.strings.open
-                ) +
-                ' ' +
-                this.filterLabel +
-                ' ' +
-                this.strings.options
-              }
+              alt={this.$t(this.openOptionsContainer ? 'close': 'open', { filterLabel: this.filterLabel })}
             />
           </button>
           <fieldset
