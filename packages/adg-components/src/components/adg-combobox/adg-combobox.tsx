@@ -41,6 +41,7 @@ export class AdgComboboxComponent {
   @Prop() formControlName = this._id;
   @Prop() filterLabel = '';
   @Prop() options: string[] = [];
+  @Prop() multi = false;
 
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
@@ -76,11 +77,13 @@ export class AdgComboboxComponent {
 
   filterInputElementRef: HTMLInputElement;
   unselectAllButtonElementRef: HTMLButtonElement;
+  fieldsetElementRef: HTMLFieldSetElement;
   filterAndOptionsContainerElementRef: HTMLSpanElement;
 
   lastArrowSelectedElem = 0;
   availableOptionsListItems: HTMLLIElement[] = [];
   optionSelectedButtons: HTMLButtonElement[] = [];
+  currentlyFocusedOption?: HTMLInputElement;
 
   setupLiveRegion() {
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
@@ -113,6 +116,25 @@ export class AdgComboboxComponent {
     this.openOptionsContainer();
   }
 
+  handleFilterInputBlur() {
+    this.handleComponentBlur();
+  }
+
+  handleComponentBlur() {
+    setTimeout(() => {
+      if (
+        !this.multi &&
+        !isDescendant(
+          this.filterAndOptionsContainerElementRef,
+          document.activeElement
+        )
+      ) {
+        const selectedOption = this.selectedOptionModels.find((a) => a.checked);
+        this.filterInputElementRef.value = selectedOption?.label;
+      }
+    });
+  }
+
   handleToggleOptionsButtonClicked() {
     this.isOptionsContainerOpen
       ? this.closeOptionsContainer()
@@ -123,7 +145,7 @@ export class AdgComboboxComponent {
   handleFilterInputKeyup(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       this.closeOptionsContainer();
-      if (this.el.shadowRoot.activeElement === this.filterInputElementRef) {
+      if (document.activeElement === this.filterInputElementRef) {
         this.unselectAllButtonElementRef.focus();
       } else {
         this.filterInputElementRef.focus();
@@ -152,10 +174,20 @@ export class AdgComboboxComponent {
     this.filterTermText =
       filterTerm.trim() === '' ? 'empty filter' : `filter "${filterTerm}"`;
 
-    this.optionModels = this.optionModels.map((optionModel) => ({
+    let optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       hidden: !optionModel.label.toLowerCase().includes(filterTerm),
     }));
+    if (!this.multi && !optionModels.some((a) => a.checked && !a.hidden)) {
+      const firstNonHidden = optionModels.findIndex((a) => !a.hidden);
+      if (firstNonHidden != -1) {
+        optionModels[firstNonHidden].checked = true;
+        this.currentlyFocusedOption =
+          this.availableOptionsListItems[firstNonHidden].querySelector('input');
+        this.currentlyFocusedOption.focus();
+      }
+    }
+    this.optionModels = optionModels;
     const shownOptions = this.optionModels.filter((option) => !option.hidden);
     this.numberOfShownOptions = shownOptions.length;
     this.filterTermTextStartingWith = shownOptions.length
@@ -179,15 +211,33 @@ export class AdgComboboxComponent {
 
   handleOptionInputFocus(i: number) {
     this.lastArrowSelectedElem = i + 1;
+    this.currentlyFocusedOption =
+      this.availableOptionsListItems[i].querySelector('input');
+  }
+
+  handleOptionInputKeyDown(event: KeyboardEvent) {
+    // here we must override the default behavior of the browser, as otherwise the form will be submitted
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
   }
 
   handleOptionInputKeyUp(event: KeyboardEvent, optionIndex: number) {
-    if (event.key === 'Enter') {
-      this.optionModels = this.optionModels.map((optionModel, i) =>
-        i === optionIndex
-          ? { ...optionModel, checked: !optionModel.checked }
-          : optionModel
-      );
+    if (this.multi) {
+      if (event.key === 'Enter') {
+        this.optionModels = this.optionModels.map((optionModel, i) =>
+          i === optionIndex
+            ? { ...optionModel, checked: !optionModel.checked }
+            : optionModel
+        );
+      }
+    } else {
+      if (event.key === 'Enter') {
+        this.filterInputElementRef.value = this.optionModels[optionIndex].label;
+        this.closeOptionsContainer();
+        this.filterInputElementRef.focus();
+        this.filterInputElementRef.select();
+      }
     }
     if (event.key === 'Escape') {
       this.filterInputElementRef.focus();
@@ -195,36 +245,71 @@ export class AdgComboboxComponent {
     }
   }
 
+  handleOptionInputClick(value: string) {
+    if (!this.multi) {
+      this.optionModels = this.optionModels.map((optionModel) =>
+        optionModel.value === value
+          ? { ...optionModel, checked: true }
+          : { ...optionModel, checked: false }
+      );
+    }
+  }
+
   handleOptionInputChange(value: string) {
-    this.optionModels = this.optionModels.map((optionModel) =>
-      optionModel.value === value
-        ? { ...optionModel, checked: !optionModel.checked }
-        : optionModel
-    );
+    if (this.multi) {
+      this.optionModels = this.optionModels.map((optionModel) =>
+        optionModel.value === value
+          ? { ...optionModel, checked: !optionModel.checked }
+          : optionModel
+      );
+    } else {
+      this.optionModels = this.optionModels.map((optionModel) =>
+        optionModel.value === value
+          ? { ...optionModel, checked: true }
+          : { ...optionModel, checked: false }
+      );
+    }
   }
 
   handleKeyUp(event: KeyboardEvent) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       if (this.isOptionsContainerOpen) {
-        const direction = event.key === 'ArrowDown' ? 1 : -1;
-        const arrowSelectableElems = [
-          this.filterInputElementRef,
-          ...this.availableOptionsListItems,
-        ];
-        for (let i = 0; i < arrowSelectableElems.length; i++) {
-          let numberOfArrowSelectableElems = arrowSelectableElems.length;
-          let j = modulo(
-            direction * (i + 1) + this.lastArrowSelectedElem,
-            numberOfArrowSelectableElems
-          );
-          let currentElem = arrowSelectableElems[j];
-          if (!currentElem.hidden) {
-            if (currentElem === this.filterInputElementRef) {
-              currentElem.select();
-            } else {
-              currentElem.querySelector('input').focus();
+        if (this.multi) {
+          const direction = event.key === 'ArrowDown' ? 1 : -1;
+          const arrowSelectableElems = [
+            this.filterInputElementRef,
+            ...this.availableOptionsListItems,
+          ];
+          for (let i = 0; i < arrowSelectableElems.length; i++) {
+            let numberOfArrowSelectableElems = arrowSelectableElems.length;
+            let j = modulo(
+              direction * (i + 1) + this.lastArrowSelectedElem,
+              numberOfArrowSelectableElems
+            );
+            let currentElem = arrowSelectableElems[j];
+            if (!currentElem.hidden) {
+              if (currentElem === this.filterInputElementRef) {
+                this.lastArrowSelectedElem = 0;
+                currentElem.select();
+              } else {
+                currentElem.querySelector('input').focus();
+              }
+              break;
             }
-            break;
+          }
+        } else {
+          if (this.lastArrowSelectedElem === 0) {
+            const [checkedOption] = this.availableOptionsListItems
+              .map((elem) => elem.querySelector('input'))
+              .filter((input) => input.checked);
+            const optionToFocus =
+              checkedOption ||
+              (this.availableOptionsListItems[0] &&
+                this.availableOptionsListItems[0].querySelector('input'));
+            if (optionToFocus) {
+              optionToFocus.checked = true;
+              optionToFocus.focus();
+            }
           }
         }
       } else {
@@ -294,6 +379,16 @@ export class AdgComboboxComponent {
     this.optionSelectedButtons = [];
   }
 
+  componentDidUpdate() {
+    if (
+      this.isOptionsContainerOpen &&
+      !this.fieldsetElementRef.hidden &&
+      this.currentlyFocusedOption
+    ) {
+      this.currentlyFocusedOption.focus();
+    }
+  }
+
   render() {
     return (
       <div
@@ -333,6 +428,7 @@ export class AdgComboboxComponent {
               onInput={(ev) => this.handleFilterInputChange(ev)}
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
               onClick={() => this.handleFilterInputClick()}
+              onBlur={() => this.handleFilterInputBlur()}
               ref={(el) => (this.filterInputElementRef = el)}
             />
           </span>
@@ -345,9 +441,11 @@ export class AdgComboboxComponent {
             hidden={this.selectedOptionModels.length === 0}
           >
             <span id={this._optionsSelectedId}>
-              <span class="adg-combobox--x-selected-count">
-                {this.selectedOptionModels.length}
-              </span>
+              {this.multi ? (
+                <span class="adg-combobox--x-selected-count">
+                  {this.selectedOptionModels.length}
+                </span>
+              ) : null}
               <span data-visually-hidden>
                 {this.filterLabel} selected:
                 <span class="adg-combobox--x-selected-labels">
@@ -375,6 +473,7 @@ export class AdgComboboxComponent {
             />
           </button>
           <fieldset
+            ref={(el) => (this.fieldsetElementRef = el)}
             class="adg-combobox--available-options-container"
             hidden={!this.isOptionsContainerOpen}
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
@@ -411,11 +510,13 @@ export class AdgComboboxComponent {
                 >
                   <label data-inline-block>
                     <input
-                      type="checkbox"
+                      id={option.value}
+                      type={this.multi ? 'checkbox' : 'radio'}
                       name="option"
                       value={option.value}
                       checked={option.checked}
                       onFocus={() => this.handleOptionInputFocus(i)}
+                      onKeyDown={(ev) => this.handleOptionInputKeyDown(ev)}
                       onKeyUp={(ev) => this.handleOptionInputKeyUp(ev, i)}
                       onChange={() =>
                         this.handleOptionInputChange(option.value)
@@ -432,30 +533,32 @@ export class AdgComboboxComponent {
           </fieldset>
         </span>
 
-        <fieldset class="adg-combobox--selected-options-container">
-          <legend data-visually-hidden>Selected {this.filterLabel}</legend>
+        {this.multi ? (
+          <fieldset class="adg-combobox--selected-options-container">
+            <legend data-visually-hidden>Selected {this.filterLabel}</legend>
 
-          <ol class="adg-combobox--selected-options-list">
-            {this.selectedOptionModels.map((option, i) => (
-              <li>
-                <button
-                  class="adg-combobox--selected-options-button"
-                  type="button"
-                  ref={(el) => this.optionSelectedButtons.push(el)}
-                  onClick={() =>
-                    this.handleOptionSelectedButtonClick(option.value, i)
-                  }
-                >
-                  {option.label}
-                  <img
-                    src={getAssetPath(`./assets/clear.svg`)}
-                    alt="unselect"
-                  />
-                </button>
-              </li>
-            ))}
-          </ol>
-        </fieldset>
+            <ol class="adg-combobox--selected-options-list">
+              {this.selectedOptionModels.map((option, i) => (
+                <li key={option.value}>
+                  <button
+                    class="adg-combobox--selected-options-button"
+                    type="button"
+                    ref={(el) => this.optionSelectedButtons.push(el)}
+                    onClick={() =>
+                      this.handleOptionSelectedButtonClick(option.value, i)
+                    }
+                  >
+                    {option.label}
+                    <img
+                      src={getAssetPath(`./assets/clear.svg`)}
+                      alt="unselect"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </fieldset>
+        ) : null}
       </div>
     );
   }
@@ -463,4 +566,15 @@ export class AdgComboboxComponent {
 
 function modulo(a: number, n: number) {
   return ((a % n) + n) % n;
+}
+
+function isDescendant(parent: Element, child: Element) {
+  let node = child.parentNode;
+  while (node) {
+    if (node === parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
 }

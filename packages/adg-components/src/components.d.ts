@@ -10,6 +10,7 @@ export namespace Components {
         "ariaLiveAssertive": boolean;
         "filterLabel": string;
         "formControlName": string;
+        "multi": boolean;
         "options": string[];
         "roleAlert": boolean;
         "showInstructions": boolean;
@@ -31,6 +32,7 @@ declare namespace LocalJSX {
         "ariaLiveAssertive"?: boolean;
         "filterLabel"?: string;
         "formControlName"?: string;
+        "multi"?: boolean;
         "options"?: string[];
         "roleAlert"?: boolean;
         "showInstructions"?: boolean;
