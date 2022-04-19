@@ -33,6 +33,7 @@ export class AdgComboboxComponent {
   private _id = `adg-combobox-${nextUniqueId++}`;
   private _inputId = `${this._id}--input`;
   private _optionsSelectedId = `${this._id}--options-selected`;
+  private $t: Function;
 
   connectedCallback() {
     this.setupLiveRegion();
@@ -40,7 +41,6 @@ export class AdgComboboxComponent {
   }
 
   @Element() el: HTMLElement;
-  $t: any;
 
   @Prop() formControlName = this._id;
   @Prop() filterLabel = '';
@@ -50,9 +50,9 @@ export class AdgComboboxComponent {
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
     this.numberOfShownOptions = newValue.length;
-    this.optionModels = newValue.map((option) => ({
-      value: option.toLowerCase(),
-      label: option,
+    this.optionModels = newValue.map((option: any) => ({
+      value: option.value || option.toLowerCase(),
+      label: option.label || option,
       checked: false,
       hidden: false,
     }));
@@ -70,7 +70,7 @@ export class AdgComboboxComponent {
 
   @State() filterTermText: string = '';
   @State() numberOfShownOptions = 0;
-  @State() filterTermTextStartingWith: string = '';
+  @State() filteredOptionsStartingWith: string = '';
 
   @State() isOptionsContainerOpen: boolean = false;
 
@@ -89,12 +89,10 @@ export class AdgComboboxComponent {
   optionSelectedButtons: HTMLButtonElement[] = [];
   currentlyFocusedOption?: HTMLInputElement;
 
-  constructor() {
-  }
+  constructor() {}
 
   async componentWillLoad(): Promise<void> {
-    this.$t = await Translator(this.el)
-    this.filterTermText = this.$t('empty_filter');
+    this.$t = await Translator(this.el);
   }
 
   setupLiveRegion() {
@@ -182,11 +180,8 @@ export class AdgComboboxComponent {
 
   handleFilterInputChange(event: Event) {
     const targetElement = event.target as HTMLInputElement;
-    const filterTerm = targetElement.value.toLowerCase();
-    this.filterTermText =
-      filterTerm.trim() === ''
-        ? this.$t('empty_filter')
-        : this.$t('filter', { filterTerm });
+    const filterTerm = targetElement.value.toLowerCase().trim();
+    this.filterTermText = filterTerm;
 
     let optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
@@ -204,7 +199,7 @@ export class AdgComboboxComponent {
     this.optionModels = optionModels;
     const shownOptions = this.optionModels.filter((option) => !option.hidden);
     this.numberOfShownOptions = shownOptions.length;
-    this.filterTermTextStartingWith = shownOptions.length
+    this.filteredOptionsStartingWith = shownOptions.length
       ? shownOptions[0].label
       : '';
 
@@ -478,7 +473,9 @@ export class AdgComboboxComponent {
             <img
               src={getAssetPath(`./assets/close.svg`)}
               class="adg-combobox--toggle-options-button-icon"
-              alt={this.$t(this.openOptionsContainer ? 'close': 'open', { filterLabel: this.filterLabel })}
+              alt={this.$t(this.openOptionsContainer ? 'close' : 'open', {
+                filterLabel: this.filterLabel,
+              })}
             />
           </button>
           <fieldset
@@ -495,11 +492,17 @@ export class AdgComboboxComponent {
                 aria-live={this.ariaLiveAssertive ? 'assertive' : null}
                 role={this.roleAlert ? 'alert' : null}
               >
-                {this.numberOfShownOptions} of {this.options.length} options for{' '}
-                {this.filterTermText}
-                {!!this.filterTermTextStartingWith ? (
+                {this.$t(this.filterTermText ? 'results_filtered' : 'results', {
+                  optionsShown: this.numberOfShownOptions,
+                  optionsTotal: this.options.length,
+                  filterTerm: this.filterTermText,
+                })}
+
+                {!!this.filteredOptionsStartingWith ? (
                   <span data-visually-hidden>
-                    , starting with {this.filterTermTextStartingWith}
+                    , {this.$t('results_first', {
+                      first: this.filteredOptionsStartingWith
+                    })}
                   </span>
                 ) : null}
                 {this.showInstructions ? (

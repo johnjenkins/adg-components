@@ -1,7 +1,8 @@
 {
   "input_placeholder": "Eingabe Suchbegriff",
-  "empty_filter": "kein Filter gesetzt",
-  "filter": "Filter $(filterTerm)",
   "close": "$(filterLabel) Optionen schliessen",
-  "open": "$(filterLabel) Optionen öffnen"
+  "open": "$(filterLabel) Optionen öffnen",
+  "results": "$(optionsTotal) Optionen (kein Filter gesetzt)",
+  "results_filtered": "$(optionsShown) von $(optionsTotal) Optionen für Filter \"$(filterTerm)\"",
+  "results_first": "erstes Resultat \"{first}\""
 }
