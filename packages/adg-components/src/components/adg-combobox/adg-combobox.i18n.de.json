@@ -1,0 +1,7 @@
+{
+  "input_placeholder": "Eingabe Suchbegriff",
+  "empty_filter": "kein Filter gesetzt",
+  "filter": "Filter $(filterTerm)",
+  "close": "$(filterLabel) Optionen schliessen",
+  "open": "$(filterLabel) Optionen öffnen"
+}

@@ -9,6 +9,9 @@ import {
   Watch,
 } from '@stencil/core';
 
+import { Translator } from '../../utils/locale';
+
+
 const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
 
 interface OptionModel {
@@ -37,6 +40,7 @@ export class AdgComboboxComponent {
   }
 
   @Element() el: HTMLElement;
+  $t: any;
 
   @Prop() formControlName = this._id;
   @Prop() filterLabel = '';
@@ -64,7 +68,7 @@ export class AdgComboboxComponent {
 
   selectedOptionModels: OptionModel[] = [];
 
-  @State() filterTermText: string = 'empty filter';
+  @State() filterTermText: string = '';
   @State() numberOfShownOptions = 0;
   @State() filterTermTextStartingWith: string = '';
 
@@ -84,6 +88,14 @@ export class AdgComboboxComponent {
   availableOptionsListItems: HTMLLIElement[] = [];
   optionSelectedButtons: HTMLButtonElement[] = [];
   currentlyFocusedOption?: HTMLInputElement;
+
+  constructor() {
+  }
+
+  async componentWillLoad(): Promise<void> {
+    this.$t = await Translator(this.el)
+    this.filterTermText = this.$t('empty_filter');
+  }
 
   setupLiveRegion() {
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
@@ -172,7 +184,9 @@ export class AdgComboboxComponent {
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase();
     this.filterTermText =
-      filterTerm.trim() === '' ? 'empty filter' : `filter "${filterTerm}"`;
+      filterTerm.trim() === ''
+        ? this.$t('empty_filter')
+        : this.$t('filter', { filterTerm });
 
     let optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
@@ -423,7 +437,7 @@ export class AdgComboboxComponent {
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
               autocomplete="off"
-              placeholder="Enter filter term"
+              placeholder={this.$t('input_placeholder')}
               aria-describedby={this._optionsSelectedId}
               onInput={(ev) => this.handleFilterInputChange(ev)}
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
@@ -464,12 +478,7 @@ export class AdgComboboxComponent {
             <img
               src={getAssetPath(`./assets/close.svg`)}
               class="adg-combobox--toggle-options-button-icon"
-              alt={
-                (this.openOptionsContainer ? 'Close' : 'Open') +
-                ' ' +
-                this.filterLabel +
-                ' options'
-              }
+              alt={this.$t(this.openOptionsContainer ? 'close': 'open', { filterLabel: this.filterLabel })}
             />
           </button>
           <fieldset
