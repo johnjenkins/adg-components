@@ -468,6 +468,7 @@ export class AdgComboboxComponent {
           <button
             class="adg-combobox--toggle-options-button"
             type="button"
+            tabindex="-1"
             onClick={() => this.handleToggleOptionsButtonClicked()}
           >
             <img
