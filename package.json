@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "build": "nx build adg-components",
-    "start": "nx serve adg-components"
+    "start": "nx serve adg-components",
+    "test:run": "playwright test",
+    "test:gui": "playwright test --headed"
   },
   "devDependencies": {
     "@nrwl/cli": "13.9.5",
@@ -13,6 +15,7 @@
     "@nrwl/jest": "13.9.5",
     "@nrwl/js": "13.9.5",
     "@nrwl/workspace": "13.9.5",
+    "@playwright/test": "^1.21.1",
     "@stencil/core": "^2.14.0",
     "@types/jest": "27.0.2",
     "@types/node": "16.11.7",
