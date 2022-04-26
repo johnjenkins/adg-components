@@ -1,57 +1,11 @@
-import {test, expect} from '@playwright/test'
+import {test, expect} from '@playwright/test';
+import {
+  assertions, pressTab, pressSpace, focusFilter, pressEsc,
+  checkMultiState, pressDown, pressUp, ALL_OPTIONS, expectFocusedOption,
+  pressEnter
+} from './helpers';
 
-const expectOptionsExpanded = async (page, visible = true) => {
-  const list = page.locator('.adg-combobox--available-options-list').first();
-  if (visible) {
-    return await expect(list).toBeVisible()
-  } else {
-    return await expect(list).not.toBeVisible()
-  }
-}
 
-interface MultiStateOptions {
-  filterFocused: boolean;
-  optionsExpanded: boolean;
-  visibleOptions?: string[];
-  focusedOption?: string;
-}
-
-const defaultOptions: MultiStateOptions = {
-  optionsExpanded: false,
-  visibleOptions: [],
-  filterFocused: false,
-  focusedOption: null
-}
-
-const checkMultiState = async (page, options: MultiStateOptions) => {
-  const mergedOptions = Object.assign({}, defaultOptions, options);
-  const {
-    optionsExpanded,
-    visibleOptions,
-    filterFocused,
-    focusedOption
-  } = mergedOptions;
-  await expectOptionsExpanded(page, optionsExpanded);
-
-  const results = page.locator('.adg-combobox--available-options-list-item:visible');
-  const count = await results.count();
-  expect(count).toEqual(visibleOptions.length);
-
-  for (let option of visibleOptions) {
-    const item = await page.locator(`input[value="${option}"]`);
-    await expect(item).toBeVisible();
-  }
-
-  if (filterFocused) {
-    const filter = await page.locator('input[name="hobbies"]');
-    await expect(filter).toBeFocused();
-  }
-
-  if (focusedOption) {
-    const focused = await page.locator(`input[value="${focusedOption}"]`);
-    await expect(focused).toBeFocused();
-  }
-}
 
 test.describe('Multiselect', () => {
   test.beforeEach(async ({page}) => {
@@ -61,6 +15,7 @@ test.describe('Multiselect', () => {
   test('Initial display', async ({page}) => {
     const label = page.locator('.adg-combobox--filter-label').first();
     await expect(label).toHaveText('Hobbies');
+    await assertions(page);
   });
 
   test.describe('Keyboard', () => {
@@ -79,23 +34,125 @@ test.describe('Multiselect', () => {
     });
 
     test('Tab outside filter input', async ({page}) => {
-    })
-    test('Activate open/close button', async ({page}) => {
-    })
+      await focusFilter(page);
+      await checkMultiState(page, {
+        filterFocused: true
+      });
 
-    test('Toggle through options using Up key', async ({page}) => {
-
+      await page.keyboard.press('Shift+Tab');
+      await checkMultiState(page, {
+        filterFocused: false
+      });
     });
 
+    test('Activate open/close button', async ({page}) => {
+      await focusFilter(page);
+      await pressTab(page);
+      await pressSpace(page);
+      await checkMultiState(page, {
+        filterFocused: false,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS
+      });
+      // todo: tbd: should the component automatically focus the first item or not?
+      await pressSpace(page);
+      await checkMultiState(page, {
+        filterFocused: false,
+        optionsExpanded: false
+      });
+    })
+
     test('Toggle through options using Down key', async ({page}) => {
+      await focusFilter(page);
+      await pressDown(page);
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS
+      });
+      await pressDown(page);
+      await expectFocusedOption(page, 'Soccer');
+      await pressDown(page);
+      await expectFocusedOption(page, 'Badminton');
+      for (let i = 0; i < 11; i++) {
+        await pressDown(page);
+      }
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS
+      })
+    });
+
+    test('Toggle through options using Up key', async ({page}) => {
+      await focusFilter(page);
+      await pressUp(page);
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS
+      });
+      await pressUp(page);
+      await expectFocusedOption(page, 'Programming');
+      await pressUp(page);
+      await expectFocusedOption(page, 'Sleeping');
+      for (let i = 0; i < 11; i++) {
+        await pressUp(page);
+      }
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS
+      })
 
     });
 
     test('Close options using Esc key', async ({page}) => {
-
+      await focusFilter(page);
+      await pressDown(page);
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS
+      });
+      await pressEsc(page);
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: false,
+      });
     });
 
     test('Toggle options using Space/Enter key', async ({page}) => {
+      await focusFilter(page);
+      await pressDown(page);
+      await pressDown(page);
+      await pressEnter(page);
+      await checkMultiState(page, {
+        filterFocused:false,
+        visibleOptions: ALL_OPTIONS,
+        optionsExpanded: true,
+        focusedOption: 'Soccer',
+        selectedOptions: ['Soccer']
+      })
+      await pressDown(page);
+      await pressDown(page);
+      await pressSpace(page);
+      await checkMultiState(page, {
+        filterFocused:false,
+        visibleOptions: ALL_OPTIONS,
+        optionsExpanded: true,
+        focusedOption: 'Movies',
+        selectedOptions: ['Soccer', 'Movies']
+      });
+      await pressSpace(page);
+      await checkMultiState(page, {
+        filterFocused:false,
+        visibleOptions: ALL_OPTIONS,
+        optionsExpanded: true,
+        focusedOption: 'Movies',
+        selectedOptions: ['Soccer']
+      });
+
 
     });
 
@@ -105,35 +162,6 @@ test.describe('Multiselect', () => {
     });
     test('Propagate Enter key', async ({page}) => {
     });
-
-    test('Multiselect Test', async ({page}) => {
-      await expectOptionsExpanded(page, false);
-
-      const filter = await page.locator('input[name="hobbies"]');
-      await page.keyboard.type('ing', {delay: 300});
-      await expect(filter).toBeFocused();
-      await expectOptionsExpanded(page);
-
-      const results = page.locator('.adg-combobox--available-options-list-item:visible');
-      const count = await results.count();
-      expect(count).toEqual(9);
-
-      const gardening = await page.locator('input[value="gardening"]');
-      const hiking = await page.locator('input[value="hiking"]');
-
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Tab');
-      await expect(gardening).toBeFocused();
-      await page.keyboard.press('Space');
-      await expect(gardening).toBeChecked();
-
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Tab');
-      await expect(hiking).toBeFocused();
-      await page.keyboard.press('Space');
-      await expect(hiking).toBeChecked();
-    });
-
   })
 
 
