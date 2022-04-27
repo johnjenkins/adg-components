@@ -12,8 +12,6 @@ import {
 import { Translator } from '../../utils/locale';
 
 
-const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
-
 interface OptionModel {
   value: string;
   label: string;
@@ -42,9 +40,10 @@ export class AdgComboboxComponent {
 
   @Element() el: HTMLElement;
 
-  @Prop() formControlName = this._id;
-  @Prop() filterLabel = '';
+  @Prop() label = '';
+  @Prop() filterLabel = this.label;
   @Prop() options: string[] = [];
+  @Prop() name = this._id;
   @Prop() multi = false;
 
   @Watch('options')
@@ -132,15 +131,10 @@ export class AdgComboboxComponent {
 
   handleComponentBlur() {
     setTimeout(() => {
-      if (
-        !this.multi &&
-        !isDescendant(
-          this.filterAndOptionsContainerElementRef,
-          document.activeElement
-        )
-      ) {
+      if (!this.multi) {
         const selectedOption = this.selectedOptionModels.find((a) => a.checked);
-        this.filterInputElementRef.value = selectedOption?.label;
+        console.log(selectedOption);
+        this.filterInputElementRef.value = selectedOption?.label || '';
       }
     });
   }
@@ -187,15 +181,7 @@ export class AdgComboboxComponent {
       ...optionModel,
       hidden: !optionModel.label.toLowerCase().includes(filterTerm),
     }));
-    if (!this.multi && !optionModels.some((a) => a.checked && !a.hidden)) {
-      const firstNonHidden = optionModels.findIndex((a) => !a.hidden);
-      if (firstNonHidden != -1) {
-        optionModels[firstNonHidden].checked = true;
-        this.currentlyFocusedOption =
-          this.availableOptionsListItems[firstNonHidden].querySelector('input');
-        this.currentlyFocusedOption.focus();
-      }
-    }
+
     this.optionModels = optionModels;
     const shownOptions = this.optionModels.filter((option) => !option.hidden);
     this.numberOfShownOptions = shownOptions.length;
@@ -328,21 +314,6 @@ export class AdgComboboxComponent {
 
     if (event.key === '?') console.log('Help not yet implemented!');
 
-    const { target } = event;
-    if (event.key.match(textInputRegexp)) {
-      if (target !== this.filterInputElementRef) {
-        if (event.key.match(/^Backspace$/)) {
-          this.filterInputElementRef.value =
-            this.filterInputElementRef.value.slice(0, -1);
-        } else if (event.key.match(/^Delete$/)) {
-          this.filterInputElementRef.value = '';
-        } else {
-          this.filterInputElementRef.value += event.key;
-        }
-        this.filterInputElementRef.focus();
-        this.filterInputElementRef.dispatchEvent(new Event('input'));
-      }
-    }
   }
 
   handleOptionSelectedButtonClick(value: string, clickedIndex: number) {
@@ -409,7 +380,7 @@ export class AdgComboboxComponent {
           class="adg-combobox--filter-label"
           data-inline-block
         >
-          {this.filterLabel}
+          {this.label}
         </label>
         <span
           class={{
@@ -427,7 +398,7 @@ export class AdgComboboxComponent {
             <input
               class="adg-combobox--filter-input"
               id={this._inputId}
-              name={this.formControlName}
+              name={this.name}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
@@ -486,7 +457,11 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span data-visually-hidden>Available {this.filterLabel}:</span>
+              <span data-visually-hidden>
+                {this.$t('results_title', {
+                  filterLabel: this.filterLabel,
+                })}:
+              </span>
               <span
                 class="adg-combobox--x-of-y-for-filter-text"
                 data-live-region
@@ -494,6 +469,7 @@ export class AdgComboboxComponent {
                 role={this.roleAlert ? 'alert' : null}
               >
                 {this.$t(this.filterTermText ? 'results_filtered' : 'results', {
+                  filterLabel: this.filterLabel,
                   optionsShown: this.numberOfShownOptions,
                   optionsTotal: this.options.length,
                   filterTerm: this.filterTermText,
@@ -501,8 +477,9 @@ export class AdgComboboxComponent {
 
                 {!!this.filteredOptionsStartingWith ? (
                   <span data-visually-hidden>
-                    , {this.$t('results_first', {
-                      first: this.filteredOptionsStartingWith
+                    ,{' '}
+                    {this.$t('results_first', {
+                      first: this.filteredOptionsStartingWith,
                     })}
                   </span>
                 ) : null}
@@ -525,7 +502,7 @@ export class AdgComboboxComponent {
                     <input
                       id={option.value}
                       type={this.multi ? 'checkbox' : 'radio'}
-                      name="option"
+                      name={this.name}
                       value={option.value}
                       checked={option.checked}
                       onFocus={() => this.handleOptionInputFocus(i)}
@@ -579,15 +556,4 @@ export class AdgComboboxComponent {
 
 function modulo(a: number, n: number) {
   return ((a % n) + n) % n;
-}
-
-function isDescendant(parent: Element, child: Element) {
-  let node = child.parentNode;
-  while (node) {
-    if (node === parent) {
-      return true;
-    }
-    node = node.parentNode;
-  }
-  return false;
 }

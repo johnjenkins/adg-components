@@ -9,8 +9,9 @@ export namespace Components {
     interface AdgCombobox {
         "ariaLiveAssertive": boolean;
         "filterLabel": string;
-        "formControlName": string;
+        "label": string;
         "multi": boolean;
+        "name": string;
         "options": string[];
         "roleAlert": boolean;
         "showInstructions": boolean;
@@ -31,8 +32,9 @@ declare namespace LocalJSX {
     interface AdgCombobox {
         "ariaLiveAssertive"?: boolean;
         "filterLabel"?: string;
-        "formControlName"?: string;
+        "label"?: string;
         "multi"?: boolean;
+        "name"?: string;
         "options"?: string[];
         "roleAlert"?: boolean;
         "showInstructions"?: boolean;

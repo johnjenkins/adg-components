@@ -2,7 +2,8 @@
   "input_placeholder": "Enter filter term",
   "close": "Close $(filterLabel) Options",
   "open": "Open $(filterLabel) Options",
-  "results": "$(optionsTotal) options (empty filter)",
-  "results_filtered": "$(optionsShown) of $(optionsTotal) options for filter \"$(filterTerm)\"",
+  "results_title": "Available $(filterLabel)",
+  "results": "$(optionsTotal) $(filterLabel)",
+  "results_filtered": "$(optionsShown) of $(optionsTotal) $(filterLabel) for filter \"$(filterTerm)\"",
   "results_first": "starting with \"{first}\""
 }

@@ -1,8 +1,9 @@
 {
   "input_placeholder": "Eingabe Suchbegriff",
-  "close": "$(filterLabel) Optionen schliessen",
-  "open": "$(filterLabel) Optionen öffnen",
-  "results": "$(optionsTotal) Optionen (kein Filter gesetzt)",
-  "results_filtered": "$(optionsShown) von $(optionsTotal) Optionen für Filter \"$(filterTerm)\"",
+  "close": "$(filterLabel) Auswahl schliessen",
+  "open": "$(filterLabel) Auswahl öffnen",
+  "results_title": "Verfügbare $(filterLabel)",
+  "results": "$(optionsTotal) $(filterLabel)",
+  "results_filtered": "$(optionsShown) von $(optionsTotal) $(filterLabel) für Filter \"$(filterTerm)\"",
   "results_first": "erstes Resultat \"{first}\""
 }
