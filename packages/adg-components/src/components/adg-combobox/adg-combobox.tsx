@@ -458,7 +458,7 @@ export class AdgComboboxComponent {
               <span data-visually-hidden>
                 {this.filterLabel} selected:&nbsp;
                 <span class="adg-combobox--x-selected-labels">
-                  {this.selectedOptionModels.map((a) => a.label).join(',')}
+                  {this.selectedOptionModels.map((a) => a.label).join(', ')}
                 </span>
                 ,
               </span>
