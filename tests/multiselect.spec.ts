@@ -1,5 +1,12 @@
 import { test, expect, Page } from '@playwright/test';
-import { tabIntoFilter, checkMultiState, ALL_OPTIONS } from './helpers';
+import {
+  tabIntoFilter,
+  checkMultiState,
+  ALL_OPTIONS,
+  clickIntoFilter,
+  clickOutsideFilter,
+  clickOpenCloseButton,
+} from './helpers';
 
 test.describe('Multiselect', () => {
   test.beforeEach(async ({ page }) => {
@@ -10,11 +17,12 @@ test.describe('Multiselect', () => {
     await checkMultiState(page, {}); // Default state
   });
 
-  test.describe('Keyboard', () => {
+  test.describe('Keyboard interaction', () => {
     test('Tab into filter input', async ({ page }) => {
       await tabIntoFilter(page);
       await checkMultiState(page, {
         filterFocused: true,
+        optionsExpanded: false,
       });
     });
 
@@ -22,11 +30,13 @@ test.describe('Multiselect', () => {
       await tabIntoFilter(page);
       await checkMultiState(page, {
         filterFocused: true,
+        optionsExpanded: false,
       });
 
       await page.keyboard.press('Shift+Tab'); // At the time being, the open/close button is also focusable, so we should rather do a Shift-Tab here to definitely move focus outside the component. This might change though, see https://github.com/NothingAG/adg-components/issues/16.
       await checkMultiState(page, {
         filterFocused: false,
+        optionsExpanded: false,
       });
     });
 
@@ -213,37 +223,110 @@ test.describe('Multiselect', () => {
           selectedOptions: ['Soccer'],
         });
       });
+      test('Using Enter key', async ({ page }) => {
+        await tabIntoFilter(page);
+        await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
+        await page.keyboard.press('Enter'); // Press `Enter` to check option "Soccer"
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Badminton"
+        await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Movies"
+        await page.keyboard.press('Space'); // Press `Enter` to check option "Movies"
+        await checkMultiState(page, {
+          filterFocused: false,
+          visibleOptions: ALL_OPTIONS,
+          optionsExpanded: true,
+          focusedOption: 'Movies',
+          selectedOptions: ['Soccer', 'Movies'],
+        });
 
-      test('Using Enter key', async ({ page }) => {});
+        await page.keyboard.press('Enter'); // Press `Enter` to uncheck option "Movies"
+        await checkMultiState(page, {
+          filterFocused: false,
+          visibleOptions: ALL_OPTIONS,
+          optionsExpanded: true,
+          focusedOption: 'Movies',
+          selectedOptions: ['Soccer'],
+        });
+      });
     });
 
-    test('Activate "unselect all" button', async ({ page }) => {
+    test.describe('Activate "Unselect all" button', () => {
+      test('"Unselect all" button', async ({ page }) => {
+        await tabIntoFilter(page);
+        await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+        await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
+        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
+        await checkMultiState(page, {
+          filterFocused: true,
+          optionsExpanded: false,
+          selectedOptions: ['Soccer'],
+        });
+
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await checkMultiState(page, {
+          unselectAllButtonFocused: true,
+          optionsExpanded: false,
+          selectedOptions: ['Soccer'],
+        });
+
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await checkMultiState(page, {
+          filterFocused: true,
+          optionsExpanded: false,
+          selectedOptions: [],
+        });
+      });
+    });
+
+    test('Propagate Enter key', async ({ page }) => {
       await tabIntoFilter(page);
-      await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
-      await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
-      await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
-      await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
+      await page.keyboard.press('Enter'); // Press `Enter` to trigger browser default behaviour (send form)
+      await expect(page).toHaveURL(/.*?hobbies=$/);
+    });
+  });
+
+  test.describe('Mouse interaction', () => {
+    test('Click into filter input', async ({ page }) => {
+      await clickIntoFilter(page); // Click into the filter to expand options
       await checkMultiState(page, {
         filterFocused: true,
-        optionsExpanded: false,
-        selectedOptions: ['Soccer'],
+        optionsExpanded: true,
       });
 
-      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
-      await checkMultiState(page, {
-        unselectAllButtonFocused: true,
-        optionsExpanded: false,
-        selectedOptions: ['Soccer'],
-      });
-
-      await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+      await clickIntoFilter(page); // Click again into the filter, options remain expanded (unsure about that, see https://github.com/NothingAG/adg-components/issues/17)
       await checkMultiState(page, {
         filterFocused: true,
-        optionsExpanded: false,
-        selectedOptions: [],
+        optionsExpanded: true,
       });
     });
 
-    test('Propagate Enter key', async ({ page }) => {});
+    test('Click out of filter input', async ({ page }) => {
+      await clickIntoFilter(page); // Click into the filter to expand options
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+      });
+
+      await clickOutsideFilter(page); // Click into the filter to expand options
+      await checkMultiState(page, {
+        filterFocused: false,
+        optionsExpanded: false,
+      });
+    });
+
+    test('Click open/close button', async ({ page }) => {
+      await clickOpenCloseButton(page); // Click open/close button to expand options
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: true,
+      });
+
+      await clickOpenCloseButton(page); // Click open/close button to collapse options
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: false,
+      });
+    });
   });
 });

@@ -35,15 +35,6 @@ const defaultOptions: MultiStateOptions = {
   unselectAllButtonFocused: false,
 };
 
-export const expectOptionsExpanded = async (page: Page, visible = true) => {
-  const list = page.locator('.adg-combobox--available-options-list').first();
-  if (visible) {
-    return await expect(list).toBeVisible();
-  } else {
-    return await expect(list).not.toBeVisible();
-  }
-};
-
 export const checkMultiState = async (
   page: Page,
   options: MultiStateOptions
@@ -58,6 +49,7 @@ export const checkMultiState = async (
     unselectAllButtonFocused,
   } = mergedOptions;
 
+  // As soon as we need to also check single select, we need to make this method more configurable. For the moment let's have fixed values.
   const options2 = {
     id: 'hobbiesCombobox',
     internalId:
@@ -65,10 +57,10 @@ export const checkMultiState = async (
     label: 'Hobbies',
   };
 
-  const filterInputId = `${options2['internalId']}--input`;
-  const xOptionsSelectedId = `${options2['internalId']}--options-selected`;
+  const filterInputId = `${options2.internalId}--input`;
+  const xOptionsSelectedId = `${options2.internalId}--options-selected`;
 
-  const adgCombobox = page.locator(`adg-combobox#${options2['id']}`);
+  const adgCombobox = page.locator(`adg-combobox#${options2.id}`);
   await expect(adgCombobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
 
   const widgetContainer = page.locator('.adg-combobox--container');
@@ -77,7 +69,7 @@ export const checkMultiState = async (
   const filterLabel = widgetContainer.locator(
     'label.adg-combobox--filter-label'
   );
-  await expect(filterLabel).toHaveText(options2['label']);
+  await expect(filterLabel).toHaveText(options2.label);
   await expect(filterLabel).toHaveAttribute('for', filterInputId);
   await expect(filterLabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
 
@@ -250,19 +242,6 @@ export const checkMultiState = async (
   );
 };
 
-export const expectFocusedOption = async (
-  page: Page,
-  option,
-  options = ALL_OPTIONS
-) => {
-  await checkMultiState(page, {
-    filterFocused: false,
-    optionsExpanded: true,
-    visibleOptions: options,
-    focusedOption: option,
-  });
-};
-
 export const assertAvailableOption = async (
   availableOptionsList: Locator,
   nthChild: number,
@@ -312,4 +291,20 @@ export const tabIntoFilter = async (page: Page) => {
   }
   // todo: this would be better, but it doesn't 'tab into' the filter input
   // await filter.focus();
+};
+
+export const clickIntoFilter = async (page: Page) => {
+  // TODO: We should refactor this into a separate method
+  const filterInput = page.locator('input.adg-combobox--filter-input');
+  await filterInput.click();
+};
+
+export const clickOutsideFilter = async (page: Page) => {
+  const buttonAfter = page.locator('button#buttonAfter');
+  await buttonAfter.click();
+};
+
+export const clickOpenCloseButton = async (page: Page) => {
+  const buttonAfter = page.locator('.adg-combobox--toggle-options-button');
+  await buttonAfter.click();
 };
