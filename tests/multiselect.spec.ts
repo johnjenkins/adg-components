@@ -1,17 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import {
-  tabIntoFilter,
-  pressTab,
-  pressSpace,
-  focusFilter,
-  pressEsc,
-  checkMultiState,
-  pressDown,
-  pressUp,
-  ALL_OPTIONS,
-  expectFocusedOption,
-  pressEnter,
-} from './helpers';
+import { tabIntoFilter, checkMultiState, ALL_OPTIONS } from './helpers';
 
 test.describe('Multiselect', () => {
   test.beforeEach(async ({ page }) => {
@@ -31,7 +19,7 @@ test.describe('Multiselect', () => {
     });
 
     test('Tab out of filter input', async ({ page }) => {
-      await focusFilter(page);
+      await tabIntoFilter(page);
       await checkMultiState(page, {
         filterFocused: true,
       });
@@ -44,7 +32,7 @@ test.describe('Multiselect', () => {
 
     test('Activate open/close button', async ({ page }) => {
       // This button will not remain focusable, see https://github.com/NothingAG/adg-components/issues/16
-      // await focusFilter(page);
+      // await tabIntoFilter(page);
       // await pressTab(page);
       // await pressSpace(page);
       // await checkMultiState(page, {
@@ -150,7 +138,7 @@ test.describe('Multiselect', () => {
 
     test.describe('Close options using Esc key', () => {
       test('When focus in filter input', async ({ page }) => {
-        await focusFilter(page);
+        await tabIntoFilter(page);
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await checkMultiState(page, {
           filterFocused: true,
@@ -166,7 +154,7 @@ test.describe('Multiselect', () => {
       });
 
       test('When focus on option', async ({ page }) => {
-        await focusFilter(page);
+        await tabIntoFilter(page);
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
         await checkMultiState(page, {
@@ -186,7 +174,7 @@ test.describe('Multiselect', () => {
 
     test.describe('Select/unselect options', () => {
       test('Using Space key', async ({ page }) => {
-        await focusFilter(page);
+        await tabIntoFilter(page);
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
         await checkMultiState(page, {

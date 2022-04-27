@@ -16,38 +16,6 @@ export const ALL_OPTIONS = [
   'Programming',
 ];
 
-// todo: maybe there is a more elegant way not to always use `page` as an argument, but this way it's more functional i suppose?
-export const getFilter = async (page: Page) => {
-  return page.locator('.adg-combobox--filter-input').first();
-};
-
-export const focusFilter = async (page: Page) => {
-  const filter = await getFilter(page);
-  await filter.focus();
-};
-
-export const pressTab = async (page: Page) => {
-  await page.keyboard.press('Tab');
-};
-export const pressDown = async (page: Page) => {
-  await page.keyboard.press('ArrowDown');
-};
-export const pressUp = async (page: Page) => {
-  await page.keyboard.press('ArrowUp');
-};
-
-export const pressSpace = async (page: Page) => {
-  await page.keyboard.press('Space');
-};
-
-export const pressEsc = async (page: Page) => {
-  await page.keyboard.press('Escape');
-};
-
-export const pressEnter = async (page: Page) => {
-  await page.keyboard.press('Enter');
-};
-
 interface MultiStateOptions {
   filterFocused?: boolean;
   optionsExpanded?: boolean;
