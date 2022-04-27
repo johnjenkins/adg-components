@@ -308,3 +308,10 @@ export const clickOpenCloseButton = async (page: Page) => {
   const buttonAfter = page.locator('.adg-combobox--toggle-options-button');
   await buttonAfter.click();
 };
+
+export const clickOption = async (page: Page, label) => {
+  const buttonAfter = page.locator(
+    `.adg-combobox--available-options-list-item:has-text("${label}")`
+  );
+  await buttonAfter.click();
+};

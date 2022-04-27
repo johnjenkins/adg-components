@@ -6,6 +6,7 @@ import {
   clickIntoFilter,
   clickOutsideFilter,
   clickOpenCloseButton,
+  clickOption,
 } from './helpers';
 
 test.describe('Multiselect', () => {
@@ -326,6 +327,28 @@ test.describe('Multiselect', () => {
       await checkMultiState(page, {
         filterFocused: true,
         optionsExpanded: false,
+      });
+    });
+
+    test('Select/unselect options', async ({ page }) => {
+      await clickIntoFilter(page); // Expand options
+      await clickOption(page, 'Soccer'); // Select option "Soccer"
+      await clickOption(page, 'Movies'); // Select option "Movies"
+      await checkMultiState(page, {
+        filterFocused: false,
+        optionsExpanded: true,
+        visibleOptions: ALL_OPTIONS,
+        focusedOption: 'Movies',
+        selectedOptions: ['Soccer', 'Movies'],
+      });
+
+      await clickOption(page, 'Movies'); // Unselect option "Movies"
+      await checkMultiState(page, {
+        filterFocused: false,
+        visibleOptions: ALL_OPTIONS,
+        optionsExpanded: true,
+        focusedOption: 'Movies',
+        selectedOptions: ['Soccer'],
       });
     });
   });
