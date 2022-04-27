@@ -118,17 +118,20 @@ export const expectFocusedOption = async (page: Page, option, options = ALL_OPTI
   });
 };
 
-export const assertions = async (page: Page) => {
-  const widgetContainer = page.locator('.adg-combobox--container').first();
-// Label of filter input
+export const assertions = async (page: Page, options = {}) => {
+  const filterInputId = `${options['internalId']}--input`;
+  const xOptionsSelectedId = `${options['internalId']}--options-selected`
+
+  const adgCombobox = page.locator(`adg-combobox#${options['id']}`);
+  await expect(adgCombobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
+
+  const widgetContainer = page.locator('.adg-combobox--container');
+  await expect(widgetContainer).toHaveCSS('display', 'block');
 
   const filterLabel = widgetContainer.locator('label.adg-combobox--filter-label');
-  await expect(filterLabel).toHaveText('Hobbies');
-  // await expect(filterLabel).toHaveAttribute('for', 'hobbies');
-  await expect(filterLabel).toHaveCSS('display', 'inline-block');
-// So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher!
-// const filterLabelMarker = page.locator('.adg-combobox--container label.adg-combobox--filter-label::after');
-// await expect(filterLabelMarker).toHaveCSS('content', ':')
+  await expect(filterLabel).toHaveText(options['label']);
+  await expect(filterLabel).toHaveAttribute('for', filterInputId);
+  await expect(filterLabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
 
   const filterAndOptionsContainer = widgetContainer.locator('.adg-combobox--filter-and-options-container');
   await expect(filterAndOptionsContainer).toHaveCSS('display', 'inline-block');
@@ -137,7 +140,7 @@ export const assertions = async (page: Page) => {
   await expect(filterContainer).toHaveCSS('display', 'inline-block');
 
   const filterInput = filterContainer.locator('input.adg-combobox--filter-input');
-  await expect(filterInput).toHaveId('hobbies');
+  await expect(filterInput).toHaveId(filterInputId);
   await expect(filterInput).toHaveAttribute('type', 'text');
   await expect(filterInput).toHaveAttribute('role', 'combobox');
 // Needed for a) that certain screen readers and browsers announce aria-expanded change (ie. Chrome on Desktop), and to let certain screen readers give some more details about the element's purpose (ie. VoiceOver/iOS would say "combobox")
@@ -145,7 +148,7 @@ export const assertions = async (page: Page) => {
   await expect(filterInput).toHaveAttribute('autocomplete', 'off');
 // Default browser autocompletion should not be confused (or interfere) with our filter feature!
   await expect(filterInput).toHaveAttribute('placeholder', 'Enter filter term');
-  await expect(filterInput).toHaveAttribute('aria-describedby', 'hobbies-x-options-selected');
+  await expect(filterInput).toHaveAttribute('aria-describedby', xOptionsSelectedId);
 
   const unselectAllButton = filterAndOptionsContainer.locator('button.adg-combobox--unselect-all-button');
   await expect(unselectAllButton).toHaveAttribute('type', 'button');
@@ -153,7 +156,7 @@ export const assertions = async (page: Page) => {
   await expect(unselectAllButton).toHaveText("0 Hobbies selected: ,");
 // TODO: No colon, no comma!
 
-  const xOptionsSelected = unselectAllButton.locator('#hobbies-x-options-selected')
+  const xOptionsSelected = unselectAllButton.locator(`#${xOptionsSelectedId}`)
   const xSelectedCount = xOptionsSelected.locator('.adg-combobox--x-selected-count')
   await expect(xSelectedCount).toHaveText('0');
 
@@ -165,20 +168,20 @@ export const assertions = async (page: Page) => {
   const xSelectedLabels = xOptionSelectedVisuallyHidden.locator('.adg-combobox--x-selected-labels');
   await expect(xSelectedLabels).toBeEmpty()
 
-  const unselectAllButtonImage = unselectAllButton.locator('img[src="clear.svg"]');
+  const unselectAllButtonImage = unselectAllButton.locator('img[src$="clear.svg"]');
   await expect(unselectAllButtonImage).toHaveAttribute('alt', 'unselect all');
 
   const toggleOptionsButton = filterAndOptionsContainer.locator('button.adg-combobox--toggle-options-button');
   await expect(toggleOptionsButton).toHaveAttribute('type', 'button');
 
-  const toggleOptionsButtonImage = toggleOptionsButton.locator('img[src="close.svg"]');
-  await expect(toggleOptionsButtonImage).toHaveAttribute('alt', 'Open Hobbies options');
+  const toggleOptionsButtonImage = toggleOptionsButton.locator('img[src$="close.svg"]');
+  await expect(toggleOptionsButtonImage).toHaveAttribute('alt', 'Open Hobbies Options');
 
   const availableOptionsContainer = filterAndOptionsContainer.locator('fieldset.adg-combobox--available-options-container');
   await expect(availableOptionsContainer).toHaveAttribute('hidden', '');
 
   const availableOptionsContainerLegend = availableOptionsContainer.locator('legend');
-  await expect(availableOptionsContainerLegend).toHaveText("Available Hobbies: 12 of 12 options for empty filter, starting with \"Soccer\"");
+  await expect(availableOptionsContainerLegend).toHaveText("Available Hobbies: 12 options (empty filter)");
 
   const availableOptionsContainerLegendVisuallyHidden = availableOptionsContainerLegend.locator('span[data-visually-hidden]');
   await expect(availableOptionsContainerLegendVisuallyHidden).toHaveText('Available Hobbies:');
@@ -186,11 +189,11 @@ export const assertions = async (page: Page) => {
   const xOfYForFilterText = availableOptionsContainerLegend.locator('.adg-combobox--x-of-y-for-filter-text');
   await expect(xOfYForFilterText).toHaveAttribute('data-live-region', '');
   await expect(xOfYForFilterText).toHaveAttribute('aria-live', 'assertive');
-// TODO: Change to role="alert" for browsers other than FF!
-  await expect(xOfYForFilterText).toHaveText("12 of 12 options for empty filter, starting with \"Soccer\"");
 
+  await expect(xOfYForFilterText).toHaveText("12 options (empty filter)"); // TODO: Change to role="alert" for browsers other than FF!
 
-  const xOfYForFilterTextVisuallyHidden = xOfYForFilterText.locator('span[data-visually-hidden]');
-  await expect(xOfYForFilterTextVisuallyHidden).toHaveText(", starting with \"Soccer\"");
+  // TODO: The whole live region thing is tricky and not final yet. Let's test it when it's done!
+  // const instructions = xOfYForFilterText.locator('.adg-combobox--instructions');
+  // await expect(instructions).toHaveText('(enter question mark for help)');
 };
 

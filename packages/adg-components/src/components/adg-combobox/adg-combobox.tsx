@@ -21,7 +21,7 @@ interface OptionModel {
   hidden: boolean;
 }
 
-let nextUniqueId = 0;
+let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefer any passed ID (as this results in race conditions when there are many instances of the component on the same page).
 
 @Component({
   tag: 'adg-combobox',
@@ -452,11 +452,11 @@ export class AdgComboboxComponent {
             <span id={this._optionsSelectedId}>
               {this.multi ? (
                 <span class="adg-combobox--x-selected-count">
-                  {this.selectedOptionModels.length}
+                  {this.selectedOptionModels.length}&nbsp;
                 </span>
               ) : null}
               <span data-visually-hidden>
-                {this.filterLabel} selected:
+                {this.filterLabel} selected:&nbsp;
                 <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(',')}
                 </span>
@@ -473,7 +473,7 @@ export class AdgComboboxComponent {
             <img
               src={getAssetPath(`./assets/close.svg`)}
               class="adg-combobox--toggle-options-button-icon"
-              alt={this.$t(this.openOptionsContainer ? 'close' : 'open', {
+              alt={this.$t(this.isOptionsContainerOpen ? 'close' : 'open', {
                 filterLabel: this.filterLabel,
               })}
             />
@@ -485,7 +485,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span data-visually-hidden>Available {this.filterLabel}:</span>
+              <span data-visually-hidden>Available {this.filterLabel}:&nbsp;</span>
               <span
                 class="adg-combobox--x-of-y-for-filter-text"
                 data-live-region

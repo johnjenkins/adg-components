@@ -12,10 +12,14 @@ test.describe('Multiselect', () => {
     await page.goto('http://localhost:3333');
   });
 
-  test('Initial display', async ({page}) => {
+  test.only('Initial display', async ({page}) => {
     const label = page.locator('.adg-combobox--filter-label').first();
     await expect(label).toHaveText('Hobbies');
-    await assertions(page);
+    await assertions(page, {
+      id: 'hobbiesCombobox',
+      internalId: 'adg-combobox-0', // Gets created automatically. Maybe we should just use the ID specified by the user?
+      label: 'Hobbies'
+    });
   });
 
   test.describe('Keyboard', () => {
