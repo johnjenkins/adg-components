@@ -19,7 +19,7 @@ const config: PlaywrightTestConfig = {
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 1000 // A component should be pretty quick
+    timeout: 1000, // A component should be pretty quick
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -33,7 +33,10 @@ const config: PlaywrightTestConfig = {
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
-    headless: false,
+    headless: true,
+    launchOptions: {
+      slowMo: 100, // If we don't use slowMo, we seem to have some unpredictable timing issues.
+    },
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
 

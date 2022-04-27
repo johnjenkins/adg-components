@@ -19,7 +19,7 @@ DESCRIBE ADG Combobox
         tab_into_filter()
         has_multi_state(filter_input_focused: true)
 
-      SPECIFY Tab outside filter input
+      SPECIFY Tab out of filter input
         tab_into_filter()
         tab_outside() // At the time being, the open/close button is also focusable, so we should rather do a Shift-Tab here. This might change though, see https://github.com/NothingAG/adg-components/issues/16.
         has_multi_state()

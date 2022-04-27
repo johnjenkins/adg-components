@@ -507,7 +507,7 @@ export class AdgComboboxComponent {
                 ) : null}
                 {this.showInstructions ? (
                   <span class="adg-combobox--instructions" data-visually-hidden>
-                    (enter question mark for help)
+                    &nbsp;(enter question mark for help)
                   </span>
                 ) : null}
               </span>
