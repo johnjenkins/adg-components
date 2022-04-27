@@ -217,7 +217,33 @@ test.describe('Multiselect', () => {
       test('Using Enter key', async ({ page }) => {});
     });
 
-    test('Activate "unselect all" button', async ({ page }) => {});
+    test('Activate "unselect all" button', async ({ page }) => {
+      await tabIntoFilter(page);
+      await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
+      await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+      await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
+      await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: false,
+        selectedOptions: ['Soccer'],
+      });
+
+      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+      await checkMultiState(page, {
+        unselectAllButtonFocused: true,
+        optionsExpanded: false,
+        selectedOptions: ['Soccer'],
+      });
+
+      await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: false,
+        selectedOptions: [],
+      });
+    });
+
     test('Propagate Enter key', async ({ page }) => {});
   });
 });

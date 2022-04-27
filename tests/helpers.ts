@@ -22,14 +22,17 @@ interface MultiStateOptions {
   visibleOptions?: string[];
   focusedOption?: string;
   selectedOptions?: string[];
+  unselectAllButtonFocused?: boolean;
 }
 
+// These should reflect the component's initial state without any interaction happened
 const defaultOptions: MultiStateOptions = {
   optionsExpanded: false,
   visibleOptions: ALL_OPTIONS,
   filterFocused: false,
   focusedOption: null,
   selectedOptions: [],
+  unselectAllButtonFocused: false,
 };
 
 export const expectOptionsExpanded = async (page: Page, visible = true) => {
@@ -52,6 +55,7 @@ export const checkMultiState = async (
     filterFocused,
     focusedOption,
     selectedOptions,
+    unselectAllButtonFocused,
   } = mergedOptions;
 
   const options2 = {
@@ -114,26 +118,35 @@ export const checkMultiState = async (
   await expect(unselectAllButton).toHaveAttribute('type', 'button');
   await expect(unselectAllButton).toHaveAttribute('hidden', '');
 
-  // TODO: "1 Hobbies selected: Soccer,"
-  await expect(unselectAllButton).toHaveText('0 Hobbies selected: ,'); // TODO: No colon, no comma!
+  if (unselectAllButtonFocused) await expect(unselectAllButton).toBeFocused();
+  else await expect(unselectAllButton).not.toBeFocused();
+
+  // TODO: When there is no option selected, then there should be no colon and no comma!
+  await expect(unselectAllButton).toHaveText(
+    `${selectedOptions.length} Hobbies selected: ${selectedOptions.join(', ')},`
+  );
 
   const xOptionsSelected = unselectAllButton.locator(`#${xOptionsSelectedId}`);
   const xSelectedCount = xOptionsSelected.locator(
     '.adg-combobox--x-selected-count'
   );
-  await expect(xSelectedCount).toHaveText('0');
+  await expect(xSelectedCount).toHaveText(selectedOptions.length.toString());
 
   const xOptionSelectedVisuallyHidden = xOptionsSelected.locator(
     'span[data-visually-hidden]'
   );
 
-  await expect(xOptionSelectedVisuallyHidden).toHaveText('Hobbies selected: ,');
+  await expect(xOptionSelectedVisuallyHidden).toHaveText(
+    `Hobbies selected: ${selectedOptions.join(', ')},`
+  );
   // TODO: No colon, no comma!
 
   const xSelectedLabels = xOptionSelectedVisuallyHidden.locator(
     '.adg-combobox--x-selected-labels'
   );
-  await expect(xSelectedLabels).toBeEmpty();
+
+  if (selectedOptions.length == 0) await expect(xSelectedLabels).toBeEmpty();
+  else await expect(xSelectedLabels).toHaveText(selectedOptions.join(', '));
 
   const unselectAllButtonImage = unselectAllButton.locator(
     'img[src$="clear.svg"]'
@@ -222,7 +235,7 @@ export const checkMultiState = async (
     allOptions.map(async (item, i) => {
       const optionVisible = visibleOptions.includes(item.label);
       const optionFocused = item.label == focusedOption;
-      const optionChecked = false; // checkedOptions.includes(item.label);
+      const optionChecked = selectedOptions.includes(item.label);
 
       await assertAvailableOption(
         availableOptionsList,
