@@ -38,6 +38,28 @@ const defaultComboboxExpectations: ComboboxExpectations = {
   unselectAllButtonFocused: false,
 };
 
+export const expectSingleCombobox = async (
+  page: Page,
+  expectations: ComboboxExpectations
+) => {
+  const adgCombobox = page.locator(`adg-combobox#coloursCombobox`);
+
+  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
+  const internalId = await (
+    await adgCombobox
+      .locator('label.adg-combobox--filter-label')
+      .getAttribute('for')
+  ).replace('--input', '');
+
+  await expectCombobox(adgCombobox, expectations, {
+    internalId: internalId,
+    label: 'Colours',
+    multi: false,
+    lang: 'de',
+  });
+};
+
+// Nearly identical copy of expectSingleSelect
 export const expectMultiCombobox = async (
   page: Page,
   expectations: ComboboxExpectations
@@ -54,6 +76,8 @@ export const expectMultiCombobox = async (
   await expectCombobox(adgCombobox, expectations, {
     internalId: internalId,
     label: 'Hobbies',
+    multi: true,
+    lang: 'en',
   });
 };
 
@@ -63,6 +87,8 @@ export const expectCombobox = async (
   options: {
     internalId: string;
     label: string;
+    multi: boolean;
+    lang: string;
   }
 ) => {
   const mergedExpectations = Object.assign(
@@ -124,7 +150,10 @@ export const expectCombobox = async (
   }
 
   await expect(filterInput).toHaveAttribute('autocomplete', 'off'); // Default browser autocompletion should not be confused (or interfere) with our filter feature!
-  await expect(filterInput).toHaveAttribute('placeholder', 'Enter filter term');
+  await expect(filterInput).toHaveAttribute(
+    'placeholder',
+    options.lang == 'en' ? 'Enter filter term' : 'Eingabe Suchbegriff'
+  );
   await expect(filterInput).toHaveAttribute(
     'aria-describedby',
     xOptionsSelectedId
@@ -142,23 +171,35 @@ export const expectCombobox = async (
     await expect(unselectAllButton).not.toBeFocused();
   }
 
-  // TODO: When there is no option selected, then there should be no colon and no comma!
-  await expect(unselectAllButton).toHaveText(
-    `${selectedOptions.length} Hobbies selected: ${selectedOptions.join(', ')},`
-  );
+  if (options.multi) {
+    // TODO: When there is no option selected, then there should be no colon and no comma!
+    await expect(unselectAllButton).toHaveText(
+      `${selectedOptions.length} ${
+        options.label
+      } selected: ${selectedOptions.join(', ')},`
+    );
+  } else {
+    await expect(unselectAllButton).toHaveText(
+      `${options.label} selected: ${selectedOptions.join(', ')},`
+    );
+  }
 
   const xOptionsSelected = unselectAllButton.locator(`#${xOptionsSelectedId}`);
   const xSelectedCount = xOptionsSelected.locator(
     '.adg-combobox--x-selected-count'
   );
-  await expect(xSelectedCount).toHaveText(selectedOptions.length.toString());
+  if (options.multi) {
+    await expect(xSelectedCount).toHaveText(selectedOptions.length.toString());
+  } else {
+    // TODO: Not yet implemented, ie. does not make much sense for single select!
+  }
 
   const xOptionSelectedVisuallyHidden = xOptionsSelected.locator(
     'span[data-visually-hidden]'
   );
 
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
-    `Hobbies selected: ${selectedOptions.join(', ')},`
+    `${options.label} selected: ${selectedOptions.join(', ')},`
   );
   // TODO: No colon, no comma!
 
@@ -194,7 +235,7 @@ export const expectCombobox = async (
   } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      'Open Hobbies Options'
+      options.multi ? 'Open Hobbies Options' : 'Colours Optionen öffnen'
     );
   }
 
@@ -231,7 +272,7 @@ export const expectCombobox = async (
   const availableOptionsContainerLegendVisuallyHidden =
     availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
   await expect(availableOptionsContainerLegendVisuallyHidden).toHaveText(
-    'Available Hobbies:'
+    `Available ${options.label}:`
   );
 
   const xOfYForFilterText = availableOptionsContainerLegend.locator(

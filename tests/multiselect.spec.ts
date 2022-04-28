@@ -7,6 +7,7 @@ import {
   clickOutsideFilter,
   clickOpenCloseButton,
   clickOption,
+  expectSingleCombobox,
 } from './helpers';
 
 test.describe('ADG-Combobox', () => {
@@ -15,13 +16,13 @@ test.describe('ADG-Combobox', () => {
   });
 
   test.describe('Single-Select', () => {
-    test('Initial display', async ({ page }) => {
-      await expectMultiCombobox(page, {}); // Default state
+    test.only('Initial display', async ({ page }) => {
+      await expectSingleCombobox(page, {}); // Default state
     });
   });
 
   test.describe('Multi-Select', () => {
-    test('Initial display', async ({ page }) => {
+    test.only('Initial display', async ({ page }) => {
       await expectMultiCombobox(page, {}); // Default state
     });
 
