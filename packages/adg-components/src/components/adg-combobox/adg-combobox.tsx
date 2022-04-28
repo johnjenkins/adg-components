@@ -464,7 +464,7 @@ export class AdgComboboxComponent {
                     <label data-inline-block>
                       <input
                         type={this.multi ? 'checkbox' : 'radio'}
-                        name={this.name}
+                        name={`${this.name}${this.multi ? '[]' : ''}`}
                         value={option.value}
                         checked={option.checked}
                         onKeyDown={(ev) =>
