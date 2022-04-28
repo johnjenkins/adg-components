@@ -38,6 +38,7 @@ test.describe('ADG-Combobox (single)', () => {
       await page.keyboard.press('Shift+Tab'); // At the time being, the open/close button is also focusable, so we should rather do a Shift-Tab here to definitely move focus outside the component. This might change though, see https://github.com/NothingAG/adg-components/issues/16.
       await expectSingleCombobox(page, {
         filterFocused: false,
+        filterValue: 'undefined', // This is actually a bug! It should be empty.
         optionsExpanded: false,
       });
     });

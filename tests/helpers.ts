@@ -285,7 +285,7 @@ export const expectCombobox = async (
   if (optionsExpanded) {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      'Close Hobbies Options'
+      options.multi ? 'Close Hobbies Options' : 'Colours Optionen schliessen'
     );
   } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
