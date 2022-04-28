@@ -84,6 +84,8 @@ export class AdgComboboxComponent {
     this.selectedOptionModels = this.optionModels.filter(
       (optionModel) => optionModel.checked
     );
+
+    this.displaySelectedItems();
   }
 
   async componentWillLoad(): Promise<void> {
@@ -119,19 +121,6 @@ export class AdgComboboxComponent {
 
   handleFilterInputClick() {
     this.openOptionsContainer();
-  }
-
-  handleFilterInputBlur() {
-    this.handleComponentBlur();
-  }
-
-  handleComponentBlur() {
-    setTimeout(() => {
-      if (!this.multi) {
-        const selectedOption = this.selectedOptionModels.find((a) => a.checked);
-        this.filterInputElementRef.value = selectedOption?.label || '';
-      }
-    });
   }
 
   handleToggleOptionsButtonClicked() {
@@ -209,6 +198,10 @@ export class AdgComboboxComponent {
     // here we must override the default behavior of the browser, as otherwise the form will be submitted
     if (event.key === 'Enter') {
       this.handleOptionInputChange(value);
+      if (!this.multi) {
+        this.filterInputElementRef.focus();
+        this.closeOptionsContainer();
+      }
       event.preventDefault();
     }
     if (event.key === 'Escape') {
@@ -217,6 +210,14 @@ export class AdgComboboxComponent {
     }
   }
 
+  handleOptionInputClick(event: MouseEvent) {
+    if (event.x && event.y) { // todo: check if it is click
+      if (!this.multi) {
+        this.filterInputElementRef.focus();
+        this.closeOptionsContainer();
+      }
+    }
+  }
 
   handleOptionInputChange(value: string) {
     if (this.multi) {
@@ -299,6 +300,13 @@ export class AdgComboboxComponent {
     });
   }
 
+  displaySelectedItems() {
+    if (!this.multi && this.filterInputElementRef) {
+      const selectedOption = this.selectedOptionModels.find((a) => a.checked);
+      this.filterInputElementRef.value = selectedOption?.label || '';
+    }
+  }
+
   openOptionsContainer() {
     if (!this.isOptionsContainerOpen) {
       this.isOptionsContainerOpen = true;
@@ -374,7 +382,6 @@ export class AdgComboboxComponent {
               onInput={(ev) => this.handleFilterInputChange(ev)}
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
               onClick={() => this.handleFilterInputClick()}
-              onBlur={() => this.handleFilterInputBlur()}
               ref={(el) => (this.filterInputElementRef = el)}
             />
           </span>
@@ -476,6 +483,7 @@ export class AdgComboboxComponent {
                       onKeyDown={(ev) =>
                         this.handleOptionInputKeyDown(ev, option.value)
                       }
+                      onClick={(ev) => this.handleOptionInputClick(ev)}
                       onInput={() => this.handleOptionInputChange(option.value)}
                     />
                     <span>
