@@ -4,6 +4,7 @@
   "open": "Open $(filterLabel) Options",
   "results_title": "Available $(filterLabel)",
   "results": "$(optionsTotal) $(filterLabel)",
+  "results_selected": "$(filterLabel) selected",
   "results_filtered": "$(optionsShown) of $(optionsTotal) $(filterLabel) for filter \"$(filterTerm)\"",
   "results_first": "starting with \"{first}\""
 }

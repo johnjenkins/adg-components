@@ -400,7 +400,9 @@ export class AdgComboboxComponent {
                 </span>
               ) : null}
               <span data-visually-hidden>
-                {this.filterLabel} selected:&nbsp;
+                {this.$t('results_selected', {
+                  filterLabel: this.filterLabel,
+                })}:
                 <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(', ')}
                 </span>
@@ -499,7 +501,11 @@ export class AdgComboboxComponent {
 
         {this.multi ? (
           <fieldset class="adg-combobox--selected-options-container">
-            <legend data-visually-hidden>Selected {this.filterLabel}</legend>
+            <legend data-visually-hidden>
+              {this.$t('results_selected', {
+                filterLabel: this.filterLabel,
+              })}
+            </legend>
 
             <ol class="adg-combobox--selected-options-list">
               {this.selectedOptionModels.map((option, i) => (
