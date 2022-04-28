@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import {
   tabIntoFilter,
   expectSingleCombobox,
-  ALL_OPTIONS,
+  ALL_MULTI_OPTIONS,
   clickIntoFilter,
   clickOutsideFilter,
   clickOpenCloseButton,
@@ -15,7 +15,7 @@ test.describe('ADG-Combobox', () => {
   });
 
   test.describe('Single-Select', () => {
-    test.only('Initial display', async ({ page }) => {
+    test('Initial display', async ({ page }) => {
       await expectSingleCombobox(page, {}); // Default state
     });
 
@@ -68,7 +68,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: null,
         });
 
@@ -76,7 +76,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Soccer',
         });
 
@@ -84,7 +84,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Badminton',
         });
 
@@ -92,7 +92,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Programming',
         });
 
@@ -100,7 +100,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: null,
         });
       });
@@ -111,7 +111,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: null,
         });
 
@@ -119,7 +119,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Programming',
         });
 
@@ -127,7 +127,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Sleeping',
         });
 
@@ -135,7 +135,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Soccer',
         });
 
@@ -143,7 +143,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: null,
         });
       });
@@ -155,7 +155,7 @@ test.describe('ADG-Combobox', () => {
           await expectSingleCombobox(page, {
             filterFocused: true,
             optionsExpanded: true,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
           });
 
           await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter input
@@ -172,7 +172,7 @@ test.describe('ADG-Combobox', () => {
           await expectSingleCombobox(page, {
             filterFocused: false,
             optionsExpanded: true,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             focusedOption: 'Soccer',
           });
 
@@ -192,14 +192,14 @@ test.describe('ADG-Combobox', () => {
           await expectSingleCombobox(page, {
             filterFocused: false,
             optionsExpanded: true,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             focusedOption: 'Soccer',
           });
 
           await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
           await expectSingleCombobox(page, {
             filterFocused: false,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             optionsExpanded: true,
             focusedOption: 'Soccer',
             selectedOptions: ['Soccer'],
@@ -210,7 +210,7 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('Space'); // Press `Space` to check option "Movies"
           await expectSingleCombobox(page, {
             filterFocused: false,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             optionsExpanded: true,
             focusedOption: 'Movies',
             selectedOptions: ['Soccer', 'Movies'],
@@ -219,7 +219,7 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('Space'); // Press `Space` to uncheck option "Movies"
           await expectSingleCombobox(page, {
             filterFocused: false,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             optionsExpanded: true,
             focusedOption: 'Movies',
             selectedOptions: ['Soccer'],
@@ -235,7 +235,7 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('Space'); // Press `Enter` to check option "Movies"
           await expectSingleCombobox(page, {
             filterFocused: false,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             optionsExpanded: true,
             focusedOption: 'Movies',
             selectedOptions: ['Soccer', 'Movies'],
@@ -244,7 +244,7 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('Enter'); // Press `Enter` to uncheck option "Movies"
           await expectSingleCombobox(page, {
             filterFocused: false,
-            visibleOptions: ALL_OPTIONS,
+            visibleOptions: ALL_MULTI_OPTIONS,
             optionsExpanded: true,
             focusedOption: 'Movies',
             selectedOptions: ['Soccer'],
@@ -338,7 +338,7 @@ test.describe('ADG-Combobox', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           focusedOption: 'Movies',
           selectedOptions: ['Soccer', 'Movies'],
         });
@@ -346,7 +346,7 @@ test.describe('ADG-Combobox', () => {
         await clickOption(page, 'Movies'); // Unselect option "Movies"
         await expectSingleCombobox(page, {
           filterFocused: false,
-          visibleOptions: ALL_OPTIONS,
+          visibleOptions: ALL_MULTI_OPTIONS,
           optionsExpanded: true,
           focusedOption: 'Movies',
           selectedOptions: ['Soccer'],

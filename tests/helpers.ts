@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { ALL } from 'dns';
 
-export const ALL_OPTIONS = [
+export const ALL_MULTI_OPTIONS = [
   'Soccer',
   'Badminton',
   'Movies',
@@ -26,17 +26,6 @@ interface ComboboxExpectations {
   selectedOptions?: string[];
   unselectAllButtonFocused?: boolean;
 }
-
-// These should reflect the component's initial state without any interaction happened
-const defaultComboboxExpectations: ComboboxExpectations = {
-  filterFocused: false,
-  filterValue: '',
-  optionsExpanded: false,
-  visibleOptions: ALL_OPTIONS,
-  focusedOption: null,
-  selectedOptions: [],
-  unselectAllButtonFocused: false,
-};
 
 export const expectSingleCombobox = async (
   page: Page,
@@ -66,6 +55,20 @@ export const expectMultiCombobox = async (
 ) => {
   const adgCombobox = page.locator(`adg-combobox#hobbiesCombobox`);
 
+  const mergedExpectations = Object.assign(
+    {},
+    {
+      filterFocused: false,
+      filterValue: '',
+      optionsExpanded: false,
+      visibleOptions: ALL_MULTI_OPTIONS,
+      focusedOption: null,
+      selectedOptions: [],
+      unselectAllButtonFocused: false,
+    },
+    expectations
+  );
+
   // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
   const internalId = await (
     await adgCombobox
@@ -73,7 +76,7 @@ export const expectMultiCombobox = async (
       .getAttribute('for')
   ).replace('--input', '');
 
-  await expectCombobox(adgCombobox, expectations, {
+  await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: internalId,
     label: 'Hobbies',
     multi: true,
@@ -91,11 +94,6 @@ export const expectCombobox = async (
     lang: string;
   }
 ) => {
-  const mergedExpectations = Object.assign(
-    {},
-    defaultComboboxExpectations,
-    expectations
-  );
   const {
     filterFocused,
     filterValue,
@@ -104,7 +102,7 @@ export const expectCombobox = async (
     focusedOption,
     selectedOptions,
     unselectAllButtonFocused,
-  } = mergedExpectations;
+  } = expectations;
 
   const filterInputId = `${options.internalId}--input`;
   const xOptionsSelectedId = `${options.internalId}--options-selected`;
@@ -248,10 +246,10 @@ export const expectCombobox = async (
     availableOptionsContainer.locator('legend');
 
   let expectedXOfYForFilterTextValue = '';
-  if (visibleOptions.length < ALL_OPTIONS.length) {
+  if (visibleOptions.length < ALL_MULTI_OPTIONS.length) {
     expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
   }
-  expectedXOfYForFilterTextValue += ` ${ALL_OPTIONS.length} Hobbies`;
+  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTIONS.length} Hobbies`;
   if (filterValue == '') {
     // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
   } else {
