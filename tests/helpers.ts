@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
+import { ALL } from 'dns';
 
 export const ALL_OPTIONS = [
   'Soccer',
@@ -18,6 +19,7 @@ export const ALL_OPTIONS = [
 
 interface MultiStateOptions {
   filterFocused?: boolean;
+  filterValue?: string;
   optionsExpanded?: boolean;
   visibleOptions?: string[];
   focusedOption?: string;
@@ -27,9 +29,10 @@ interface MultiStateOptions {
 
 // These should reflect the component's initial state without any interaction happened
 const defaultOptions: MultiStateOptions = {
+  filterFocused: false,
+  filterValue: '',
   optionsExpanded: false,
   visibleOptions: ALL_OPTIONS,
-  filterFocused: false,
   focusedOption: null,
   selectedOptions: [],
   unselectAllButtonFocused: false,
@@ -41,9 +44,10 @@ export const checkMultiState = async (
 ) => {
   const mergedOptions = Object.assign({}, defaultOptions, options);
   const {
+    filterFocused,
+    filterValue,
     optionsExpanded,
     visibleOptions,
-    filterFocused,
     focusedOption,
     selectedOptions,
     unselectAllButtonFocused,
@@ -89,6 +93,7 @@ export const checkMultiState = async (
   await expect(filterInput).toHaveId(filterInputId);
   await expect(filterInput).toHaveAttribute('type', 'text');
   await expect(filterInput).toHaveAttribute('role', 'combobox'); // Needed for a) that certain screen readers and browsers announce aria-expanded change (ie. Chrome on Desktop), and to let certain screen readers give some more details about the element's purpose (ie. VoiceOver/iOS would say "combobox")
+  await expect(filterInput).toHaveValue(filterValue);
   await expect(filterInput).toHaveAttribute(
     'aria-expanded',
     optionsExpanded.toString()
@@ -183,14 +188,31 @@ export const checkMultiState = async (
   const availableOptionsContainerLegend =
     availableOptionsContainer.locator('legend');
 
-  if (optionsExpanded)
-    await expect(availableOptionsContainerLegend).toHaveText(
-      'Available Hobbies: 12 options (empty filter) (enter question mark for help)'
-    );
-  else
-    await expect(availableOptionsContainerLegend).toHaveText(
-      'Available Hobbies: 12 options (empty filter)'
-    );
+  let expectedXOfYForFilterTextValue = '';
+  if (visibleOptions.length < ALL_OPTIONS.length) {
+    // Currently a bug, see: https://github.com/NothingAG/adg-components/issues/24
+    if (visibleOptions.length == 0) {
+      expectedXOfYForFilterTextValue += ` of`; // Remove this after fixing the bug (just keep `else` block)
+    } else {
+      expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
+    }
+  }
+  expectedXOfYForFilterTextValue += ` ${ALL_OPTIONS.length} options`;
+  if (filterValue == '') {
+    expectedXOfYForFilterTextValue += ' (empty filter)';
+  } else {
+    expectedXOfYForFilterTextValue += ` for filter "${filterValue}"`;
+
+    if (visibleOptions.length > 0) {
+      expectedXOfYForFilterTextValue += `, starting with "{first}"`; // Bug in I18n!, see https://github.com/NothingAG/adg-components/issues/25
+    }
+  }
+  if (optionsExpanded) {
+    expectedXOfYForFilterTextValue += ' (enter question mark for help)';
+  }
+  await expect(availableOptionsContainerLegend).toHaveText(
+    `Available Hobbies: ${expectedXOfYForFilterTextValue}`
+  );
 
   const availableOptionsContainerLegendVisuallyHidden =
     availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
@@ -204,13 +226,7 @@ export const checkMultiState = async (
   await expect(xOfYForFilterText).toHaveAttribute('data-live-region', '');
   await expect(xOfYForFilterText).toHaveAttribute('aria-live', 'assertive'); // TODO: Change to role="alert" for browsers other than FF!
 
-  if (optionsExpanded) {
-    await expect(xOfYForFilterText).toHaveText(
-      '12 options (empty filter) (enter question mark for help)'
-    );
-  } else {
-    await expect(xOfYForFilterText).toHaveText('12 options (empty filter)');
-  }
+  await expect(xOfYForFilterText).toHaveText(expectedXOfYForFilterTextValue);
 
   // TODO: The whole live region thing is tricky and not final yet. Let's test it when it's done!
   // const instructions = xOfYForFilterText.locator('.adg-combobox--instructions');

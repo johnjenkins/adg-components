@@ -352,4 +352,35 @@ test.describe('Multiselect', () => {
       });
     });
   });
+
+  test.describe('Filter', () => {
+    test('Enter term to filter options', async ({ page }) => {
+      await clickIntoFilter(page); // Expand options
+      await page.keyboard.press('b'); // Start filtering with "b"
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'b',
+        visibleOptions: ['Badminton', 'Kickboxing'],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('a'); // Add "a", so filter is "ba"
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'ba',
+        visibleOptions: ['Badminton'],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('t'); // Add "t", so filter is "bat"
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'bat',
+        visibleOptions: [],
+        optionsExpanded: true,
+      });
+    });
+
+    test('Filter is case insensitive', async ({ page }) => {});
+  });
 });
