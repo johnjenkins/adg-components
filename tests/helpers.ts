@@ -94,8 +94,11 @@ export const checkMultiState = async (
     optionsExpanded.toString()
   );
 
-  if (filterFocused) await expect(filterInput).toBeFocused();
-  else await expect(filterInput).not.toBeFocused();
+  if (filterFocused) {
+    await expect(filterInput).toBeFocused();
+  } else {
+    await expect(filterInput).not.toBeFocused();
+  }
 
   await expect(filterInput).toHaveAttribute('autocomplete', 'off'); // Default browser autocompletion should not be confused (or interfere) with our filter feature!
   await expect(filterInput).toHaveAttribute('placeholder', 'Enter filter term');
@@ -110,8 +113,11 @@ export const checkMultiState = async (
   await expect(unselectAllButton).toHaveAttribute('type', 'button');
   await expect(unselectAllButton).toHaveAttribute('hidden', '');
 
-  if (unselectAllButtonFocused) await expect(unselectAllButton).toBeFocused();
-  else await expect(unselectAllButton).not.toBeFocused();
+  if (unselectAllButtonFocused) {
+    await expect(unselectAllButton).toBeFocused();
+  } else {
+    await expect(unselectAllButton).not.toBeFocused();
+  }
 
   // TODO: When there is no option selected, then there should be no colon and no comma!
   await expect(unselectAllButton).toHaveText(
@@ -137,8 +143,11 @@ export const checkMultiState = async (
     '.adg-combobox--x-selected-labels'
   );
 
-  if (selectedOptions.length == 0) await expect(xSelectedLabels).toBeEmpty();
-  else await expect(xSelectedLabels).toHaveText(selectedOptions.join(', '));
+  if (selectedOptions.length == 0) {
+    await expect(xSelectedLabels).toBeEmpty();
+  } else {
+    await expect(xSelectedLabels).toHaveText(selectedOptions.join(', '));
+  }
 
   const unselectAllButtonImage = unselectAllButton.locator(
     'img[src$="clear.svg"]'
@@ -154,16 +163,17 @@ export const checkMultiState = async (
     'img[src$="close.svg"]'
   );
 
-  if (optionsExpanded)
+  if (optionsExpanded) {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
       'Close Hobbies Options'
     );
-  else
+  } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
       'Open Hobbies Options'
     );
+  }
 
   const availableOptionsContainer = filterAndOptionsContainer.locator(
     'fieldset.adg-combobox--available-options-container'
@@ -194,11 +204,13 @@ export const checkMultiState = async (
   await expect(xOfYForFilterText).toHaveAttribute('data-live-region', '');
   await expect(xOfYForFilterText).toHaveAttribute('aria-live', 'assertive'); // TODO: Change to role="alert" for browsers other than FF!
 
-  if (optionsExpanded)
+  if (optionsExpanded) {
     await expect(xOfYForFilterText).toHaveText(
       '12 options (empty filter) (enter question mark for help)'
     );
-  else await expect(xOfYForFilterText).toHaveText('12 options (empty filter)');
+  } else {
+    await expect(xOfYForFilterText).toHaveText('12 options (empty filter)');
+  }
 
   // TODO: The whole live region thing is tricky and not final yet. Let's test it when it's done!
   // const instructions = xOfYForFilterText.locator('.adg-combobox--instructions');
@@ -256,14 +268,15 @@ export const assertAvailableOption = async (
   await expect(optionListItem).toHaveText(label);
 
   // Would rather do `await expect(optionListItem).not.toHaveAttribute('hidden')`, but does not work, see https://stackoverflow.com/questions/72028707/
-  if (visible)
+  if (visible) {
     await expect(
       availableOptionsList.locator(`${optionListItemSelector}:not([hidden])`)
     ).toHaveCount(1);
-  else
+  } else {
     await expect(
       availableOptionsList.locator(`${optionListItemSelector}[hidden]`)
     ).toHaveCount(1);
+  }
 
   const optionLabel = optionListItem.locator('> label');
   await expect(optionLabel).toHaveCSS('display', 'inline-block');
@@ -273,11 +286,17 @@ export const assertAvailableOption = async (
   await expect(optionInput).toHaveAttribute('type', 'checkbox');
   await expect(optionInput).toHaveAttribute('name', 'option'); // TODO: Create a more generic name!
 
-  if (focused) await expect(optionInput).toBeFocused();
-  else await expect(optionInput).not.toBeFocused();
+  if (focused) {
+    await expect(optionInput).toBeFocused();
+  } else {
+    await expect(optionInput).not.toBeFocused();
+  }
 
-  if (checked) await expect(optionInput).toBeChecked();
-  else await expect(optionInput).not.toBeChecked();
+  if (checked) {
+    await expect(optionInput).toBeChecked();
+  } else {
+    await expect(optionInput).not.toBeChecked();
+  }
 
   // TODO: Put <input> outside of <label>, so devs can use input:checked + label!
   // Also, I'm unsure whether we need the span.check!
