@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import {
   tabIntoFilter,
   expectSingleCombobox,
-  ALL_SINGLE_OPTION_LABELS,
+  ALL_SINGLE_OPTIONS,
   clickIntoFilter,
   clickOutsideFilter,
   clickOpenCloseButton,
@@ -69,7 +69,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: null,
       });
 
@@ -77,7 +77,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         selectedOptions: ['Black'],
         focusedOption: 'Black',
       });
@@ -86,7 +86,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: 'Blue',
       });
 
@@ -94,7 +94,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: 'Yellow',
       });
 
@@ -102,7 +102,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: null,
       });
     });
@@ -113,7 +113,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: null,
       });
 
@@ -121,7 +121,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: 'Programming',
       });
 
@@ -129,7 +129,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: 'Sleeping',
       });
 
@@ -137,7 +137,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: 'Soccer',
       });
 
@@ -145,7 +145,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: null,
       });
     });
@@ -157,7 +157,7 @@ test.describe('ADG-Combobox (single)', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         });
 
         await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter input
@@ -174,7 +174,7 @@ test.describe('ADG-Combobox (single)', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           focusedOption: 'Soccer',
         });
 
@@ -194,14 +194,14 @@ test.describe('ADG-Combobox (single)', () => {
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           focusedOption: 'Soccer',
         });
 
         await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
         await expectSingleCombobox(page, {
           filterFocused: false,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
           focusedOption: 'Soccer',
           selectedOptions: ['Soccer'],
@@ -212,7 +212,7 @@ test.describe('ADG-Combobox (single)', () => {
         await page.keyboard.press('Space'); // Press `Space` to check option "Movies"
         await expectSingleCombobox(page, {
           filterFocused: false,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
           focusedOption: 'Movies',
           selectedOptions: ['Soccer', 'Movies'],
@@ -221,7 +221,7 @@ test.describe('ADG-Combobox (single)', () => {
         await page.keyboard.press('Space'); // Press `Space` to uncheck option "Movies"
         await expectSingleCombobox(page, {
           filterFocused: false,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
           focusedOption: 'Movies',
           selectedOptions: ['Soccer'],
@@ -237,7 +237,7 @@ test.describe('ADG-Combobox (single)', () => {
         await page.keyboard.press('Space'); // Press `Enter` to check option "Movies"
         await expectSingleCombobox(page, {
           filterFocused: false,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
           focusedOption: 'Movies',
           selectedOptions: ['Soccer', 'Movies'],
@@ -246,7 +246,7 @@ test.describe('ADG-Combobox (single)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to uncheck option "Movies"
         await expectSingleCombobox(page, {
           filterFocused: false,
-          visibleOptions: ALL_SINGLE_OPTION_LABELS,
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
           focusedOption: 'Movies',
           selectedOptions: ['Soccer'],
@@ -340,7 +340,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         focusedOption: 'Movies',
         selectedOptions: ['Soccer', 'Movies'],
       });
@@ -348,7 +348,7 @@ test.describe('ADG-Combobox (single)', () => {
       await clickOption(page, 'Movies', 'coloursCombobox'); // Unselect option "Movies"
       await expectSingleCombobox(page, {
         filterFocused: false,
-        visibleOptions: ALL_SINGLE_OPTION_LABELS,
+        visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         optionsExpanded: true,
         focusedOption: 'Movies',
         selectedOptions: ['Soccer'],

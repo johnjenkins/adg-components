@@ -30,36 +30,6 @@ export const ALL_SINGLE_OPTIONS = [
   { label: 'Yellow', value: 'yellow' },
 ];
 
-// RAMON
-// Would be great to collect those automatically from ALL_MULTI_OPTIONS, but couldn't figure out how
-export const ALL_MULTI_OPTION_LABELS = [
-  'Soccer',
-  'Badminton',
-  'Movies',
-  'Gardening',
-  'Kickboxing',
-  'Hiking',
-  'Dancing',
-  'Painting',
-  'Cooking',
-  'Reading',
-  'Sleeping',
-  'Programming',
-];
-
-export const ALL_SINGLE_OPTION_LABELS = [
-  'Black',
-  'Blue',
-  'Brown',
-  'Green',
-  'Grey',
-  'Orange',
-  'Pink',
-  'Red',
-  'White',
-  'Yellow',
-];
-
 interface ComboboxExpectations {
   filterFocused?: boolean;
   filterValue?: string;
@@ -82,7 +52,7 @@ export const expectSingleCombobox = async (
       filterFocused: false,
       filterValue: '',
       optionsExpanded: false,
-      visibleOptions: ALL_SINGLE_OPTION_LABELS,
+      visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
       focusedOption: null,
       selectedOptions: [],
       unselectAllButtonFocused: false,
@@ -118,7 +88,7 @@ export const expectMultiCombobox = async (
       filterFocused: false,
       filterValue: '',
       optionsExpanded: false,
-      visibleOptions: ALL_MULTI_OPTION_LABELS,
+      visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
       focusedOption: null,
       selectedOptions: [],
       unselectAllButtonFocused: false,
@@ -303,10 +273,10 @@ export const expectCombobox = async (
     availableOptionsContainer.locator('legend');
 
   let expectedXOfYForFilterTextValue = '';
-  if (visibleOptions.length < ALL_MULTI_OPTION_LABELS.length) {
+  if (visibleOptions.length < ALL_MULTI_OPTIONS.length) {
     expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
   }
-  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTION_LABELS.length} Hobbies`;
+  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTIONS.length} Hobbies`;
   if (filterValue == '') {
     // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
   } else {
