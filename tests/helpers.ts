@@ -53,21 +53,27 @@ export const checkMultiState = async (
     unselectAllButtonFocused,
   } = mergedOptions;
 
+  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
+  const multiComboboxInternalId = await (
+    await page
+      .locator('adg-combobox:first-of-type label.adg-combobox--filter-label')
+      .getAttribute('for')
+  ).replace('--input', '');
+
   // As soon as we need to also check single select, we need to make this method more configurable. For the moment let's have fixed values.
   const options2 = {
     id: 'hobbiesCombobox',
-    internalId:
-      'adg-combobox-0' /* Gets created automatically. Maybe we should just use the ID specified by the user? */,
+    internalId: multiComboboxInternalId,
     label: 'Hobbies',
   };
 
   const filterInputId = `${options2.internalId}--input`;
   const xOptionsSelectedId = `${options2.internalId}--options-selected`;
 
-  const adgCombobox = page.locator(`adg-combobox#${options2.id}`);
+  const adgCombobox = page.locator(`adg-combobox#${options2.id}`); // Or better `.first()`?
   await expect(adgCombobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
 
-  const widgetContainer = page.locator('.adg-combobox--container');
+  const widgetContainer = adgCombobox.locator('.adg-combobox--container');
   await expect(widgetContainer).toHaveCSS('display', 'block');
 
   const filterLabel = widgetContainer.locator(
@@ -190,16 +196,11 @@ export const checkMultiState = async (
 
   let expectedXOfYForFilterTextValue = '';
   if (visibleOptions.length < ALL_OPTIONS.length) {
-    // Currently a bug, see: https://github.com/NothingAG/adg-components/issues/24
-    if (visibleOptions.length == 0) {
-      expectedXOfYForFilterTextValue += ` of`; // Remove this after fixing the bug (just keep `else` block)
-    } else {
-      expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
-    }
+    expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
   }
-  expectedXOfYForFilterTextValue += ` ${ALL_OPTIONS.length} options`;
+  expectedXOfYForFilterTextValue += ` ${ALL_OPTIONS.length} Hobbies`;
   if (filterValue == '') {
-    expectedXOfYForFilterTextValue += ' (empty filter)';
+    // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
   } else {
     expectedXOfYForFilterTextValue += ` for filter "${filterValue}"`;
 
@@ -300,7 +301,7 @@ export const assertAvailableOption = async (
   const optionInput = optionLabel.locator('> input');
   await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
   await expect(optionInput).toHaveAttribute('type', 'checkbox');
-  await expect(optionInput).toHaveAttribute('name', 'option'); // TODO: Create a more generic name!
+  await expect(optionInput).toHaveAttribute('name', 'hobbies');
 
   if (focused) {
     await expect(optionInput).toBeFocused();
@@ -330,7 +331,7 @@ export const tabIntoFilter = async (page: Page) => {
 
 export const clickIntoFilter = async (page: Page) => {
   // TODO: We should refactor this into a separate method
-  const filterInput = page.locator('input.adg-combobox--filter-input');
+  const filterInput = page.locator('input.adg-combobox--filter-input').first();
   await filterInput.click();
 };
 
@@ -340,7 +341,9 @@ export const clickOutsideFilter = async (page: Page) => {
 };
 
 export const clickOpenCloseButton = async (page: Page) => {
-  const buttonAfter = page.locator('.adg-combobox--toggle-options-button');
+  const buttonAfter = page
+    .locator('.adg-combobox--toggle-options-button')
+    .first();
   await buttonAfter.click();
 };
 

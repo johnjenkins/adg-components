@@ -283,7 +283,7 @@ test.describe('Multiselect', () => {
     test('Propagate Enter key', async ({ page }) => {
       await tabIntoFilter(page);
       await page.keyboard.press('Enter'); // Press `Enter` to trigger browser default behaviour (send form)
-      await expect(page).toHaveURL(/.*?hobbies=$/);
+      await expect(page).toHaveURL(/.*?hobbies=/);
     });
   });
 
