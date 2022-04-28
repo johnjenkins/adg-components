@@ -9,7 +9,7 @@ import {
   clickOption,
 } from './helpers';
 
-test.describe('Multiselect', () => {
+test.describe('Multi-Select', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3333');
   });
@@ -354,6 +354,22 @@ test.describe('Multiselect', () => {
   });
 
   test.describe('Filter', () => {
+    test('Change filter term to expand options', async ({ page }) => {
+      await tabIntoFilter(page); // Focus filter term (does not expand options)
+      await checkMultiState(page, {
+        filterFocused: true,
+        optionsExpanded: false,
+      });
+
+      await page.keyboard.press('b'); // Enter something will expand options
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'b',
+        visibleOptions: ['Badminton', 'Kickboxing'],
+        optionsExpanded: true,
+      });
+    });
+
     test('Enter term to filter options', async ({ page }) => {
       await clickIntoFilter(page); // Expand options
       await page.keyboard.press('b'); // Start filtering with "b"
@@ -381,6 +397,83 @@ test.describe('Multiselect', () => {
       });
     });
 
-    test('Filter is case insensitive', async ({ page }) => {});
+    test('Toggle through filtered options', async ({ page }) => {
+      await clickIntoFilter(page); // Expand options
+      await page.keyboard.press('b'); // Start filtering with "b"
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'b',
+        visibleOptions: ['Badminton', 'Kickboxing'],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
+      await checkMultiState(page, {
+        filterValue: 'b',
+        visibleOptions: ['Badminton', 'Kickboxing'],
+        focusedOption: 'Badminton',
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus to next (last) option "Kickboxing"
+      await checkMultiState(page, {
+        filterValue: 'b',
+        visibleOptions: ['Badminton', 'Kickboxing'],
+        focusedOption: 'Kickboxing',
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus back to top (filter input)
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'b',
+        visibleOptions: ['Badminton', 'Kickboxing'],
+        optionsExpanded: true,
+      });
+    });
+
+    test('Filter can be changed while toggling through options', async ({
+      page,
+    }) => {
+      await clickIntoFilter(page); // Expand options
+      await page.keyboard.press('a'); // Start filtering with "a"
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'a',
+        visibleOptions: [
+          'Badminton',
+          'Gardening',
+          'Dancing',
+          'Painting',
+          'Reading',
+          'Programming',
+        ],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
+      await checkMultiState(page, {
+        filterValue: 'a',
+        visibleOptions: [
+          'Badminton',
+          'Gardening',
+          'Dancing',
+          'Painting',
+          'Reading',
+          'Programming',
+        ],
+        optionsExpanded: true,
+        focusedOption: 'Badminton',
+      });
+
+      await page.keyboard.press('a'); // Add "d", so filter is "ba", and focus should be back on filter input
+      test.fixme(); // Focus is not put back to filter input
+      await checkMultiState(page, {
+        filterFocused: true,
+        filterValue: 'ba',
+        visibleOptions: ['Badminton'],
+        optionsExpanded: true,
+      });
+    });
   });
 });
