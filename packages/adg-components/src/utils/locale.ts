@@ -42,12 +42,12 @@ async function getLocaleComponentStrings(
   return strings;
 }
 function TemplateEngine(
-  tpl: string, 
+  tpl: string,
   data: object
   ) {
     // @ts-ignore
     return tpl.replace(/\$\(([^\)]+)?\)/g, function ($1, $2) {
-      return $2.split('.').reduce((p, c) => p?.[c], data) || '';
+      return `${$2.split('.').reduce((p, c) => p?.[c], data)}` || '';
     });
   };
 

@@ -15,7 +15,7 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 <script type="module" src="/build/adg-components.esm.js"></script>
 <script nomodule src="/build/adg-components.js"></script>
 
-<adg-combobox id="hobbiesCombobox"></adg-combobox>
+<adg-combobox id="hobbiesCombobox" name='hobbies' label='Hobbies'></adg-combobox>
 
 <script>
   const hobbiesCombobox = document.querySelector('#hobbiesCombobox');

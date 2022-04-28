@@ -12,8 +12,6 @@ import {
 import { Translator } from '../../utils/locale';
 
 
-const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
-
 interface OptionModel {
   value: string;
   label: string;
@@ -30,22 +28,44 @@ let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefe
   assetsDirs: ['assets'],
 })
 export class AdgComboboxComponent {
+  private $t: Function;
+
   private _id = `adg-combobox-${nextUniqueId++}`;
   private _inputId = `${this._id}--input`;
   private _optionsSelectedId = `${this._id}--options-selected`;
-  private $t: Function;
+
+  selectedOptionModels: OptionModel[] = [];
+  lastArrowSelectedElem = -1;
+
+  filterInputElementRef: HTMLInputElement;
+  unselectAllButtonElementRef: HTMLButtonElement;
+  fieldsetElementRef: HTMLFieldSetElement;
+  filterAndOptionsContainerElementRef: HTMLSpanElement;
+
+  availableOptionsListItems: HTMLLIElement[] = [];
+  optionSelectedButtons: HTMLButtonElement[] = [];
+  currentlyFocusedOption?: HTMLInputElement;
+
+  @Element() el: HTMLElement;
+
+  @Prop() label = '';
+  @Prop() filterLabel = this.label;
+  @Prop() options: string[] = [];
+  @Prop() name = this._id;
+  @Prop() multi = false;
+  @Prop() showInstructions = false;
+  @Prop() ariaLiveAssertive = false;
+  @Prop() roleAlert = false;
+
+  @State() filterTermText: string = '';
+  @State() numberOfShownOptions = 0;
+  @State() filteredOptionsStartingWith: string = '';
+  @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
   }
-
-  @Element() el: HTMLElement;
-
-  @Prop() formControlName = this._id;
-  @Prop() filterLabel = '';
-  @Prop() options: string[] = [];
-  @Prop() multi = false;
 
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
@@ -64,32 +84,9 @@ export class AdgComboboxComponent {
     this.selectedOptionModels = this.optionModels.filter(
       (optionModel) => optionModel.checked
     );
+
+    this.displaySelectedItems();
   }
-
-  selectedOptionModels: OptionModel[] = [];
-
-  @State() filterTermText: string = '';
-  @State() numberOfShownOptions = 0;
-  @State() filteredOptionsStartingWith: string = '';
-
-  @State() isOptionsContainerOpen: boolean = false;
-
-  @Prop() showInstructions = false;
-
-  @Prop() ariaLiveAssertive = false;
-  @Prop() roleAlert = false;
-
-  filterInputElementRef: HTMLInputElement;
-  unselectAllButtonElementRef: HTMLButtonElement;
-  fieldsetElementRef: HTMLFieldSetElement;
-  filterAndOptionsContainerElementRef: HTMLSpanElement;
-
-  lastArrowSelectedElem = 0;
-  availableOptionsListItems: HTMLLIElement[] = [];
-  optionSelectedButtons: HTMLButtonElement[] = [];
-  currentlyFocusedOption?: HTMLInputElement;
-
-  constructor() {}
 
   async componentWillLoad(): Promise<void> {
     this.$t = await Translator(this.el);
@@ -124,25 +121,6 @@ export class AdgComboboxComponent {
 
   handleFilterInputClick() {
     this.openOptionsContainer();
-  }
-
-  handleFilterInputBlur() {
-    this.handleComponentBlur();
-  }
-
-  handleComponentBlur() {
-    setTimeout(() => {
-      if (
-        !this.multi &&
-        !isDescendant(
-          this.filterAndOptionsContainerElementRef,
-          document.activeElement
-        )
-      ) {
-        const selectedOption = this.selectedOptionModels.find((a) => a.checked);
-        this.filterInputElementRef.value = selectedOption?.label;
-      }
-    });
   }
 
   handleToggleOptionsButtonClicked() {
@@ -187,15 +165,7 @@ export class AdgComboboxComponent {
       ...optionModel,
       hidden: !optionModel.label.toLowerCase().includes(filterTerm),
     }));
-    if (!this.multi && !optionModels.some((a) => a.checked && !a.hidden)) {
-      const firstNonHidden = optionModels.findIndex((a) => !a.hidden);
-      if (firstNonHidden != -1) {
-        optionModels[firstNonHidden].checked = true;
-        this.currentlyFocusedOption =
-          this.availableOptionsListItems[firstNonHidden].querySelector('input');
-        this.currentlyFocusedOption.focus();
-      }
-    }
+
     this.optionModels = optionModels;
     const shownOptions = this.optionModels.filter((option) => !option.hidden);
     this.numberOfShownOptions = shownOptions.length;
@@ -224,29 +194,15 @@ export class AdgComboboxComponent {
       this.availableOptionsListItems[i].querySelector('input');
   }
 
-  handleOptionInputKeyDown(event: KeyboardEvent) {
+  handleOptionInputKeyDown(event: KeyboardEvent, value: string) {
     // here we must override the default behavior of the browser, as otherwise the form will be submitted
     if (event.key === 'Enter') {
-      event.preventDefault();
-    }
-  }
-
-  handleOptionInputKeyUp(event: KeyboardEvent, optionIndex: number) {
-    if (this.multi) {
-      if (event.key === 'Enter') {
-        this.optionModels = this.optionModels.map((optionModel, i) =>
-          i === optionIndex
-            ? { ...optionModel, checked: !optionModel.checked }
-            : optionModel
-        );
-      }
-    } else {
-      if (event.key === 'Enter') {
-        this.filterInputElementRef.value = this.optionModels[optionIndex].label;
-        this.closeOptionsContainer();
+      this.handleOptionInputChange(value);
+      if (!this.multi) {
         this.filterInputElementRef.focus();
-        this.filterInputElementRef.select();
+        this.closeOptionsContainer();
       }
+      event.preventDefault();
     }
     if (event.key === 'Escape') {
       this.filterInputElementRef.focus();
@@ -254,13 +210,12 @@ export class AdgComboboxComponent {
     }
   }
 
-  handleOptionInputClick(value: string) {
-    if (!this.multi) {
-      this.optionModels = this.optionModels.map((optionModel) =>
-        optionModel.value === value
-          ? { ...optionModel, checked: true }
-          : { ...optionModel, checked: false }
-      );
+  handleOptionInputClick(event: MouseEvent) {
+    if (event.x && event.y) { // todo: check if it is click
+      if (!this.multi) {
+        this.filterInputElementRef.focus();
+        this.closeOptionsContainer();
+      }
     }
   }
 
@@ -272,11 +227,10 @@ export class AdgComboboxComponent {
           : optionModel
       );
     } else {
-      this.optionModels = this.optionModels.map((optionModel) =>
-        optionModel.value === value
-          ? { ...optionModel, checked: true }
-          : { ...optionModel, checked: false }
-      );
+      this.optionModels = this.optionModels.map((optionModel) => ({
+        ...optionModel,
+        checked: optionModel.value === value,
+      }));
     }
   }
 
@@ -327,22 +281,6 @@ export class AdgComboboxComponent {
     }
 
     if (event.key === '?') console.log('Help not yet implemented!');
-
-    const { target } = event;
-    if (event.key.match(textInputRegexp)) {
-      if (target !== this.filterInputElementRef) {
-        if (event.key.match(/^Backspace$/)) {
-          this.filterInputElementRef.value =
-            this.filterInputElementRef.value.slice(0, -1);
-        } else if (event.key.match(/^Delete$/)) {
-          this.filterInputElementRef.value = '';
-        } else {
-          this.filterInputElementRef.value += event.key;
-        }
-        this.filterInputElementRef.focus();
-        this.filterInputElementRef.dispatchEvent(new Event('input'));
-      }
-    }
   }
 
   handleOptionSelectedButtonClick(value: string, clickedIndex: number) {
@@ -360,6 +298,13 @@ export class AdgComboboxComponent {
         this.filterInputElementRef.select();
       }
     });
+  }
+
+  displaySelectedItems() {
+    if (!this.multi && this.filterInputElementRef) {
+      const selectedOption = this.selectedOptionModels.find((a) => a.checked);
+      this.filterInputElementRef.value = selectedOption?.label || '';
+    }
   }
 
   openOptionsContainer() {
@@ -409,7 +354,7 @@ export class AdgComboboxComponent {
           class="adg-combobox--filter-label"
           data-inline-block
         >
-          {this.filterLabel}
+          {this.label}
         </label>
         <span
           class={{
@@ -427,7 +372,7 @@ export class AdgComboboxComponent {
             <input
               class="adg-combobox--filter-input"
               id={this._inputId}
-              name={this.formControlName}
+              name={this.name}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
@@ -437,7 +382,6 @@ export class AdgComboboxComponent {
               onInput={(ev) => this.handleFilterInputChange(ev)}
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
               onClick={() => this.handleFilterInputClick()}
-              onBlur={() => this.handleFilterInputBlur()}
               ref={(el) => (this.filterInputElementRef = el)}
             />
           </span>
@@ -468,6 +412,7 @@ export class AdgComboboxComponent {
           <button
             class="adg-combobox--toggle-options-button"
             type="button"
+            tabindex="-1"
             onClick={() => this.handleToggleOptionsButtonClicked()}
           >
             <img
@@ -485,7 +430,12 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span data-visually-hidden>Available {this.filterLabel}:&nbsp;</span>
+              <span data-visually-hidden>
+                {this.$t('results_title', {
+                  filterLabel: this.filterLabel,
+                })}
+                :&nbsp;
+              </span>
               <span
                 class="adg-combobox--x-of-y-for-filter-text"
                 data-live-region
@@ -493,6 +443,7 @@ export class AdgComboboxComponent {
                 role={this.roleAlert ? 'alert' : null}
               >
                 {this.$t(this.filterTermText ? 'results_filtered' : 'results', {
+                  filterLabel: this.filterLabel,
                   optionsShown: this.numberOfShownOptions,
                   optionsTotal: this.options.length,
                   filterTerm: this.filterTermText,
@@ -500,8 +451,9 @@ export class AdgComboboxComponent {
 
                 {!!this.filteredOptionsStartingWith ? (
                   <span data-visually-hidden>
-                    , {this.$t('results_first', {
-                      first: this.filteredOptionsStartingWith
+                    ,{' '}
+                    {this.$t('results_first', {
+                      first: this.filteredOptionsStartingWith,
                     })}
                   </span>
                 ) : null}
@@ -524,15 +476,15 @@ export class AdgComboboxComponent {
                     <input
                       id={option.value}
                       type={this.multi ? 'checkbox' : 'radio'}
-                      name="option"
+                      name={this.name}
                       value={option.value}
                       checked={option.checked}
                       onFocus={() => this.handleOptionInputFocus(i)}
-                      onKeyDown={(ev) => this.handleOptionInputKeyDown(ev)}
-                      onKeyUp={(ev) => this.handleOptionInputKeyUp(ev, i)}
-                      onChange={() =>
-                        this.handleOptionInputChange(option.value)
+                      onKeyDown={(ev) =>
+                        this.handleOptionInputKeyDown(ev, option.value)
                       }
+                      onClick={(ev) => this.handleOptionInputClick(ev)}
+                      onInput={() => this.handleOptionInputChange(option.value)}
                     />
                     <span>
                       {option.label}
@@ -578,15 +530,4 @@ export class AdgComboboxComponent {
 
 function modulo(a: number, n: number) {
   return ((a % n) + n) % n;
-}
-
-function isDescendant(parent: Element, child: Element) {
-  let node = child.parentNode;
-  while (node) {
-    if (node === parent) {
-      return true;
-    }
-    node = node.parentNode;
-  }
-  return false;
 }
