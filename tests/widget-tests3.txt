@@ -1,0 +1,259 @@
+ALL_OPTIONS = [
+  "Badminton",
+  "Movies",
+  "Painting",
+  "Reading"
+]
+
+DESCRIBE ADG Combobox
+  DESCRIBE Single select
+    SPECIFY Initial display
+      has_single_state()
+
+  DESCRIBE Multi select
+    SPECIFY Initial display
+      has_multi_state()
+
+    DESCRIBE Keyboard interaction
+      SPECIFY Tab into filter input
+        tab_into_filter()
+        has_multi_state(filter_input_focused: true)
+
+      SPECIFY Tab out of filter input
+        tab_into_filter()
+        tab_outside() // At the time being, the open/close button is also focusable, so we should rather do a Shift-Tab here. This might change though, see https://github.com/NothingAG/adg-components/issues/16.
+        has_multi_state()
+
+      SPECIFY Activate open/close button
+        // TODO, although not yet sure whether this button will remain focusable, see https://github.com/NothingAG/adg-components/issues/16
+
+      SPECIFY Toggle through options using Up key
+        tab_into_filter()
+
+        press("Down") // Displays all options
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        visible_options: ALL_OPTIONS)
+
+        press("Down") // Moves focus to first option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton")
+
+        press("Down") // Moves focus to next option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Movies")
+
+        // Move down to last option
+        press("Down")
+        press("Down")
+        
+        press("Down") // After the last option, moves focus back to filter input
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        visible_options: ALL_OPTIONS)
+
+      SPECIFY Toggle through options using Down key
+        tab_into_filter()
+
+        press("Up") // Displays all options
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        visible_options: ALL_OPTIONS)
+
+        press("Up") // Moves focus to last option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Reading")
+
+        press("Up") // Moves focus to previous option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Painting")
+
+        // Move up to first option
+        press("Up")
+        press("Up")
+      
+        press("Up") // After the first option, moves focus back to filter input
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        visible_options: ALL_OPTIONS)
+
+      SPECIFY Close options using Esc key
+        tab_into_filter()
+        press("Down")
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        visible_options: ALL_OPTIONS)
+
+        press("Esc") // Closes the options
+        has_multi_state(filter_input_focused: true)
+
+        press("Down")
+        press("Down")
+        press("Esc") // When an option was focused, moves focus back to the filter input
+        has_multi_state(filter_input_focused: true)
+
+        press("Down") // When options opened again, moves focus back to the previously focused option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Movies")
+
+      SPECIFY Toggle options using Space/Enter key
+        tab_into_filter()
+        press("Down")
+        press("Down")
+        press("Enter") // Selects option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton",
+                        selected_options: ["Badminton"])
+
+        press("Enter") // Unselects option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton")
+
+        press("Space") // Selects option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton",
+                        selected_options: ["Badminton"])
+
+        press("Space") // Unselects option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton")
+
+      SPECIFY Tab out of filter input
+        // Still unclear of the optimal interplay of browser default behaviour and keyboard-only optimisations, see https://github.com/NothingAG/adg-components/issues/8 and https://github.com/NothingAG/adg-components/issues/16.
+
+      SPECIFY Activate "unselect all" button
+        tab_into_filter()
+        press("Down") // Displays options
+        press("Space") // Selects an option
+        press("Esc") // Close options and moves focus to filter input
+        press("Esc") // Moves focus to "unselect all" button
+        has_multi_state(unselect_all_button_focused: true,
+                        selected_options: ["Badminton"])
+        press("Enter")
+        has_multi_state(filter_input_focused: true)
+
+        // TODO: currently, the "unselect all" button is also reachable by Tab. But we are not yet sure whether this will remain, see https://github.com/NothingAG/adg-components/issues/16
+
+      SPECIFY Propagate Enter key
+        // TODO: When filter input is focused, the options are closed, and Enter is pressed, then the form should be submitted.
+
+    DESCRIBE Mouse interaction
+      SPECIFY Click into filter input
+        click_filter() // Displays the options
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        visible_options: ALL_OPTIONS)
+
+        // Unsure, see https://github.com/NothingAG/adg-components/issues/17
+        // click_filter() // Closes the options when clicking a 2nd time
+        // has_multi_state(filter_input_focused: true,
+        //                 options_expanded: true,
+        //                 visible_options: ALL_OPTIONS)
+
+      SPECIFY Click outside filter input
+        click_filter() // Displays the options
+        click_outside() // Hides the options
+        has_multi_state()
+
+      SPECIFY Click open/close button
+        // TODO
+
+      SPECIFY Click "unselect all" button
+        // TODO
+
+      SPECIFY Toggle options
+        click_filter() // Displays the options
+
+        click_option("Badminton") // Select an option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton",
+                        selected_options: ["Badminton"])
+
+        click_option("Painting") // Select another option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Painting",
+                        selected_options: ["Badminton", "Painting"])
+
+        click_option("Badminton") // Unselect an option
+        has_multi_state(options_expanded: true,
+                        visible_options: ALL_OPTIONS,
+                        focused_option: "Badminton",
+                        selected_options: ["Painting"])
+
+    DESCRIBE Filter
+      SPECIFY Enter term to filter options
+        click_filter()
+
+        press("B")
+        has_multi_state(filter_input_focused: true,
+                        filter_value: "B",
+                        options_expanded: true,
+                        visible_options: ["Badminton"],
+                        options_count:   "1 of 4 options for filter B")
+
+        press("Backspace")
+        press("b") // Not case sensitive
+        has_multi_state(filter_input_focused: true,
+                        filter_value: "b",
+                        options_expanded: true,
+                        visible_options: ["Badminton"],
+                        options_count:   "1 of 4 options for filter b")
+
+      SPECIFY Toggle through filtered options
+        click_filter()
+
+        press("e")
+        press("Down") // Moves focus to first visible option
+        has_multi_state(filter_value: "e",
+                        options_expanded: true,
+                        focused_option: "Movies",
+                        visible_options: ["Movies, Reading"],
+                        options_count:   "2 of 4 options for filter e")
+
+        press("Down") // Moves focus to next visible option
+        has_multi_state(filter_value: "e",
+                        options_expanded: true,
+                        focused_option: "Reading",
+                        visible_options: ["Movies, Reading"],
+                        options_count:   "2 of 4 options for filter e")
+
+        press("Down") // After the last visible option, moves focus back to filter input
+        has_multi_state(filter_input_focused: true,
+                        filter_value: "e",
+                        options_expanded: true,
+                        visible_options: ["Movies, Reading"],
+                        options_count:   "2 of 4 options for filter e")
+
+      SPECIFY Change filter while toggling through options
+        click_filter()
+
+        press("d")
+        press("Down")
+        press("m") // Moves focus to filter input and appends typed character
+        has_multi_state(filter_input_focused: true,
+                        options_expanded: true,
+                        focused_option: "Badminton",
+                        visible_options: ["Badminton"],
+                        options_count:   "1 of 4 options for filter dm")
+          
+        // TODO: More edge cases to test here, but not 100% sure how to handle them yet, see https://github.com/NothingAG/adg-components/issues/13.
+
+    DESCRIBE Click "unselect all" button
+      // TODO: Unsure whether we need a specific click-test for this... Doesn't the keyboard-test suffice?
+
+    DESCRIBE Pills
+      // TODO: Make sure that the pills behave as expected, and that the component reflects any changes!
+
+DESCRIBE live region
+  // TODO: Should be pretty straightforward: simply make sure there is a live region, and that its content is changed only after 300ms when its CSS display property changes from `hidden` to `block`!
