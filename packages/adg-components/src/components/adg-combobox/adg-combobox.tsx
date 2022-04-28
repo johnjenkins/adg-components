@@ -178,13 +178,19 @@ export class AdgComboboxComponent {
 
   handleKeyUpForPageUpAndPageDown(event: KeyboardEvent) {
     if (event.key === 'PageDown' || event.key === 'PageUp') {
+
+      this.openOptionsContainer();
+
       const shownElems = this.availableOptionsListItems.filter(
         (elem) => !elem.hidden
       );
       const elemToFocus = shownElems
         .at(event.key === 'PageDown' ? -1 : 0)
         .querySelector('input');
-      elemToFocus.focus();
+
+      setTimeout(() => {
+        elemToFocus.focus();
+      }, 0);
     }
   }
 
@@ -237,23 +243,23 @@ export class AdgComboboxComponent {
       const shownElems = this.availableOptionsListItems.filter(
         (elem) => !elem.hidden
       );
+
       const arrowSelectableElems = [this.filterInputElementRef, ...shownElems];
 
       const index = modulo(
         direction + this.lastArrowSelectedElem,
         arrowSelectableElems.length
       );
-      console.log(this.lastArrowSelectedElem, index);
-      console.log(arrowSelectableElems);
+
       const currentElem = arrowSelectableElems[index];
 
-      console.log(currentElem);
       if (currentElem === this.filterInputElementRef) {
         currentElem.select();
       } else {
-        currentElem.querySelector('input').focus();
+        setTimeout(() => {
+          currentElem.querySelector('input').focus();
+        }, 0);
       }
-
 
       this.lastArrowSelectedElem = index;
 
