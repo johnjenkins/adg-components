@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import {
   tabIntoFilter,
-  expectMultiCombobox,
+  expectSingleCombobox,
   ALL_OPTIONS,
   clickIntoFilter,
   clickOutsideFilter,
@@ -14,15 +14,15 @@ test.describe('ADG-Combobox', () => {
     await page.goto('http://localhost:3333');
   });
 
-  test.describe('Multi-Select', () => {
+  test.describe('Single-Select', () => {
     test.only('Initial display', async ({ page }) => {
-      await expectMultiCombobox(page, {}); // Default state
+      await expectSingleCombobox(page, {}); // Default state
     });
 
     test.describe('Keyboard interaction', () => {
       test('Tab into filter input', async ({ page }) => {
         await tabIntoFilter(page);
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: false,
         });
@@ -30,13 +30,13 @@ test.describe('ADG-Combobox', () => {
 
       test('Tab out of filter input', async ({ page }) => {
         await tabIntoFilter(page);
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: false,
         });
 
         await page.keyboard.press('Shift+Tab'); // At the time being, the open/close button is also focusable, so we should rather do a Shift-Tab here to definitely move focus outside the component. This might change though, see https://github.com/NothingAG/adg-components/issues/16.
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: false,
         });
@@ -65,7 +65,7 @@ test.describe('ADG-Combobox', () => {
       }) => {
         await tabIntoFilter(page);
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -73,7 +73,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -81,7 +81,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on next option
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -89,7 +89,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         for (let i = 0; i < 10; i++) await page.keyboard.press('ArrowDown'); //  // Press `Down` multiple times to set focus on last option
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -97,7 +97,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus back to filter input
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -108,7 +108,7 @@ test.describe('ADG-Combobox', () => {
       test('Toggle upwards through options using Up key', async ({ page }) => {
         await tabIntoFilter(page);
         await page.keyboard.press('ArrowUp'); // Press `Up` to expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -116,7 +116,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowUp'); // Press `Up` to set focus on last option
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -124,7 +124,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowUp'); // Press `Up` to set focus on previous option
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -132,7 +132,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         for (let i = 0; i < 10; i++) await page.keyboard.press('ArrowUp'); //  // Press `Up` multiple times to set focus on first option
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -140,7 +140,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowUp'); // Press `Up` to set focus back to filter input
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -152,14 +152,14 @@ test.describe('ADG-Combobox', () => {
         test('When focus in filter input', async ({ page }) => {
           await tabIntoFilter(page);
           await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: true,
             optionsExpanded: true,
             visibleOptions: ALL_OPTIONS,
           });
 
           await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter input
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: true,
             optionsExpanded: false,
           });
@@ -169,7 +169,7 @@ test.describe('ADG-Combobox', () => {
           await tabIntoFilter(page);
           await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
           await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             optionsExpanded: true,
             visibleOptions: ALL_OPTIONS,
@@ -177,7 +177,7 @@ test.describe('ADG-Combobox', () => {
           });
 
           await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter input
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: true,
             optionsExpanded: false,
           });
@@ -189,7 +189,7 @@ test.describe('ADG-Combobox', () => {
           await tabIntoFilter(page);
           await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
           await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             optionsExpanded: true,
             visibleOptions: ALL_OPTIONS,
@@ -197,7 +197,7 @@ test.describe('ADG-Combobox', () => {
           });
 
           await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             visibleOptions: ALL_OPTIONS,
             optionsExpanded: true,
@@ -208,7 +208,7 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Badminton"
           await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Movies"
           await page.keyboard.press('Space'); // Press `Space` to check option "Movies"
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             visibleOptions: ALL_OPTIONS,
             optionsExpanded: true,
@@ -217,7 +217,7 @@ test.describe('ADG-Combobox', () => {
           });
 
           await page.keyboard.press('Space'); // Press `Space` to uncheck option "Movies"
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             visibleOptions: ALL_OPTIONS,
             optionsExpanded: true,
@@ -233,7 +233,7 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Badminton"
           await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Movies"
           await page.keyboard.press('Space'); // Press `Enter` to check option "Movies"
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             visibleOptions: ALL_OPTIONS,
             optionsExpanded: true,
@@ -242,7 +242,7 @@ test.describe('ADG-Combobox', () => {
           });
 
           await page.keyboard.press('Enter'); // Press `Enter` to uncheck option "Movies"
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: false,
             visibleOptions: ALL_OPTIONS,
             optionsExpanded: true,
@@ -259,21 +259,21 @@ test.describe('ADG-Combobox', () => {
           await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
           await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
           await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: true,
             optionsExpanded: false,
             selectedOptions: ['Soccer'],
           });
 
           await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             unselectAllButtonFocused: true,
             optionsExpanded: false,
             selectedOptions: ['Soccer'],
           });
 
           await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
-          await expectMultiCombobox(page, {
+          await expectSingleCombobox(page, {
             filterFocused: true,
             optionsExpanded: false,
             selectedOptions: [],
@@ -291,13 +291,13 @@ test.describe('ADG-Combobox', () => {
     test.describe('Mouse interaction', () => {
       test('Click into filter input', async ({ page }) => {
         await clickIntoFilter(page); // Click into the filter to expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
         });
 
         await clickIntoFilter(page); // Click again into the filter, options remain expanded (unsure about that, see https://github.com/NothingAG/adg-components/issues/17)
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
         });
@@ -305,13 +305,13 @@ test.describe('ADG-Combobox', () => {
 
       test('Click out of filter input', async ({ page }) => {
         await clickIntoFilter(page); // Click into the filter to expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
         });
 
         await clickOutsideFilter(page); // Click into the filter to expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: false,
         });
@@ -319,13 +319,13 @@ test.describe('ADG-Combobox', () => {
 
       test('Click open/close button', async ({ page }) => {
         await clickOpenCloseButton(page); // Click open/close button to expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
         });
 
         await clickOpenCloseButton(page); // Click open/close button to collapse options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: false,
         });
@@ -335,7 +335,7 @@ test.describe('ADG-Combobox', () => {
         await clickIntoFilter(page); // Expand options
         await clickOption(page, 'Soccer'); // Select option "Soccer"
         await clickOption(page, 'Movies'); // Select option "Movies"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_OPTIONS,
@@ -344,7 +344,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await clickOption(page, 'Movies'); // Unselect option "Movies"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: false,
           visibleOptions: ALL_OPTIONS,
           optionsExpanded: true,
@@ -357,13 +357,13 @@ test.describe('ADG-Combobox', () => {
     test.describe('Filter', () => {
       test('Change filter term to expand options', async ({ page }) => {
         await tabIntoFilter(page); // Focus filter term (does not expand options)
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: false,
         });
 
         await page.keyboard.press('b'); // Enter something will expand options
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'b',
           visibleOptions: ['Badminton', 'Kickboxing'],
@@ -374,7 +374,7 @@ test.describe('ADG-Combobox', () => {
       test('Enter term to filter options', async ({ page }) => {
         await clickIntoFilter(page); // Expand options
         await page.keyboard.press('b'); // Start filtering with "b"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'b',
           visibleOptions: ['Badminton', 'Kickboxing'],
@@ -382,7 +382,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('a'); // Add "a", so filter is "ba"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'ba',
           visibleOptions: ['Badminton'],
@@ -390,7 +390,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('t'); // Add "t", so filter is "bat"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'bat',
           visibleOptions: [],
@@ -401,7 +401,7 @@ test.describe('ADG-Combobox', () => {
       test('Toggle through filtered options', async ({ page }) => {
         await clickIntoFilter(page); // Expand options
         await page.keyboard.press('b'); // Start filtering with "b"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'b',
           visibleOptions: ['Badminton', 'Kickboxing'],
@@ -409,7 +409,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterValue: 'b',
           visibleOptions: ['Badminton', 'Kickboxing'],
           focusedOption: 'Badminton',
@@ -417,7 +417,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Move focus to next (last) option "Kickboxing"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterValue: 'b',
           visibleOptions: ['Badminton', 'Kickboxing'],
           focusedOption: 'Kickboxing',
@@ -425,7 +425,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Move focus back to top (filter input)
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'b',
           visibleOptions: ['Badminton', 'Kickboxing'],
@@ -438,7 +438,7 @@ test.describe('ADG-Combobox', () => {
       }) => {
         await clickIntoFilter(page); // Expand options
         await page.keyboard.press('a'); // Start filtering with "a"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'a',
           visibleOptions: [
@@ -453,7 +453,7 @@ test.describe('ADG-Combobox', () => {
         });
 
         await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterValue: 'a',
           visibleOptions: [
             'Badminton',
@@ -469,7 +469,7 @@ test.describe('ADG-Combobox', () => {
 
         await page.keyboard.press('a'); // Add "d", so filter is "ba", and focus should be back on filter input
         test.fixme(); // Focus is not put back to filter input
-        await expectMultiCombobox(page, {
+        await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'ba',
           visibleOptions: ['Badminton'],
