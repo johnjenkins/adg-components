@@ -61,9 +61,9 @@ See <playwright.config.ts> for further configuration.
 
 ## Involved parties
 
-- [Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/), customer and funder of the initiative
-- [Nothing](https://www.nothing.ch/), initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
-- [Lambda IT](https://lambda-it.ch/), implementation
-- [Dept](https://www.deptagency.com/), implementation
-- [Iterativ](https://www.iterativ.ch/), automated testing
-- [Access for all](https://www.access-for-all.ch/), accessibility testing
+- Manu Heim, [Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/), customer and funder of the initiative
+- Josua Muheim & Xaver Fleer, [Nothing](https://www.nothing.ch/), initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
+- Wayne Maurer, [Lambda IT](https://lambda-it.ch/), implementation
+- Jürgen Rudigier, [Dept](https://www.deptagency.com/), implementation
+- Ramon Wenger, [Iterativ](https://www.iterativ.ch/), automated testing
+- Gianfranco Giudice & Petra Ritter, [Access for all](https://www.access-for-all.ch/), accessibility testing
