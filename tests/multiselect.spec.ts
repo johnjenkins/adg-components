@@ -9,12 +9,12 @@ import {
   clickOption,
 } from './helpers';
 
-test.describe('ADG-Combobox (multi)', () => {
+test.describe.only('ADG-Combobox (multi)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3333');
   });
 
-  test.only('Initial display', async ({ page }) => {
+  test('Initial display', async ({ page }) => {
     await expectMultiCombobox(page, {}); // Default state
   });
 

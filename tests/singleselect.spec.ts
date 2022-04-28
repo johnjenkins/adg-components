@@ -28,7 +28,7 @@ test.describe('ADG-Combobox (single)', () => {
       });
     });
 
-    test('Tab out of filter input', async ({ page }) => {
+    test.only('Tab out of filter input', async ({ page }) => {
       await tabIntoFilter(page, 'coloursCombobox');
       await expectSingleCombobox(page, {
         filterFocused: true,
@@ -78,7 +78,8 @@ test.describe('ADG-Combobox (single)', () => {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTION_LABELS,
-        focusedOption: 'Soccer',
+        selectedOptions: ['Black'],
+        focusedOption: 'Black',
       });
 
       await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on next option
@@ -86,15 +87,15 @@ test.describe('ADG-Combobox (single)', () => {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTION_LABELS,
-        focusedOption: 'Badminton',
+        focusedOption: 'Blue',
       });
 
-      for (let i = 0; i < 10; i++) await page.keyboard.press('ArrowDown'); //  // Press `Down` multiple times to set focus on last option
+      for (let i = 0; i < 8; i++) await page.keyboard.press('ArrowDown'); //  // Press `Down` multiple times to set focus on last option
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTION_LABELS,
-        focusedOption: 'Programming',
+        focusedOption: 'Yellow',
       });
 
       await page.keyboard.press('ArrowDown'); // Press `Down` to set focus back to filter input
