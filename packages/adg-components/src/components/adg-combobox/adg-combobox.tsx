@@ -35,7 +35,7 @@ export class AdgComboboxComponent {
   private _optionsSelectedId = `${this._id}--options-selected`;
 
   selectedOptionModels: OptionModel[] = [];
-  lastArrowSelectedElem = -1;
+  lastArrowSelectedElem = 0;
 
   filterInputElementRef: HTMLInputElement;
   unselectAllButtonElementRef: HTMLButtonElement;
@@ -106,17 +106,18 @@ export class AdgComboboxComponent {
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
-      this.closeOptionsContainer();
+      console.log(100);
+      this.closeOptionsContainer(false);
     }
   }
 
-  @Listen('keyup', { target: 'document' })
-  handleDocumentKeyUp(event: KeyboardEvent) {
+  @Listen('focus', { target: 'document' })
+  handleDocumentFocus(event: KeyboardEvent) {
     if (
-      event.key === 'Tab' &&
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
-      this.closeOptionsContainer();
+      console.log(111);
+      this.closeOptionsContainer(false);
     }
   }
 
@@ -128,7 +129,6 @@ export class AdgComboboxComponent {
     this.isOptionsContainerOpen
       ? this.closeOptionsContainer()
       : this.openOptionsContainer();
-    this.filterInputElementRef.select();
   }
 
   handleFilterInputKeyup(event: KeyboardEvent) {
@@ -179,20 +179,20 @@ export class AdgComboboxComponent {
 
   handleKeyUpForPageUpAndPageDown(event: KeyboardEvent) {
     if (event.key === 'PageDown' || event.key === 'PageUp') {
+
+      this.openOptionsContainer();
+
       const shownElems = this.availableOptionsListItems.filter(
         (elem) => !elem.hidden
       );
       const elemToFocus = shownElems
         .at(event.key === 'PageDown' ? -1 : 0)
         .querySelector('input');
-      elemToFocus.focus();
-    }
-  }
 
-  handleOptionInputFocus(i: number) {
-    this.lastArrowSelectedElem = i + 1;
-    this.currentlyFocusedOption =
-      this.availableOptionsListItems[i].querySelector('input');
+      setTimeout(() => {
+        elemToFocus.focus();
+      }, 0);
+    }
   }
 
   handleOptionInputKeyDown(event: KeyboardEvent, value: string) {
@@ -200,13 +200,11 @@ export class AdgComboboxComponent {
     if (event.key === 'Enter') {
       this.handleOptionInputChange(value);
       if (!this.multi) {
-        this.filterInputElementRef.focus();
         this.closeOptionsContainer();
       }
       event.preventDefault();
     }
     if (event.key === 'Escape') {
-      this.filterInputElementRef.focus();
       this.closeOptionsContainer();
     }
   }
@@ -214,7 +212,6 @@ export class AdgComboboxComponent {
   handleOptionInputClick(event: MouseEvent) {
     if (event.x && event.y) { // todo: check if it is click
       if (!this.multi) {
-        this.filterInputElementRef.focus();
         this.closeOptionsContainer();
       }
     }
@@ -237,48 +234,36 @@ export class AdgComboboxComponent {
 
   handleKeyUp(event: KeyboardEvent) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      if (this.isOptionsContainerOpen) {
-        if (this.multi) {
-          const direction = event.key === 'ArrowDown' ? 1 : -1;
-          const arrowSelectableElems = [
-            this.filterInputElementRef,
-            ...this.availableOptionsListItems,
-          ];
-          for (let i = 0; i < arrowSelectableElems.length; i++) {
-            let numberOfArrowSelectableElems = arrowSelectableElems.length;
-            let j = modulo(
-              direction * (i + 1) + this.lastArrowSelectedElem,
-              numberOfArrowSelectableElems
-            );
-            let currentElem = arrowSelectableElems[j];
-            if (!currentElem.hidden) {
-              if (currentElem === this.filterInputElementRef) {
-                this.lastArrowSelectedElem = 0;
-                currentElem.select();
-              } else {
-                currentElem.querySelector('input').focus();
-              }
-              break;
-            }
-          }
-        } else {
-          if (this.lastArrowSelectedElem === 0) {
-            const [checkedOption] = this.availableOptionsListItems
-              .map((elem) => elem.querySelector('input'))
-              .filter((input) => input.checked);
-            const optionToFocus =
-              checkedOption ||
-              (this.availableOptionsListItems[0] &&
-                this.availableOptionsListItems[0].querySelector('input'));
-            if (optionToFocus) {
-              optionToFocus.checked = true;
-              optionToFocus.focus();
-            }
-          }
-        }
-      } else {
+      event.preventDefault();
+
+      if (!this.isOptionsContainerOpen) {
         this.openOptionsContainer();
       }
+
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const shownElems = this.availableOptionsListItems.filter(
+        (elem) => !elem.hidden
+      );
+
+      const arrowSelectableElems = [this.filterInputElementRef, ...shownElems];
+
+      const index = modulo(
+        direction + this.lastArrowSelectedElem,
+        arrowSelectableElems.length
+      );
+
+      const currentElem = arrowSelectableElems[index];
+
+      if (currentElem === this.filterInputElementRef) {
+        currentElem.select();
+      } else {
+        setTimeout(() => {
+          currentElem.querySelector('input').focus();
+        }, 0);
+      }
+
+      this.lastArrowSelectedElem = index;
+
     }
 
     if (event.key === '?') console.log('Help not yet implemented!');
@@ -309,39 +294,37 @@ export class AdgComboboxComponent {
   }
 
   openOptionsContainer() {
-    if (!this.isOptionsContainerOpen) {
-      this.isOptionsContainerOpen = true;
+    if (this.isOptionsContainerOpen) {
+      return;
+    }
+
+    this.isOptionsContainerOpen = true;
+    this.lastArrowSelectedElem = 0;
+
+    setTimeout(() => {
       // Some screen readers do not announce the changed `aria-expanded`
       // attribute. So we give them some additional fodder to announce,
       // namely the instructions. We append them with a little delay so each
       // and every screen reader realises that the live region was changed and
       // hence needs to be announced.
-      setTimeout(() => {
-        this.showInstructions = true;
-      }, 200);
-    }
+      this.showInstructions = true;
+    }, 200);
   }
 
-  closeOptionsContainer() {
-    if (this.isOptionsContainerOpen) {
-      this.isOptionsContainerOpen = false;
-      this.showInstructions = false;
+  closeOptionsContainer(selectInput = true) {
+    if (!this.isOptionsContainerOpen) {
+      return
     }
+
+    this.isOptionsContainerOpen = false;
+    this.showInstructions = false;
+
+    selectInput && this.filterInputElementRef.select();
   }
 
   componentWillRender() {
     this.availableOptionsListItems = [];
     this.optionSelectedButtons = [];
-  }
-
-  componentDidUpdate() {
-    if (
-      this.isOptionsContainerOpen &&
-      !this.fieldsetElementRef.hidden &&
-      this.currentlyFocusedOption
-    ) {
-      this.currentlyFocusedOption.focus();
-    }
   }
 
   render() {
@@ -401,7 +384,10 @@ export class AdgComboboxComponent {
                 </span>
               ) : null}
               <span data-visually-hidden>
-                {this.filterLabel} selected:&nbsp;
+                {this.$t('results_selected', {
+                  filterLabel: this.filterLabel,
+                })}
+                :
                 <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(', ')}
                 </span>
@@ -466,41 +452,46 @@ export class AdgComboboxComponent {
               </span>
             </legend>
             <ol class="adg-combobox--available-options-list">
-              {this.optionModels.map((option, i) => (
-                <li
-                  key={option.value}
-                  class="adg-combobox--available-options-list-item"
-                  hidden={option.hidden}
-                  ref={(el) => this.availableOptionsListItems.push(el)}
-                >
-                  <label data-inline-block>
-                    <input
-                      id={option.value}
-                      type={this.multi ? 'checkbox' : 'radio'}
-                      name={this.name}
-                      value={option.value}
-                      checked={option.checked}
-                      onFocus={() => this.handleOptionInputFocus(i)}
-                      onKeyDown={(ev) =>
-                        this.handleOptionInputKeyDown(ev, option.value)
-                      }
-                      onClick={(ev) => this.handleOptionInputClick(ev)}
-                      onInput={() => this.handleOptionInputChange(option.value)}
-                    />
-                    <span>
-                      {option.label}
-                      <span class="check"></span>
-                    </span>
-                  </label>
-                </li>
-              ))}
+              {this.optionModels
+                .map((option) => (
+                  <li
+                    key={option.value}
+                    class="adg-combobox--available-options-list-item"
+                    hidden={option.hidden}
+                    ref={(el) => this.availableOptionsListItems.push(el)}
+                  >
+                    <label data-inline-block>
+                      <input
+                        type={this.multi ? 'checkbox' : 'radio'}
+                        name={this.name}
+                        value={option.value}
+                        checked={option.checked}
+                        onKeyDown={(ev) =>
+                          this.handleOptionInputKeyDown(ev, option.value)
+                        }
+                        onClick={(ev) => this.handleOptionInputClick(ev)}
+                        onInput={() =>
+                          this.handleOptionInputChange(option.value)
+                        }
+                      />
+                      <span>
+                        {option.label}
+                        <span class="check"></span>
+                      </span>
+                    </label>
+                  </li>
+                ))}
             </ol>
           </fieldset>
         </span>
 
         {this.multi ? (
           <fieldset class="adg-combobox--selected-options-container">
-            <legend data-visually-hidden>Selected {this.filterLabel}</legend>
+            <legend data-visually-hidden>
+              {this.$t('results_selected', {
+                filterLabel: this.filterLabel,
+              })}
+            </legend>
 
             <ol class="adg-combobox--selected-options-list">
               {this.selectedOptionModels.map((option, i) => (
