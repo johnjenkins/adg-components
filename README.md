@@ -19,6 +19,7 @@ It is based on HTML form controls, with which we prove that **accessibility is s
   id="hobbiesCombobox"
   name="hobbies"
   label="Hobbies"
+  lang="de"
 ></adg-combobox>
 
 <script>
