@@ -28,15 +28,23 @@ let nextUniqueId = 0;
   assetsDirs: ['assets'],
 })
 export class AdgComboboxComponent {
+  private $t: Function;
+
   private _id = `adg-combobox-${nextUniqueId++}`;
   private _inputId = `${this._id}--input`;
   private _optionsSelectedId = `${this._id}--options-selected`;
-  private $t: Function;
 
-  connectedCallback() {
-    this.setupLiveRegion();
-    this.watchOptionsHandler(this.options);
-  }
+  selectedOptionModels: OptionModel[] = [];
+  lastArrowSelectedElem = -1;
+
+  filterInputElementRef: HTMLInputElement;
+  unselectAllButtonElementRef: HTMLButtonElement;
+  fieldsetElementRef: HTMLFieldSetElement;
+  filterAndOptionsContainerElementRef: HTMLSpanElement;
+
+  availableOptionsListItems: HTMLLIElement[] = [];
+  optionSelectedButtons: HTMLButtonElement[] = [];
+  currentlyFocusedOption?: HTMLInputElement;
 
   @Element() el: HTMLElement;
 
@@ -45,6 +53,19 @@ export class AdgComboboxComponent {
   @Prop() options: string[] = [];
   @Prop() name = this._id;
   @Prop() multi = false;
+  @Prop() showInstructions = false;
+  @Prop() ariaLiveAssertive = false;
+  @Prop() roleAlert = false;
+
+  @State() filterTermText: string = '';
+  @State() numberOfShownOptions = 0;
+  @State() filteredOptionsStartingWith: string = '';
+  @State() isOptionsContainerOpen: boolean = false;
+
+  connectedCallback() {
+    this.setupLiveRegion();
+    this.watchOptionsHandler(this.options);
+  }
 
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
@@ -64,31 +85,6 @@ export class AdgComboboxComponent {
       (optionModel) => optionModel.checked
     );
   }
-
-  selectedOptionModels: OptionModel[] = [];
-
-  @State() filterTermText: string = '';
-  @State() numberOfShownOptions = 0;
-  @State() filteredOptionsStartingWith: string = '';
-
-  @State() isOptionsContainerOpen: boolean = false;
-
-  @Prop() showInstructions = false;
-
-  @Prop() ariaLiveAssertive = false;
-  @Prop() roleAlert = false;
-
-  filterInputElementRef: HTMLInputElement;
-  unselectAllButtonElementRef: HTMLButtonElement;
-  fieldsetElementRef: HTMLFieldSetElement;
-  filterAndOptionsContainerElementRef: HTMLSpanElement;
-
-  lastArrowSelectedElem = 0;
-  availableOptionsListItems: HTMLLIElement[] = [];
-  optionSelectedButtons: HTMLButtonElement[] = [];
-  currentlyFocusedOption?: HTMLInputElement;
-
-  constructor() {}
 
   async componentWillLoad(): Promise<void> {
     this.$t = await Translator(this.el);
@@ -133,7 +129,6 @@ export class AdgComboboxComponent {
     setTimeout(() => {
       if (!this.multi) {
         const selectedOption = this.selectedOptionModels.find((a) => a.checked);
-        console.log(selectedOption);
         this.filterInputElementRef.value = selectedOption?.label || '';
       }
     });
@@ -210,29 +205,11 @@ export class AdgComboboxComponent {
       this.availableOptionsListItems[i].querySelector('input');
   }
 
-  handleOptionInputKeyDown(event: KeyboardEvent) {
+  handleOptionInputKeyDown(event: KeyboardEvent, value: string) {
     // here we must override the default behavior of the browser, as otherwise the form will be submitted
     if (event.key === 'Enter') {
+      this.handleOptionInputChange(value);
       event.preventDefault();
-    }
-  }
-
-  handleOptionInputKeyUp(event: KeyboardEvent, optionIndex: number) {
-    if (this.multi) {
-      if (event.key === 'Enter') {
-        this.optionModels = this.optionModels.map((optionModel, i) =>
-          i === optionIndex
-            ? { ...optionModel, checked: !optionModel.checked }
-            : optionModel
-        );
-      }
-    } else {
-      if (event.key === 'Enter') {
-        this.filterInputElementRef.value = this.optionModels[optionIndex].label;
-        this.closeOptionsContainer();
-        this.filterInputElementRef.focus();
-        this.filterInputElementRef.select();
-      }
     }
     if (event.key === 'Escape') {
       this.filterInputElementRef.focus();
@@ -240,15 +217,6 @@ export class AdgComboboxComponent {
     }
   }
 
-  handleOptionInputClick(value: string) {
-    if (!this.multi) {
-      this.optionModels = this.optionModels.map((optionModel) =>
-        optionModel.value === value
-          ? { ...optionModel, checked: true }
-          : { ...optionModel, checked: false }
-      );
-    }
-  }
 
   handleOptionInputChange(value: string) {
     if (this.multi) {
@@ -258,11 +226,10 @@ export class AdgComboboxComponent {
           : optionModel
       );
     } else {
-      this.optionModels = this.optionModels.map((optionModel) =>
-        optionModel.value === value
-          ? { ...optionModel, checked: true }
-          : { ...optionModel, checked: false }
-      );
+      this.optionModels = this.optionModels.map((optionModel) => ({
+        ...optionModel,
+        checked: optionModel.value === value,
+      }));
     }
   }
 
@@ -313,7 +280,6 @@ export class AdgComboboxComponent {
     }
 
     if (event.key === '?') console.log('Help not yet implemented!');
-
   }
 
   handleOptionSelectedButtonClick(value: string, clickedIndex: number) {
@@ -460,7 +426,8 @@ export class AdgComboboxComponent {
               <span data-visually-hidden>
                 {this.$t('results_title', {
                   filterLabel: this.filterLabel,
-                })}:
+                })}
+                :
               </span>
               <span
                 class="adg-combobox--x-of-y-for-filter-text"
@@ -506,11 +473,10 @@ export class AdgComboboxComponent {
                       value={option.value}
                       checked={option.checked}
                       onFocus={() => this.handleOptionInputFocus(i)}
-                      onKeyDown={(ev) => this.handleOptionInputKeyDown(ev)}
-                      onKeyUp={(ev) => this.handleOptionInputKeyUp(ev, i)}
-                      onChange={() =>
-                        this.handleOptionInputChange(option.value)
+                      onKeyDown={(ev) =>
+                        this.handleOptionInputKeyDown(ev, option.value)
                       }
+                      onInput={() => this.handleOptionInputChange(option.value)}
                     />
                     <span>
                       {option.label}
