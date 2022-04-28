@@ -63,6 +63,7 @@ export class AdgComboboxComponent {
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
+    // RAMON: make debugger work?! (Instead of console.log)
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
   }

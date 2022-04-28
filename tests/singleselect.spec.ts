@@ -12,6 +12,7 @@ import {
 test.describe('ADG-Combobox (single)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3333');
+    // RAMON: comboBox generell verfügbar machen in jedem `test`?! Und auch in jedem Helper?!
   });
 
   test.only('Initial display', async ({ page }) => {

@@ -30,6 +30,7 @@ export const ALL_SINGLE_OPTIONS = [
   { label: 'Yellow', value: 'yellow' },
 ];
 
+// RAMON
 // Would be great to collect those automatically from ALL_MULTI_OPTIONS, but couldn't figure out how
 export const ALL_MULTI_OPTION_LABELS = [
   'Soccer',
@@ -104,7 +105,7 @@ export const expectSingleCombobox = async (
   });
 };
 
-// Nearly identical copy of expectSingleSelect
+// RAMON: Nearly identical copy of expectSingleSelect
 export const expectMultiCombobox = async (
   page: Page,
   expectations: ComboboxExpectations
