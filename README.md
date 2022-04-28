@@ -4,7 +4,7 @@ An initiative of the [«Accessibility Developer Guide»](https://www.accessibili
 
 - It is **searchable** 🔍
 - It handles both ✅ **single** and ✅✅✅ **multi** selection
-- Options can be loaded **async** 🧩
+- ~~Options can be loaded **async** 🧩~~ (not yet)
 - It is 100% **accessible** ♿️, based on [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
 
 It is based on HTML form controls, with which we prove that **accessibility is simple** by relying on rock-solid browser standard behaviour, instead of reinventing the wheel with the (up to this day) fragmentarily supported [ARIA Standard](https://www.w3.org/WAI/standards-guidelines/aria/).
