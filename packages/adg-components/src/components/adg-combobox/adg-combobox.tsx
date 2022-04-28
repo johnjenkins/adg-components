@@ -231,7 +231,7 @@ export class AdgComboboxComponent {
     }
   }
 
-  handleKeyUp(event: KeyboardEvent) {
+  handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
 
@@ -333,7 +333,7 @@ export class AdgComboboxComponent {
     return (
       <div
         class="adg-combobox--container"
-        onKeyUp={(ev) => this.handleKeyUp(ev)}
+        onKeyDown={(ev) => this.handleKeyDown(ev)}
       >
         <label
           htmlFor={this._inputId}
