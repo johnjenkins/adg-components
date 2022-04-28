@@ -44,7 +44,10 @@ Our components are based on [Stencil](https://stenciljs.com/).
 Our components are thoroughly tested using [Playwright](https://playwright.dev/).
 
 - Make sure your local server is running
-- `$ npm run test:run`
+- `$ npm run test:run` for headless
+- `$ npm run test:gui` to see the magic happen!
+
+See <playwright.config.ts> for further configuration.
 
 ## Involved parties
 
