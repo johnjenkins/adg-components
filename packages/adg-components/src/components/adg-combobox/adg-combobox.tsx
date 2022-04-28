@@ -63,7 +63,6 @@ export class AdgComboboxComponent {
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
-    // RAMON: make debugger work?! (Instead of console.log)
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
   }
@@ -122,7 +121,7 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputClick() {
-    this.openOptionsContainer();
+    this.openOptionsContainer(false);
   }
 
   handleToggleOptionsButtonClicked() {
@@ -174,13 +173,13 @@ export class AdgComboboxComponent {
       ? shownOptions[0].label
       : '';
 
-    this.openOptionsContainer();
+    this.openOptionsContainer(false);
   }
 
   handleKeyUpForPageUpAndPageDown(event: KeyboardEvent) {
     if (event.key === 'PageDown' || event.key === 'PageUp') {
 
-      this.openOptionsContainer();
+      this.openOptionsContainer(false);
 
       const shownElems = this.availableOptionsListItems.filter(
         (elem) => !elem.hidden
@@ -237,7 +236,8 @@ export class AdgComboboxComponent {
       event.preventDefault();
 
       if (!this.isOptionsContainerOpen) {
-        this.openOptionsContainer();
+        this.openOptionsContainer(false);
+        return;
       }
 
       const direction = event.key === 'ArrowDown' ? 1 : -1;
@@ -293,13 +293,15 @@ export class AdgComboboxComponent {
     }
   }
 
-  openOptionsContainer() {
+  openOptionsContainer(selectInput = true) {
     if (this.isOptionsContainerOpen) {
       return;
     }
 
     this.isOptionsContainerOpen = true;
     this.lastArrowSelectedElem = 0;
+
+    selectInput && this.filterInputElementRef.select();
 
     setTimeout(() => {
       // Some screen readers do not announce the changed `aria-expanded`

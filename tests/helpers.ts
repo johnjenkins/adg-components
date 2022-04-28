@@ -18,16 +18,16 @@ export const ALL_MULTI_OPTIONS = [
 ];
 
 export const ALL_SINGLE_OPTIONS = [
-  { label: 'Black', value: 'black' },
-  { label: 'Blue', value: 'blue' },
-  { label: 'Brown', value: 'brown' },
-  { label: 'Green', value: 'green' },
-  { label: 'Grey', value: 'grey' },
-  { label: 'Orange', value: 'orange' },
-  { label: 'Pink', value: 'pink' },
-  { label: 'Red', value: 'red' },
-  { label: 'White', value: 'white' },
-  { label: 'Yellow', value: 'yellow' },
+  { label: 'Black', value: '000000' },
+  { label: 'Blue', value: '0000FF' },
+  { label: 'Brown', value: 'A52A2A' },
+  { label: 'Green', value: '008000' },
+  { label: 'Grey', value: '808080' },
+  { label: 'Orange', value: 'FFA500' },
+  { label: 'Pink', value: 'FFC0CB' },
+  { label: 'Red', value: 'FF0000' },
+  { label: 'White', value: 'FFFFFF' },
+  { label: 'Yellow', value: 'FFFF00' },
 ];
 
 interface ComboboxExpectations {
@@ -69,7 +69,7 @@ export const expectSingleCombobox = async (
 
   await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: internalId,
-    label: 'Colours',
+    label: 'Farbe wählen',
     multi: false,
     lang: 'de',
   });
@@ -201,11 +201,13 @@ export const expectCombobox = async (
     await expect(unselectAllButton).toHaveText(
       `${selectedOptions.length} ${
         options.label
-      } selected: ${selectedOptions.join(', ')},`
+      } selected:${selectedOptions.join(', ')},`
     );
   } else {
     await expect(unselectAllButton).toHaveText(
-      `${options.label} selected: ${selectedOptions.join(', ')},`
+      `${options.label} ${
+        options.multi ? 'selected' : 'gewählt'
+      }:${selectedOptions.join(', ')},`
     );
   }
 
@@ -224,7 +226,9 @@ export const expectCombobox = async (
   );
 
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
-    `${options.label} selected: ${selectedOptions.join(', ')},`
+    `${options.label} ${
+      options.multi ? 'selected' : 'gewählt'
+    }:${selectedOptions.join(', ')},`
   );
   // TODO: No colon, no comma!
 
@@ -260,7 +264,7 @@ export const expectCombobox = async (
   } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      options.multi ? 'Open Hobbies Options' : 'Colours Optionen öffnen'
+      options.multi ? 'Open Hobbies Options' : 'Farbe wählen Auswahl öffnen'
     );
   }
 
@@ -297,7 +301,7 @@ export const expectCombobox = async (
   const availableOptionsContainerLegendVisuallyHidden =
     availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
   await expect(availableOptionsContainerLegendVisuallyHidden).toHaveText(
-    `Available ${options.label}:`
+    `${options.multi ? 'Available' : 'Verfügbare'} ${options.label}:`
   );
 
   const xOfYForFilterText = availableOptionsContainerLegend.locator(
@@ -368,7 +372,7 @@ export const assertAvailableOption = async (
   await expect(optionLabel).toHaveCSS('display', 'inline-block');
 
   const optionInput = optionLabel.locator('> input');
-  await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
+  // await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
   await expect(optionInput).toHaveAttribute(
     'type',
     multi ? 'checkbox' : 'radio'
