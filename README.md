@@ -15,7 +15,11 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 <script type="module" src="/build/adg-components.esm.js"></script>
 <script nomodule src="/build/adg-components.js"></script>
 
-<adg-combobox id="hobbiesCombobox" name='hobbies' label='Hobbies'></adg-combobox>
+<adg-combobox
+  id="hobbiesCombobox"
+  name="hobbies"
+  label="Hobbies"
+></adg-combobox>
 
 <script>
   const hobbiesCombobox = document.querySelector('#hobbiesCombobox');
@@ -43,11 +47,16 @@ Our components are based on [Stencil](https://stenciljs.com/).
 
 Our components are thoroughly tested using [Playwright](https://playwright.dev/).
 
-- Make sure your local server is running
+- Make sure your local server is running (and its port is `3333`)
 - `$ npm run test:run` for headless
 - `$ npm run test:gui` to see the magic happen!
 
 See <playwright.config.ts> for further configuration.
+
+### Debugging
+
+- To debug the component's internals, simply add a `debugger` statement in a `*.tsx` file. This will trigger the debugging environment in your browser.
+- To debug Playwright tests, install [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright), then add a breakpoint in a `*.spec.ts` file. Now open the "Testing" tab on the left (below "Extensions"), and click "Debug Tests" or hover over a specific test and click "Debug Test"). This will run the test environment in headed mode and trigger the debugging environment in VSCode.
 
 ## Involved parties
 
