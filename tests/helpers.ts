@@ -3,6 +3,35 @@ import { expect } from '@playwright/test';
 import { ALL } from 'dns';
 
 export const ALL_MULTI_OPTIONS = [
+  { label: 'Soccer', value: 'soccer' },
+  { label: 'Badminton', value: 'badminton' },
+  { label: 'Movies', value: 'movies' },
+  { label: 'Gardening', value: 'gardening' },
+  { label: 'Kickboxing', value: 'kickboxing' },
+  { label: 'Hiking', value: 'hiking' },
+  { label: 'Dancing', value: 'dancing' },
+  { label: 'Painting', value: 'painting' },
+  { label: 'Cooking', value: 'cooking' },
+  { label: 'Reading', value: 'reading' },
+  { label: 'Sleeping', value: 'sleeping' },
+  { label: 'Programming', value: 'programming' },
+];
+
+export const ALL_SINGLE_OPTIONS = [
+  { label: 'Black', value: 'black' },
+  { label: 'Blue', value: 'blue' },
+  { label: 'Brown', value: 'brown' },
+  { label: 'Green', value: 'green' },
+  { label: 'Grey', value: 'grey' },
+  { label: 'Orange', value: 'orange' },
+  { label: 'Pink', value: 'pink' },
+  { label: 'Red', value: 'red' },
+  { label: 'White', value: 'white' },
+  { label: 'Yellow', value: 'yellow' },
+];
+
+// Would be great to collect those automatically from ALL_MULTI_OPTIONS, but couldn't figure out how
+export const ALL_MULTI_OPTION_LABELS = [
   'Soccer',
   'Badminton',
   'Movies',
@@ -15,6 +44,19 @@ export const ALL_MULTI_OPTIONS = [
   'Reading',
   'Sleeping',
   'Programming',
+];
+
+export const ALL_SINGLE_OPTION_LABELS = [
+  'Black',
+  'Blue',
+  'Brown',
+  'Green',
+  'Grey',
+  'Orange',
+  'Pink',
+  'Red',
+  'White',
+  'Yellow',
 ];
 
 interface ComboboxExpectations {
@@ -33,6 +75,20 @@ export const expectSingleCombobox = async (
 ) => {
   const adgCombobox = page.locator(`adg-combobox#coloursCombobox`);
 
+  const mergedExpectations = Object.assign(
+    {},
+    {
+      filterFocused: false,
+      filterValue: '',
+      optionsExpanded: false,
+      visibleOptions: ALL_SINGLE_OPTION_LABELS,
+      focusedOption: null,
+      selectedOptions: [],
+      unselectAllButtonFocused: false,
+    },
+    expectations
+  );
+
   // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
   const internalId = await (
     await adgCombobox
@@ -40,7 +96,7 @@ export const expectSingleCombobox = async (
       .getAttribute('for')
   ).replace('--input', '');
 
-  await expectCombobox(adgCombobox, expectations, {
+  await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: internalId,
     label: 'Colours',
     multi: false,
@@ -61,7 +117,7 @@ export const expectMultiCombobox = async (
       filterFocused: false,
       filterValue: '',
       optionsExpanded: false,
-      visibleOptions: ALL_MULTI_OPTIONS,
+      visibleOptions: ALL_MULTI_OPTION_LABELS,
       focusedOption: null,
       selectedOptions: [],
       unselectAllButtonFocused: false,
@@ -246,10 +302,10 @@ export const expectCombobox = async (
     availableOptionsContainer.locator('legend');
 
   let expectedXOfYForFilterTextValue = '';
-  if (visibleOptions.length < ALL_MULTI_OPTIONS.length) {
+  if (visibleOptions.length < ALL_MULTI_OPTION_LABELS.length) {
     expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
   }
-  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTIONS.length} Hobbies`;
+  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTION_LABELS.length} Hobbies`;
   if (filterValue == '') {
     // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
   } else {
@@ -290,37 +346,25 @@ export const expectCombobox = async (
     '> ol.adg-combobox--available-options-list'
   );
 
-  const allOptions = [
-    { label: 'Soccer', value: 'soccer' },
-    { label: 'Badminton', value: 'badminton' },
-    { label: 'Movies', value: 'movies' },
-    { label: 'Gardening', value: 'gardening' },
-    { label: 'Kickboxing', value: 'kickboxing' },
-    { label: 'Hiking', value: 'hiking' },
-    { label: 'Dancing', value: 'dancing' },
-    { label: 'Painting', value: 'painting' },
-    { label: 'Cooking', value: 'cooking' },
-    { label: 'Reading', value: 'reading' },
-    { label: 'Sleeping', value: 'sleeping' },
-    { label: 'Programming', value: 'programming' },
-  ];
-
   await Promise.all(
-    allOptions.map(async (item, i) => {
-      const optionVisible = visibleOptions.includes(item.label);
-      const optionFocused = item.label == focusedOption;
-      const optionChecked = selectedOptions.includes(item.label);
+    (options.multi ? ALL_MULTI_OPTIONS : ALL_SINGLE_OPTIONS).map(
+      async (item, i) => {
+        const optionVisible = visibleOptions.includes(item.label);
+        const optionFocused = item.label == focusedOption;
+        const optionChecked = selectedOptions.includes(item.label);
 
-      await assertAvailableOption(
-        availableOptionsList,
-        i + 1,
-        item.label,
-        item.value,
-        optionVisible,
-        optionFocused,
-        optionChecked
-      );
-    })
+        await assertAvailableOption(
+          availableOptionsList,
+          i + 1,
+          item.label,
+          item.value,
+          optionVisible,
+          optionFocused,
+          optionChecked,
+          options.multi
+        );
+      }
+    )
   );
 };
 
@@ -331,7 +375,8 @@ export const assertAvailableOption = async (
   value: string,
   visible: boolean,
   focused: boolean,
-  checked: boolean
+  checked: boolean,
+  multi: boolean
 ) => {
   const optionListItemSelector = `> li.adg-combobox--available-options-list-item:nth-child(${nthChild})`;
   const optionListItem = availableOptionsList.locator(optionListItemSelector);
@@ -353,7 +398,10 @@ export const assertAvailableOption = async (
 
   const optionInput = optionLabel.locator('> input');
   await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
-  await expect(optionInput).toHaveAttribute('type', 'checkbox');
+  await expect(optionInput).toHaveAttribute(
+    'type',
+    multi ? 'checkbox' : 'radio'
+  );
   // await expect(optionInput).toHaveAttribute('name', 'hobbies'); // UNCOMMENT
 
   if (focused) {
