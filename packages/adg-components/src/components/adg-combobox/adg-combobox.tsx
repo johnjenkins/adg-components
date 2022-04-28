@@ -358,7 +358,6 @@ export class AdgComboboxComponent {
             <input
               class="adg-combobox--filter-input"
               id={this._inputId}
-              name={this.name}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
