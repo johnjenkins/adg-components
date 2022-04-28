@@ -21,7 +21,7 @@ test.describe('ADG-Combobox (single)', () => {
 
   test.describe('Keyboard interaction', () => {
     test('Tab into filter input', async ({ page }) => {
-      await tabIntoFilter(page);
+      await tabIntoFilter(page, 'coloursCombobox');
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: false,
@@ -29,7 +29,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Tab out of filter input', async ({ page }) => {
-      await tabIntoFilter(page);
+      await tabIntoFilter(page, 'coloursCombobox');
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: false,
@@ -63,7 +63,7 @@ test.describe('ADG-Combobox (single)', () => {
     test('Toggle downwards through options using Down key', async ({
       page,
     }) => {
-      await tabIntoFilter(page);
+      await tabIntoFilter(page, 'coloursCombobox');
       await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
       await expectSingleCombobox(page, {
         filterFocused: true,
@@ -106,7 +106,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Toggle upwards through options using Up key', async ({ page }) => {
-      await tabIntoFilter(page);
+      await tabIntoFilter(page, 'coloursCombobox');
       await page.keyboard.press('ArrowUp'); // Press `Up` to expand options
       await expectSingleCombobox(page, {
         filterFocused: true,
@@ -150,7 +150,7 @@ test.describe('ADG-Combobox (single)', () => {
 
     test.describe('Close options using Esc key', () => {
       test('When focus in filter input', async ({ page }) => {
-        await tabIntoFilter(page);
+        await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await expectSingleCombobox(page, {
           filterFocused: true,
@@ -166,7 +166,7 @@ test.describe('ADG-Combobox (single)', () => {
       });
 
       test('When focus on option', async ({ page }) => {
-        await tabIntoFilter(page);
+        await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
         await expectSingleCombobox(page, {
@@ -186,7 +186,7 @@ test.describe('ADG-Combobox (single)', () => {
 
     test.describe('Select/unselect options', () => {
       test('Using Space key', async ({ page }) => {
-        await tabIntoFilter(page);
+        await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
         await expectSingleCombobox(page, {
@@ -226,7 +226,7 @@ test.describe('ADG-Combobox (single)', () => {
         });
       });
       test('Using Enter key', async ({ page }) => {
-        await tabIntoFilter(page);
+        await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
         await page.keyboard.press('Enter'); // Press `Enter` to check option "Soccer"
@@ -254,7 +254,7 @@ test.describe('ADG-Combobox (single)', () => {
 
     test.describe('Activate "Unselect all" button', () => {
       test('"Unselect all" button', async ({ page }) => {
-        await tabIntoFilter(page);
+        await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
         await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
@@ -282,7 +282,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Propagate Enter key', async ({ page }) => {
-      await tabIntoFilter(page);
+      await tabIntoFilter(page, 'coloursCombobox');
       await page.keyboard.press('Enter'); // Press `Enter` to trigger browser default behaviour (send form)
       await expect(page).toHaveURL(/.*?hobbies=/);
     });
@@ -290,13 +290,13 @@ test.describe('ADG-Combobox (single)', () => {
 
   test.describe('Mouse interaction', () => {
     test('Click into filter input', async ({ page }) => {
-      await clickIntoFilter(page); // Click into the filter to expand options
+      await clickIntoFilter(page, 'coloursCombobox'); // Click into the filter to expand options
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
       });
 
-      await clickIntoFilter(page); // Click again into the filter, options remain expanded (unsure about that, see https://github.com/NothingAG/adg-components/issues/17)
+      await clickIntoFilter(page, 'coloursCombobox'); // Click again into the filter, options remain expanded (unsure about that, see https://github.com/NothingAG/adg-components/issues/17)
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
@@ -304,7 +304,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Click out of filter input', async ({ page }) => {
-      await clickIntoFilter(page); // Click into the filter to expand options
+      await clickIntoFilter(page, 'coloursCombobox'); // Click into the filter to expand options
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
@@ -318,13 +318,13 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Click open/close button', async ({ page }) => {
-      await clickOpenCloseButton(page); // Click open/close button to expand options
+      await clickOpenCloseButton(page, 'coloursCombobox'); // Click open/close button to expand options
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: true,
       });
 
-      await clickOpenCloseButton(page); // Click open/close button to collapse options
+      await clickOpenCloseButton(page, 'coloursCombobox'); // Click open/close button to collapse options
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: false,
@@ -332,9 +332,9 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Select/unselect options', async ({ page }) => {
-      await clickIntoFilter(page); // Expand options
-      await clickOption(page, 'Soccer'); // Select option "Soccer"
-      await clickOption(page, 'Movies'); // Select option "Movies"
+      await clickIntoFilter(page, 'coloursCombobox'); // Expand options
+      await clickOption(page, 'Soccer', 'coloursCombobox'); // Select option "Soccer"
+      await clickOption(page, 'Movies', 'coloursCombobox'); // Select option "Movies"
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
@@ -343,7 +343,7 @@ test.describe('ADG-Combobox (single)', () => {
         selectedOptions: ['Soccer', 'Movies'],
       });
 
-      await clickOption(page, 'Movies'); // Unselect option "Movies"
+      await clickOption(page, 'Movies', 'coloursCombobox'); // Unselect option "Movies"
       await expectSingleCombobox(page, {
         filterFocused: false,
         visibleOptions: ALL_SINGLE_OPTION_LABELS,
@@ -356,7 +356,7 @@ test.describe('ADG-Combobox (single)', () => {
 
   test.describe('Filter', () => {
     test('Change filter term to expand options', async ({ page }) => {
-      await tabIntoFilter(page); // Focus filter term (does not expand options)
+      await tabIntoFilter(page, 'coloursCombobox'); // Focus filter term (does not expand options)
       await expectSingleCombobox(page, {
         filterFocused: true,
         optionsExpanded: false,
@@ -372,7 +372,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Enter term to filter options', async ({ page }) => {
-      await clickIntoFilter(page); // Expand options
+      await clickIntoFilter(page, 'coloursCombobox'); // Expand options
       await page.keyboard.press('b'); // Start filtering with "b"
       await expectSingleCombobox(page, {
         filterFocused: true,
@@ -399,7 +399,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test('Toggle through filtered options', async ({ page }) => {
-      await clickIntoFilter(page); // Expand options
+      await clickIntoFilter(page, 'coloursCombobox'); // Expand options
       await page.keyboard.press('b'); // Start filtering with "b"
       await expectSingleCombobox(page, {
         filterFocused: true,
@@ -436,7 +436,7 @@ test.describe('ADG-Combobox (single)', () => {
     test('Filter can be changed while toggling through options', async ({
       page,
     }) => {
-      await clickIntoFilter(page); // Expand options
+      await clickIntoFilter(page, 'coloursCombobox'); // Expand options
       await page.keyboard.press('a'); // Start filtering with "a"
       await expectSingleCombobox(page, {
         filterFocused: true,

@@ -421,9 +421,10 @@ export const assertAvailableOption = async (
   // Also, I'm unsure whether we need the span.check!
 };
 
-export const tabIntoFilter = async (page: Page) => {
+export const tabIntoFilter = async (page: Page, id: string) => {
   // todo: this is what right now needs to be pressed to get from page load to the filter, but it's easily breakable, if someone changes the example
-  for (let i = 0; i < 3; i++) {
+  const tabIndex = id == 'hobbiesCombobox' ? 3 : 5;
+  for (let i = 0; i < tabIndex; i++) {
     // press tab 4 times
     await page.keyboard.press('Tab');
   }
@@ -431,9 +432,11 @@ export const tabIntoFilter = async (page: Page) => {
   // await filter.focus();
 };
 
-export const clickIntoFilter = async (page: Page) => {
+export const clickIntoFilter = async (page: Page, id: string) => {
   // TODO: We should refactor this into a separate method
-  const filterInput = page.locator('input.adg-combobox--filter-input').first();
+  const filterInput = page.locator(
+    `adg-combobox#${id} input.adg-combobox--filter-input`
+  );
   await filterInput.click();
 };
 
@@ -442,16 +445,16 @@ export const clickOutsideFilter = async (page: Page) => {
   await buttonAfter.click();
 };
 
-export const clickOpenCloseButton = async (page: Page) => {
-  const buttonAfter = page
-    .locator('.adg-combobox--toggle-options-button')
-    .first();
+export const clickOpenCloseButton = async (page: Page, id: string) => {
+  const buttonAfter = page.locator(
+    `adg-combobox#${id} .adg-combobox--toggle-options-button`
+  );
   await buttonAfter.click();
 };
 
-export const clickOption = async (page: Page, label) => {
-  const buttonAfter = page.locator(
-    `.adg-combobox--available-options-list-item:has-text("${label}")`
+export const clickOption = async (page: Page, label: string, id: string) => {
+  const option = page.locator(
+    `adg-combobox#${id} .adg-combobox--available-options-list-item:has-text("${label}")`
   );
-  await buttonAfter.click();
+  await option.click();
 };
