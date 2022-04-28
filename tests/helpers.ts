@@ -17,7 +17,7 @@ export const ALL_OPTIONS = [
   'Programming',
 ];
 
-interface MultiStateOptions {
+interface ComboboxExpectations {
   filterFocused?: boolean;
   filterValue?: string;
   optionsExpanded?: boolean;
@@ -28,7 +28,7 @@ interface MultiStateOptions {
 }
 
 // These should reflect the component's initial state without any interaction happened
-const defaultOptions: MultiStateOptions = {
+const defaultComboboxExpectations: ComboboxExpectations = {
   filterFocused: false,
   filterValue: '',
   optionsExpanded: false,
@@ -38,11 +38,38 @@ const defaultOptions: MultiStateOptions = {
   unselectAllButtonFocused: false,
 };
 
-export const checkMultiState = async (
+export const expectMultiCombobox = async (
   page: Page,
-  options: MultiStateOptions
+  expectations: ComboboxExpectations
 ) => {
-  const mergedOptions = Object.assign({}, defaultOptions, options);
+  const adgCombobox = page.locator(`adg-combobox#hobbiesCombobox`);
+
+  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
+  const internalId = await (
+    await adgCombobox
+      .locator('label.adg-combobox--filter-label')
+      .getAttribute('for')
+  ).replace('--input', '');
+
+  await expectCombobox(adgCombobox, expectations, {
+    internalId: internalId,
+    label: 'Hobbies',
+  });
+};
+
+export const expectCombobox = async (
+  combobox: Locator,
+  expectations: ComboboxExpectations,
+  options: {
+    internalId: string;
+    label: string;
+  }
+) => {
+  const mergedExpectations = Object.assign(
+    {},
+    defaultComboboxExpectations,
+    expectations
+  );
   const {
     filterFocused,
     filterValue,
@@ -51,35 +78,20 @@ export const checkMultiState = async (
     focusedOption,
     selectedOptions,
     unselectAllButtonFocused,
-  } = mergedOptions;
+  } = mergedExpectations;
 
-  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
-  const multiComboboxInternalId = await (
-    await page
-      .locator('adg-combobox:first-of-type label.adg-combobox--filter-label')
-      .getAttribute('for')
-  ).replace('--input', '');
+  const filterInputId = `${options.internalId}--input`;
+  const xOptionsSelectedId = `${options.internalId}--options-selected`;
 
-  // As soon as we need to also check single select, we need to make this method more configurable. For the moment let's have fixed values.
-  const options2 = {
-    id: 'hobbiesCombobox',
-    internalId: multiComboboxInternalId,
-    label: 'Hobbies',
-  };
+  await expect(combobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
 
-  const filterInputId = `${options2.internalId}--input`;
-  const xOptionsSelectedId = `${options2.internalId}--options-selected`;
-
-  const adgCombobox = page.locator(`adg-combobox#${options2.id}`); // Or better `.first()`?
-  await expect(adgCombobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
-
-  const widgetContainer = adgCombobox.locator('.adg-combobox--container');
+  const widgetContainer = combobox.locator('.adg-combobox--container');
   await expect(widgetContainer).toHaveCSS('display', 'block');
 
   const filterLabel = widgetContainer.locator(
     'label.adg-combobox--filter-label'
   );
-  await expect(filterLabel).toHaveText(options2.label);
+  await expect(filterLabel).toHaveText(options.label);
   await expect(filterLabel).toHaveAttribute('for', filterInputId);
   await expect(filterLabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
 
