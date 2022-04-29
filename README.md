@@ -64,9 +64,9 @@ You can also run Playwright tests from within VSCode with the [Playwright Test f
 
 ## Involved parties
 
-- Manu Heim, [Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/), customer and funder of the initiative
-- [Josua Muheim](https://github.com/jmuheim) & Xaver Fleer, [Nothing](https://www.nothing.ch/), initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
-- [Wayne Maurer](https://github.com/wmaurer) & [Thomas Schneiter](https://github.com/thomasschneiter), [Lambda IT](https://lambda-it.ch/), implementation
-- [Jürgen Rudigier](https://github.com/rudigier), [Dept](https://www.deptagency.com/), implementation
-- [Ramon Wenger](https://github.com/ramonwenger), [Iterativ](https://www.iterativ.ch/), automated testing
-- Gianfranco Giudice & Petra Ritter, [Access for all](https://www.access-for-all.ch/), accessibility testing
+- **[Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/)** (Manu Heim): customer and funder of the initiative
+- **[Nothing](https://www.nothing.ch/)** ([Josua Muheim](https://github.com/jmuheim) & Xaver Fleer): initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
+- **[Lambda IT](https://lambda-it.ch/)** ([Wayne Maurer](https://github.com/wmaurer) & [Thomas Schneiter](https://github.com/thomasschneiter)): implementation
+- **[Dept](https://www.deptagency.com/)** ([Jürgen Rudigier](https://github.com/rudigier)): implementation
+- **[Iterativ](https://www.iterativ.ch/):** ([Ramon Wenger](https://github.com/ramonwenger)): automated testing
+- **[Access for all](https://www.access-for-all.ch/)** (Gianfranco Giudice & Petra Ritter): accessibility testing
