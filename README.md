@@ -65,7 +65,7 @@ You can also run Playwright tests from within VSCode with the [Playwright Test f
 ## Involved parties
 
 - **[Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/)** (Manu Heim): customer and funder of the initiative
-- **[Nothing](https://www.nothing.ch/)** ([Josua Muheim](https://github.com/jmuheim) & Xaver Fleer): initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
+- **[Nothing](https://www.nothing.ch/)** ([Josua Muheim](https://github.com/jmuheim) & [Xaver Fleer]()): initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
 - **[Lambda IT](https://lambda-it.ch/)** ([Wayne Maurer](https://github.com/wmaurer) & [Thomas Schneiter](https://github.com/thomasschneiter)): implementation
 - **[Dept](https://www.deptagency.com/)** ([Jürgen Rudigier](https://github.com/rudigier)): implementation
 - **[Iterativ](https://www.iterativ.ch/)** ([Ramon Wenger](https://github.com/ramonwenger)): automated testing
