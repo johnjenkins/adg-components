@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "nx build adg-components",
-    "start": "nx serve adg-components --dev",
+    "start": "nx serve adg-components --dev --port 3333",
     "test:run": "playwright test",
     "test:gui": "playwright test --headed"
   },
