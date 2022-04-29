@@ -1,4 +1,4 @@
-# ADG Combobox: a searchable single/multi select dropdown
+# ADG Combobox: A Searchable Single/Multi Select Dropdown
 
 An initiative of the [«Accessibility Developer Guide»](https://www.accessibility-developer-guide.com/) community to provide a **truly accessible** reusable **select dropdown** with the following features:
 
@@ -53,7 +53,7 @@ Our components are thoroughly tested using [Playwright](https://playwright.dev/)
 - `$ npm run test:run` for headless
 - `$ npm run test:gui` to see the magic happen!
 
-See <playwright.config.ts> for further configuration.
+See `playwright.config.ts` for further configuration.
 
 You can also run Playwright tests from within VSCode with the [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension.
 
@@ -64,9 +64,9 @@ You can also run Playwright tests from within VSCode with the [Playwright Test f
 
 ## Involved parties
 
-- Manu Heim, [Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/), customer and funder of the initiative
-- Josua Muheim & Xaver Fleer, [Nothing](https://www.nothing.ch/), initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
-- Wayne Maurer, [Lambda IT](https://lambda-it.ch/), implementation
-- Jürgen Rudigier, [Dept](https://www.deptagency.com/), implementation
-- Ramon Wenger, [Iterativ](https://www.iterativ.ch/), automated testing
-- Gianfranco Giudice & Petra Ritter, [Access for all](https://www.access-for-all.ch/), accessibility testing
+- **[Eidgenössische Technische Hochschule (ETH) Zürich](https://www.ethz.ch/)** (Manu Heim): customer and funder of the initiative
+- **[Nothing](https://www.nothing.ch/)** ([Josua Muheim](https://github.com/jmuheim) & Xaver Fleer): initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
+- **[Lambda IT](https://lambda-it.ch/)** ([Wayne Maurer](https://github.com/wmaurer) & [Thomas Schneiter](https://github.com/thomasschneiter)): implementation
+- **[Dept](https://www.deptagency.com/)** ([Jürgen Rudigier](https://github.com/rudigier)): implementation
+- **[Iterativ](https://www.iterativ.ch/)** ([Ramon Wenger](https://github.com/ramonwenger)): automated testing
+- **[Access for all](https://www.access-for-all.ch/)** (Gianfranco Giudice & Petra Ritter): accessibility testing
