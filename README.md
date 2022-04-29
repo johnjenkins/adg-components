@@ -54,6 +54,8 @@ Our components are thoroughly tested using [Playwright](https://playwright.dev/)
 
 See <playwright.config.ts> for further configuration.
 
+You can also run Playwright tests from within VSCode with the [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension.
+
 ### Debugging
 
 - To debug the component's internals, simply add a `debugger` statement in a `*.tsx` file. This will trigger the debugging environment in your browser.
