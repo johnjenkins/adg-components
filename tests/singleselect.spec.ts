@@ -15,7 +15,7 @@ test.describe('ADG-Combobox (single)', () => {
     // RAMON: comboBox generell verfügbar machen in jedem `test`?! Und auch in jedem Helper?!
   });
 
-  test.only('Initial display', async ({ page }) => {
+  test('Initial display', async ({ page }) => {
     await expectSingleCombobox(page, {}); // Default state
   });
 
@@ -311,30 +311,30 @@ test.describe('ADG-Combobox (single)', () => {
       });
     });
 
-    test('Select/unselect options', async ({ page }) => {
+    test('Select option', async ({ page }) => {
       await clickIntoFilter(page, 'coloursCombobox'); // Expand options
       await clickOption(page, 'Black', 'coloursCombobox'); // Select option "Black"
-      await clickOption(page, 'Brown', 'coloursCombobox'); // Select option "Brown"
       await expectSingleCombobox(page, {
-        filterFocused: false,
-        optionsExpanded: true,
+        filterFocused: true,
+        filterValue: 'Black',
+        optionsExpanded: false,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        focusedOption: 'Brown',
-        selectedOptions: ['Black', 'Brown'],
+        selectedOptions: ['Black'],
       });
 
-      await clickOption(page, 'Brown', 'coloursCombobox'); // Unselect option "Brown"
+      await clickIntoFilter(page, 'coloursCombobox'); // Expand options again
+      await clickOption(page, 'Brown', 'coloursCombobox'); // Select option "Brown"
       await expectSingleCombobox(page, {
-        filterFocused: false,
+        filterFocused: true,
+        filterValue: 'Brown',
+        optionsExpanded: false,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        optionsExpanded: true,
-        focusedOption: 'Brown',
-        selectedOptions: ['Black'],
+        selectedOptions: ['Brown'],
       });
     });
   });
 
-  test.describe('Filter', () => {
+  test.describe.skip('Filter', () => {
     test('Change filter term to expand options', async ({ page }) => {
       await tabIntoFilter(page, 'coloursCombobox'); // Focus filter term (does not expand options)
       await expectSingleCombobox(page, {

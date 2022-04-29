@@ -9,7 +9,7 @@ import {
   clickOption,
 } from './helpers';
 
-test.describe.only('ADG-Combobox (multi)', () => {
+test.describe('ADG-Combobox (multi)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3333');
   });
