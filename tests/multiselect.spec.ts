@@ -282,8 +282,12 @@ test.describe.only('ADG-Combobox (multi)', () => {
 
     test('Propagate Enter key', async ({ page }) => {
       await tabIntoFilter(page, 'hobbiesCombobox');
+      await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
+      await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+      await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
+      await page.keyboard.press('ArrowUp'); // Press `Up` to set focus back to filter input
       await page.keyboard.press('Enter'); // Press `Enter` to trigger browser default behaviour (send form)
-      await expect(page).toHaveURL(/.*?hobbies=/);
+      await expect(page).toHaveURL(/.*\?hobbies%5B%5D=soccer/);
     });
   });
 
