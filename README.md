@@ -1,4 +1,4 @@
-# ADG Combobox: a searchable single/multi select dropdown
+# ADG Combobox: A Searchable Single/Multi Select Dropdown
 
 An initiative of the [«Accessibility Developer Guide»](https://www.accessibility-developer-guide.com/) community to provide a **truly accessible** reusable **select dropdown** with the following features:
 
