@@ -121,7 +121,7 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputClick() {
-    this.openOptionsContainer();
+    this.openOptionsContainer(false);
   }
 
   handleToggleOptionsButtonClicked() {
@@ -173,13 +173,13 @@ export class AdgComboboxComponent {
       ? shownOptions[0].label
       : '';
 
-    this.openOptionsContainer();
+    this.openOptionsContainer(false);
   }
 
   handleKeyUpForPageUpAndPageDown(event: KeyboardEvent) {
     if (event.key === 'PageDown' || event.key === 'PageUp') {
 
-      this.openOptionsContainer();
+      this.openOptionsContainer(false);
 
       const shownElems = this.availableOptionsListItems.filter(
         (elem) => !elem.hidden
@@ -231,12 +231,13 @@ export class AdgComboboxComponent {
     }
   }
 
-  handleKeyUp(event: KeyboardEvent) {
+  handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
 
       if (!this.isOptionsContainerOpen) {
-        this.openOptionsContainer();
+        this.openOptionsContainer(false);
+        return;
       }
 
       const direction = event.key === 'ArrowDown' ? 1 : -1;
@@ -292,13 +293,15 @@ export class AdgComboboxComponent {
     }
   }
 
-  openOptionsContainer() {
+  openOptionsContainer(selectInput = true) {
     if (this.isOptionsContainerOpen) {
       return;
     }
 
     this.isOptionsContainerOpen = true;
     this.lastArrowSelectedElem = 0;
+
+    selectInput && this.filterInputElementRef.select();
 
     setTimeout(() => {
       // Some screen readers do not announce the changed `aria-expanded`
@@ -330,7 +333,7 @@ export class AdgComboboxComponent {
     return (
       <div
         class="adg-combobox--container"
-        onKeyUp={(ev) => this.handleKeyUp(ev)}
+        onKeyDown={(ev) => this.handleKeyDown(ev)}
       >
         <label
           htmlFor={this._inputId}
@@ -355,7 +358,6 @@ export class AdgComboboxComponent {
             <input
               class="adg-combobox--filter-input"
               id={this._inputId}
-              name={this.name}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
@@ -462,7 +464,7 @@ export class AdgComboboxComponent {
                     <label data-inline-block>
                       <input
                         type={this.multi ? 'checkbox' : 'radio'}
-                        name={this.name}
+                        name={`${this.name}${this.multi ? '[]' : ''}`}
                         value={option.value}
                         checked={option.checked}
                         onKeyDown={(ev) =>

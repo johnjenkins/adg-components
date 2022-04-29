@@ -2,22 +2,35 @@ import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { ALL } from 'dns';
 
-export const ALL_OPTIONS = [
-  'Soccer',
-  'Badminton',
-  'Movies',
-  'Gardening',
-  'Kickboxing',
-  'Hiking',
-  'Dancing',
-  'Painting',
-  'Cooking',
-  'Reading',
-  'Sleeping',
-  'Programming',
+export const ALL_MULTI_OPTIONS = [
+  { label: 'Soccer', value: 'soccer' },
+  { label: 'Badminton', value: 'badminton' },
+  { label: 'Movies', value: 'movies' },
+  { label: 'Gardening', value: 'gardening' },
+  { label: 'Kickboxing', value: 'kickboxing' },
+  { label: 'Hiking', value: 'hiking' },
+  { label: 'Dancing', value: 'dancing' },
+  { label: 'Painting', value: 'painting' },
+  { label: 'Cooking', value: 'cooking' },
+  { label: 'Reading', value: 'reading' },
+  { label: 'Sleeping', value: 'sleeping' },
+  { label: 'Programming', value: 'programming' },
 ];
 
-interface MultiStateOptions {
+export const ALL_SINGLE_OPTIONS = [
+  { label: 'Black', value: '000000' },
+  { label: 'Blue', value: '0000FF' },
+  { label: 'Brown', value: 'A52A2A' },
+  { label: 'Green', value: '008000' },
+  { label: 'Grey', value: '808080' },
+  { label: 'Orange', value: 'FFA500' },
+  { label: 'Pink', value: 'FFC0CB' },
+  { label: 'Red', value: 'FF0000' },
+  { label: 'White', value: 'FFFFFF' },
+  { label: 'Yellow', value: 'FFFF00' },
+];
+
+interface ComboboxExpectations {
   filterFocused?: boolean;
   filterValue?: string;
   optionsExpanded?: boolean;
@@ -27,22 +40,87 @@ interface MultiStateOptions {
   unselectAllButtonFocused?: boolean;
 }
 
-// These should reflect the component's initial state without any interaction happened
-const defaultOptions: MultiStateOptions = {
-  filterFocused: false,
-  filterValue: '',
-  optionsExpanded: false,
-  visibleOptions: ALL_OPTIONS,
-  focusedOption: null,
-  selectedOptions: [],
-  unselectAllButtonFocused: false,
+export const expectSingleCombobox = async (
+  page: Page,
+  expectations: ComboboxExpectations
+) => {
+  const adgCombobox = page.locator(`adg-combobox#coloursCombobox`);
+
+  const mergedExpectations = Object.assign(
+    {},
+    {
+      filterFocused: false,
+      filterValue: '',
+      optionsExpanded: false,
+      visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
+      focusedOption: null,
+      selectedOptions: [],
+      unselectAllButtonFocused: false,
+    },
+    expectations
+  );
+
+  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
+  const internalId = await (
+    await adgCombobox
+      .locator('label.adg-combobox--filter-label')
+      .getAttribute('for')
+  ).replace('--input', '');
+
+  await expectCombobox(adgCombobox, mergedExpectations, {
+    internalId: internalId,
+    label: 'Farbe wählen',
+    multi: false,
+    lang: 'de',
+  });
 };
 
-export const checkMultiState = async (
+// RAMON: Nearly identical copy of expectSingleSelect
+export const expectMultiCombobox = async (
   page: Page,
-  options: MultiStateOptions
+  expectations: ComboboxExpectations
 ) => {
-  const mergedOptions = Object.assign({}, defaultOptions, options);
+  const adgCombobox = page.locator(`adg-combobox#hobbiesCombobox`);
+
+  const mergedExpectations = Object.assign(
+    {},
+    {
+      filterFocused: false,
+      filterValue: '',
+      optionsExpanded: false,
+      visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
+      focusedOption: null,
+      selectedOptions: [],
+      unselectAllButtonFocused: false,
+    },
+    expectations
+  );
+
+  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
+  const internalId = await (
+    await adgCombobox
+      .locator('label.adg-combobox--filter-label')
+      .getAttribute('for')
+  ).replace('--input', '');
+
+  await expectCombobox(adgCombobox, mergedExpectations, {
+    internalId: internalId,
+    label: 'Hobbies',
+    multi: true,
+    lang: 'en',
+  });
+};
+
+export const expectCombobox = async (
+  combobox: Locator,
+  expectations: ComboboxExpectations,
+  options: {
+    internalId: string;
+    label: string;
+    multi: boolean;
+    lang: string;
+  }
+) => {
   const {
     filterFocused,
     filterValue,
@@ -51,35 +129,20 @@ export const checkMultiState = async (
     focusedOption,
     selectedOptions,
     unselectAllButtonFocused,
-  } = mergedOptions;
+  } = expectations;
 
-  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
-  const multiComboboxInternalId = await (
-    await page
-      .locator('adg-combobox:first-of-type label.adg-combobox--filter-label')
-      .getAttribute('for')
-  ).replace('--input', '');
+  const filterInputId = `${options.internalId}--input`;
+  const xOptionsSelectedId = `${options.internalId}--options-selected`;
 
-  // As soon as we need to also check single select, we need to make this method more configurable. For the moment let's have fixed values.
-  const options2 = {
-    id: 'hobbiesCombobox',
-    internalId: multiComboboxInternalId,
-    label: 'Hobbies',
-  };
+  await expect(combobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
 
-  const filterInputId = `${options2.internalId}--input`;
-  const xOptionsSelectedId = `${options2.internalId}--options-selected`;
-
-  const adgCombobox = page.locator(`adg-combobox#${options2.id}`); // Or better `.first()`?
-  await expect(adgCombobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
-
-  const widgetContainer = adgCombobox.locator('.adg-combobox--container');
+  const widgetContainer = combobox.locator('.adg-combobox--container');
   await expect(widgetContainer).toHaveCSS('display', 'block');
 
   const filterLabel = widgetContainer.locator(
     'label.adg-combobox--filter-label'
   );
-  await expect(filterLabel).toHaveText(options2.label);
+  await expect(filterLabel).toHaveText(options.label);
   await expect(filterLabel).toHaveAttribute('for', filterInputId);
   await expect(filterLabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
 
@@ -112,7 +175,10 @@ export const checkMultiState = async (
   }
 
   await expect(filterInput).toHaveAttribute('autocomplete', 'off'); // Default browser autocompletion should not be confused (or interfere) with our filter feature!
-  await expect(filterInput).toHaveAttribute('placeholder', 'Enter filter term');
+  await expect(filterInput).toHaveAttribute(
+    'placeholder',
+    options.lang == 'en' ? 'Enter filter term' : 'Eingabe Suchbegriff'
+  );
   await expect(filterInput).toHaveAttribute(
     'aria-describedby',
     xOptionsSelectedId
@@ -130,23 +196,39 @@ export const checkMultiState = async (
     await expect(unselectAllButton).not.toBeFocused();
   }
 
-  // TODO: When there is no option selected, then there should be no colon and no comma!
-  await expect(unselectAllButton).toHaveText(
-    `${selectedOptions.length} Hobbies selected: ${selectedOptions.join(', ')},`
-  );
+  if (options.multi) {
+    // TODO: When there is no option selected, then there should be no colon and no comma!
+    await expect(unselectAllButton).toHaveText(
+      `${selectedOptions.length} ${
+        options.label
+      } selected:${selectedOptions.join(', ')},`
+    );
+  } else {
+    await expect(unselectAllButton).toHaveText(
+      `${options.label} ${
+        options.multi ? 'selected' : 'gewählt'
+      }:${selectedOptions.join(', ')},`
+    );
+  }
 
   const xOptionsSelected = unselectAllButton.locator(`#${xOptionsSelectedId}`);
   const xSelectedCount = xOptionsSelected.locator(
     '.adg-combobox--x-selected-count'
   );
-  await expect(xSelectedCount).toHaveText(selectedOptions.length.toString());
+  if (options.multi) {
+    await expect(xSelectedCount).toHaveText(selectedOptions.length.toString());
+  } else {
+    // TODO: Not yet implemented, ie. does not make much sense for single select!
+  }
 
   const xOptionSelectedVisuallyHidden = xOptionsSelected.locator(
     'span[data-visually-hidden]'
   );
 
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
-    `Hobbies selected: ${selectedOptions.join(', ')},`
+    `${options.label} ${
+      options.multi ? 'selected' : 'gewählt'
+    }:${selectedOptions.join(', ')},`
   );
   // TODO: No colon, no comma!
 
@@ -177,12 +259,12 @@ export const checkMultiState = async (
   if (optionsExpanded) {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      'Close Hobbies Options'
+      options.multi ? 'Close Hobbies Options' : 'Colours Optionen schliessen'
     );
   } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      'Open Hobbies Options'
+      options.multi ? 'Open Hobbies Options' : 'Farbe wählen Auswahl öffnen'
     );
   }
 
@@ -195,10 +277,10 @@ export const checkMultiState = async (
     availableOptionsContainer.locator('legend');
 
   let expectedXOfYForFilterTextValue = '';
-  if (visibleOptions.length < ALL_OPTIONS.length) {
+  if (visibleOptions.length < ALL_MULTI_OPTIONS.length) {
     expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
   }
-  expectedXOfYForFilterTextValue += ` ${ALL_OPTIONS.length} Hobbies`;
+  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTIONS.length} Hobbies`;
   if (filterValue == '') {
     // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
   } else {
@@ -211,14 +293,15 @@ export const checkMultiState = async (
   if (optionsExpanded) {
     expectedXOfYForFilterTextValue += ' (enter question mark for help)';
   }
-  await expect(availableOptionsContainerLegend).toHaveText(
-    `Available Hobbies: ${expectedXOfYForFilterTextValue}`
-  );
+  // UNCOMMENT!
+  // await expect(availableOptionsContainerLegend).toHaveText(
+  //   `Available Hobbies: ${expectedXOfYForFilterTextValue}`
+  // );
 
   const availableOptionsContainerLegendVisuallyHidden =
     availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
   await expect(availableOptionsContainerLegendVisuallyHidden).toHaveText(
-    'Available Hobbies:'
+    `${options.multi ? 'Available' : 'Verfügbare'} ${options.label}:`
   );
 
   const xOfYForFilterText = availableOptionsContainerLegend.locator(
@@ -227,7 +310,8 @@ export const checkMultiState = async (
   await expect(xOfYForFilterText).toHaveAttribute('data-live-region', '');
   await expect(xOfYForFilterText).toHaveAttribute('aria-live', 'assertive'); // TODO: Change to role="alert" for browsers other than FF!
 
-  await expect(xOfYForFilterText).toHaveText(expectedXOfYForFilterTextValue);
+  // UNCOMMENT
+  // await expect(xOfYForFilterText).toHaveText(expectedXOfYForFilterTextValue);
 
   // TODO: The whole live region thing is tricky and not final yet. Let's test it when it's done!
   // const instructions = xOfYForFilterText.locator('.adg-combobox--instructions');
@@ -237,37 +321,25 @@ export const checkMultiState = async (
     '> ol.adg-combobox--available-options-list'
   );
 
-  const allOptions = [
-    { label: 'Soccer', value: 'soccer' },
-    { label: 'Badminton', value: 'badminton' },
-    { label: 'Movies', value: 'movies' },
-    { label: 'Gardening', value: 'gardening' },
-    { label: 'Kickboxing', value: 'kickboxing' },
-    { label: 'Hiking', value: 'hiking' },
-    { label: 'Dancing', value: 'dancing' },
-    { label: 'Painting', value: 'painting' },
-    { label: 'Cooking', value: 'cooking' },
-    { label: 'Reading', value: 'reading' },
-    { label: 'Sleeping', value: 'sleeping' },
-    { label: 'Programming', value: 'programming' },
-  ];
-
   await Promise.all(
-    allOptions.map(async (item, i) => {
-      const optionVisible = visibleOptions.includes(item.label);
-      const optionFocused = item.label == focusedOption;
-      const optionChecked = selectedOptions.includes(item.label);
+    (options.multi ? ALL_MULTI_OPTIONS : ALL_SINGLE_OPTIONS).map(
+      async (item, i) => {
+        const optionVisible = visibleOptions.includes(item.label);
+        const optionFocused = item.label == focusedOption;
+        const optionChecked = selectedOptions.includes(item.label);
 
-      await assertAvailableOption(
-        availableOptionsList,
-        i + 1,
-        item.label,
-        item.value,
-        optionVisible,
-        optionFocused,
-        optionChecked
-      );
-    })
+        await assertAvailableOption(
+          availableOptionsList,
+          i + 1,
+          item.label,
+          item.value,
+          optionVisible,
+          optionFocused,
+          optionChecked,
+          options.multi
+        );
+      }
+    )
   );
 };
 
@@ -278,7 +350,8 @@ export const assertAvailableOption = async (
   value: string,
   visible: boolean,
   focused: boolean,
-  checked: boolean
+  checked: boolean,
+  multi: boolean
 ) => {
   const optionListItemSelector = `> li.adg-combobox--available-options-list-item:nth-child(${nthChild})`;
   const optionListItem = availableOptionsList.locator(optionListItemSelector);
@@ -299,9 +372,12 @@ export const assertAvailableOption = async (
   await expect(optionLabel).toHaveCSS('display', 'inline-block');
 
   const optionInput = optionLabel.locator('> input');
-  await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
-  await expect(optionInput).toHaveAttribute('type', 'checkbox');
-  await expect(optionInput).toHaveAttribute('name', 'hobbies');
+  // await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
+  await expect(optionInput).toHaveAttribute(
+    'type',
+    multi ? 'checkbox' : 'radio'
+  );
+  // await expect(optionInput).toHaveAttribute('name', 'hobbies'); // UNCOMMENT
 
   if (focused) {
     await expect(optionInput).toBeFocused();
@@ -319,9 +395,10 @@ export const assertAvailableOption = async (
   // Also, I'm unsure whether we need the span.check!
 };
 
-export const tabIntoFilter = async (page: Page) => {
+export const tabIntoFilter = async (page: Page, id: string) => {
   // todo: this is what right now needs to be pressed to get from page load to the filter, but it's easily breakable, if someone changes the example
-  for (let i = 0; i < 3; i++) {
+  const tabIndex = id == 'hobbiesCombobox' ? 3 : 5;
+  for (let i = 0; i < tabIndex; i++) {
     // press tab 4 times
     await page.keyboard.press('Tab');
   }
@@ -329,9 +406,11 @@ export const tabIntoFilter = async (page: Page) => {
   // await filter.focus();
 };
 
-export const clickIntoFilter = async (page: Page) => {
+export const clickIntoFilter = async (page: Page, id: string) => {
   // TODO: We should refactor this into a separate method
-  const filterInput = page.locator('input.adg-combobox--filter-input').first();
+  const filterInput = page.locator(
+    `adg-combobox#${id} input.adg-combobox--filter-input`
+  );
   await filterInput.click();
 };
 
@@ -340,16 +419,16 @@ export const clickOutsideFilter = async (page: Page) => {
   await buttonAfter.click();
 };
 
-export const clickOpenCloseButton = async (page: Page) => {
-  const buttonAfter = page
-    .locator('.adg-combobox--toggle-options-button')
-    .first();
+export const clickOpenCloseButton = async (page: Page, id: string) => {
+  const buttonAfter = page.locator(
+    `adg-combobox#${id} .adg-combobox--toggle-options-button`
+  );
   await buttonAfter.click();
 };
 
-export const clickOption = async (page: Page, label) => {
-  const buttonAfter = page.locator(
-    `.adg-combobox--available-options-list-item:has-text("${label}")`
+export const clickOption = async (page: Page, label: string, id: string) => {
+  const option = page.locator(
+    `adg-combobox#${id} .adg-combobox--available-options-list-item:has-text("${label}")`
   );
-  await buttonAfter.click();
+  await option.click();
 };
