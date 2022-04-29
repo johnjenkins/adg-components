@@ -41,6 +41,7 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 Our components are based on [Stencil](https://stenciljs.com/).
 
 - `$ cd path/to/adg-components`
+- `$ nvm use` to use correct node version
 - `$ npm i` to install dependencies
 - `$ npm run start` starts a local server on <http://localhost:3333/> (with hot reload)
 
