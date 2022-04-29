@@ -53,7 +53,7 @@ Our components are thoroughly tested using [Playwright](https://playwright.dev/)
 - `$ npm run test:run` for headless
 - `$ npm run test:gui` to see the magic happen!
 
-See <playwright.config.ts> for further configuration.
+See `playwright.config.ts` for further configuration.
 
 You can also run Playwright tests from within VSCode with the [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension.
 
