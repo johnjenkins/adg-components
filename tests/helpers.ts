@@ -162,7 +162,10 @@ export const expectCombobox = async (
   await expect(filterInput).toHaveId(filterInputId);
   await expect(filterInput).toHaveAttribute('type', 'text');
   await expect(filterInput).toHaveAttribute('role', 'combobox'); // Needed for a) that certain screen readers and browsers announce aria-expanded change (ie. Chrome on Desktop), and to let certain screen readers give some more details about the element's purpose (ie. VoiceOver/iOS would say "combobox")
-  await expect(filterInput).toHaveValue(filterValue);
+  if (options.multi) {
+    await expect(filterInput).toHaveValue(filterValue);
+  } else {
+  }
   await expect(filterInput).toHaveAttribute(
     'aria-expanded',
     optionsExpanded.toString()
@@ -259,7 +262,9 @@ export const expectCombobox = async (
   if (optionsExpanded) {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      options.multi ? 'Close Hobbies Options' : 'Colours Optionen schliessen'
+      options.multi
+        ? 'Close Hobbies Options'
+        : 'Farbe wählen Auswahl schliessen'
     );
   } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
@@ -397,7 +402,7 @@ export const assertAvailableOption = async (
 
 export const tabIntoFilter = async (page: Page, id: string) => {
   // todo: this is what right now needs to be pressed to get from page load to the filter, but it's easily breakable, if someone changes the example
-  const tabIndex = id == 'hobbiesCombobox' ? 3 : 5;
+  const tabIndex = id == 'hobbiesCombobox' ? 3 : 4;
   for (let i = 0; i < tabIndex; i++) {
     // press tab 4 times
     await page.keyboard.press('Tab');

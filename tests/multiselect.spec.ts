@@ -41,24 +41,6 @@ test.describe.only('ADG-Combobox (multi)', () => {
       });
     });
 
-    test('Activate open/close button', async ({ page }) => {
-      // This button will not remain focusable, see https://github.com/NothingAG/adg-components/issues/16
-      // await tabIntoFilter(page, 'hobbiesCombobox');
-      // await pressTab(page);
-      // await pressSpace(page);
-      // await expectSingleCombobox(page, {
-      //   filterFocused: false,
-      //   optionsExpanded: true,
-      //   visibleOptions: ALL_OPTIONS
-      // });
-      // // todo: tbd: should the component automatically focus the first item or not?
-      // await pressSpace(page);
-      // await expectSingleCombobox(page, {
-      //   filterFocused: false,
-      //   optionsExpanded: false
-      // });
-    });
-
     test('Toggle downwards through options using Down key', async ({
       page,
     }) => {
@@ -224,6 +206,7 @@ test.describe.only('ADG-Combobox (multi)', () => {
           selectedOptions: ['Soccer'],
         });
       });
+
       test('Using Enter key', async ({ page }) => {
         await tabIntoFilter(page, 'hobbiesCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
@@ -231,7 +214,7 @@ test.describe.only('ADG-Combobox (multi)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to check option "Soccer"
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Badminton"
         await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Movies"
-        await page.keyboard.press('Space'); // Press `Enter` to check option "Movies"
+        await page.keyboard.press('Enter'); // Press `Enter` to check option "Movies"
         await expectMultiCombobox(page, {
           filterFocused: false,
           visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),

@@ -38,27 +38,8 @@ test.describe('ADG-Combobox (single)', () => {
       await page.keyboard.press('Shift+Tab'); // At the time being, the open/close button is also focusable, so we should rather do a Shift-Tab here to definitely move focus outside the component. This might change though, see https://github.com/NothingAG/adg-components/issues/16.
       await expectSingleCombobox(page, {
         filterFocused: false,
-        filterValue: 'undefined', // This is actually a bug! It should be empty.
         optionsExpanded: false,
       });
-    });
-
-    test('Activate open/close button', async ({ page }) => {
-      // This button will not remain focusable, see https://github.com/NothingAG/adg-components/issues/16
-      // await tabIntoFilter(page);
-      // await pressTab(page);
-      // await pressSpace(page);
-      // await expectSingleCombobox(page, {
-      //   filterFocused: false,
-      //   optionsExpanded: true,
-      //   visibleOptions: ALL_OPTIONS
-      // });
-      // // todo: tbd: should the component automatically focus the first item or not?
-      // await pressSpace(page);
-      // await expectSingleCombobox(page, {
-      //   filterFocused: false,
-      //   optionsExpanded: false
-      // });
     });
 
     test('Toggle downwards through options using Down key', async ({
@@ -78,7 +59,6 @@ test.describe('ADG-Combobox (single)', () => {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        selectedOptions: ['Black'],
         focusedOption: 'Black',
       });
 
@@ -122,7 +102,7 @@ test.describe('ADG-Combobox (single)', () => {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        focusedOption: 'Programming',
+        focusedOption: 'Yellow',
       });
 
       await page.keyboard.press('ArrowUp'); // Press `Up` to set focus on previous option
@@ -130,15 +110,15 @@ test.describe('ADG-Combobox (single)', () => {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        focusedOption: 'Sleeping',
+        focusedOption: 'White',
       });
 
-      for (let i = 0; i < 10; i++) await page.keyboard.press('ArrowUp'); //  // Press `Up` multiple times to set focus on first option
+      for (let i = 0; i < 8; i++) await page.keyboard.press('ArrowUp'); //  // Press `Up` multiple times to set focus on first option
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        focusedOption: 'Soccer',
+        focusedOption: 'Black',
       });
 
       await page.keyboard.press('ArrowUp'); // Press `Up` to set focus back to filter input
@@ -175,7 +155,7 @@ test.describe('ADG-Combobox (single)', () => {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-          focusedOption: 'Soccer',
+          focusedOption: 'Black',
         });
 
         await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter input
@@ -190,66 +170,58 @@ test.describe('ADG-Combobox (single)', () => {
       test('Using Space key', async ({ page }) => {
         await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
-        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Black"
         await expectSingleCombobox(page, {
           filterFocused: false,
           optionsExpanded: true,
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-          focusedOption: 'Soccer',
+          focusedOption: 'Black',
         });
 
-        await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
+        await page.keyboard.press('Space'); // Press `Space` to check option "Black"
         await expectSingleCombobox(page, {
           filterFocused: false,
+          filterValue: 'Black',
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
-          focusedOption: 'Soccer',
-          selectedOptions: ['Soccer'],
+          focusedOption: 'Black',
+          selectedOptions: ['Black'],
         });
 
-        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Badminton"
-        await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Movies"
-        await page.keyboard.press('Space'); // Press `Space` to check option "Movies"
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Blue"
+        await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Brown"
+        await page.keyboard.press('Space'); // Press `Space` to check option "Brown"
         await expectSingleCombobox(page, {
           filterFocused: false,
+          filterValue: 'Brown',
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
-          focusedOption: 'Movies',
-          selectedOptions: ['Soccer', 'Movies'],
+          focusedOption: 'Brown',
+          selectedOptions: ['Brown'],
         });
 
-        await page.keyboard.press('Space'); // Press `Space` to uncheck option "Movies"
+        await page.keyboard.press('Space'); // Pressing `Space` does NOT uncheck option "Brown"
         await expectSingleCombobox(page, {
           filterFocused: false,
+          filterValue: 'Brown',
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
           optionsExpanded: true,
-          focusedOption: 'Movies',
-          selectedOptions: ['Soccer'],
+          focusedOption: 'Brown',
+          selectedOptions: ['Brown'],
         });
       });
+
       test('Using Enter key', async ({ page }) => {
         await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
-        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Soccer"
-        await page.keyboard.press('Enter'); // Press `Enter` to check option "Soccer"
-        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on second option "Badminton"
-        await page.keyboard.press('ArrowDown'); // Press `Down` again to set focus on third option "Movies"
-        await page.keyboard.press('Space'); // Press `Enter` to check option "Movies"
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option "Black"
+        await page.keyboard.press('Enter'); // Press `Enter` to check option "Black"
         await expectSingleCombobox(page, {
-          filterFocused: false,
+          filterFocused: true,
+          filterValue: 'Black',
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-          optionsExpanded: true,
-          focusedOption: 'Movies',
-          selectedOptions: ['Soccer', 'Movies'],
-        });
-
-        await page.keyboard.press('Enter'); // Press `Enter` to uncheck option "Movies"
-        await expectSingleCombobox(page, {
-          filterFocused: false,
-          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-          optionsExpanded: true,
-          focusedOption: 'Movies',
-          selectedOptions: ['Soccer'],
+          optionsExpanded: false,
+          selectedOptions: ['Black'],
         });
       });
     });
@@ -259,19 +231,21 @@ test.describe('ADG-Combobox (single)', () => {
         await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
-        await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
+        await page.keyboard.press('Space'); // Press `Space` to check option "Black"
         await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
         await expectSingleCombobox(page, {
           filterFocused: true,
+          filterValue: 'Black',
           optionsExpanded: false,
-          selectedOptions: ['Soccer'],
+          selectedOptions: ['Black'],
         });
 
         await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
         await expectSingleCombobox(page, {
           unselectAllButtonFocused: true,
+          filterValue: 'Black',
           optionsExpanded: false,
-          selectedOptions: ['Soccer'],
+          selectedOptions: ['Black'],
         });
 
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
@@ -285,8 +259,12 @@ test.describe('ADG-Combobox (single)', () => {
 
     test('Propagate Enter key', async ({ page }) => {
       await tabIntoFilter(page, 'coloursCombobox');
+      await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
+      await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+      await page.keyboard.press('Space'); // Press `Space` to check option "Black"
+      await page.keyboard.press('ArrowUp'); // Press `Up` to set focus back to filter input
       await page.keyboard.press('Enter'); // Press `Enter` to trigger browser default behaviour (send form)
-      await expect(page).toHaveURL(/.*?hobbies=/);
+      await expect(page).toHaveURL(/.*\?colours=000000/);
     });
   });
 
@@ -335,23 +313,23 @@ test.describe('ADG-Combobox (single)', () => {
 
     test('Select/unselect options', async ({ page }) => {
       await clickIntoFilter(page, 'coloursCombobox'); // Expand options
-      await clickOption(page, 'Soccer', 'coloursCombobox'); // Select option "Soccer"
-      await clickOption(page, 'Movies', 'coloursCombobox'); // Select option "Movies"
+      await clickOption(page, 'Black', 'coloursCombobox'); // Select option "Black"
+      await clickOption(page, 'Brown', 'coloursCombobox'); // Select option "Brown"
       await expectSingleCombobox(page, {
         filterFocused: false,
         optionsExpanded: true,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
-        focusedOption: 'Movies',
-        selectedOptions: ['Soccer', 'Movies'],
+        focusedOption: 'Brown',
+        selectedOptions: ['Black', 'Brown'],
       });
 
-      await clickOption(page, 'Movies', 'coloursCombobox'); // Unselect option "Movies"
+      await clickOption(page, 'Brown', 'coloursCombobox'); // Unselect option "Brown"
       await expectSingleCombobox(page, {
         filterFocused: false,
         visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         optionsExpanded: true,
-        focusedOption: 'Movies',
-        selectedOptions: ['Soccer'],
+        focusedOption: 'Brown',
+        selectedOptions: ['Black'],
       });
     });
   });
@@ -368,7 +346,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Badminton', 'Kickboxing'],
+        visibleOptions: ['Blue', 'Kickboxing'],
         optionsExpanded: true,
       });
     });
@@ -379,7 +357,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Badminton', 'Kickboxing'],
+        visibleOptions: ['Blue', 'Kickboxing'],
         optionsExpanded: true,
       });
 
@@ -387,7 +365,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'ba',
-        visibleOptions: ['Badminton'],
+        visibleOptions: ['Blue'],
         optionsExpanded: true,
       });
 
@@ -406,22 +384,22 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Badminton', 'Kickboxing'],
+        visibleOptions: ['Blue', 'Kickboxing'],
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Blue"
       await expectSingleCombobox(page, {
         filterValue: 'b',
-        visibleOptions: ['Badminton', 'Kickboxing'],
-        focusedOption: 'Badminton',
+        visibleOptions: ['Blue', 'Kickboxing'],
+        focusedOption: 'Blue',
         optionsExpanded: true,
       });
 
       await page.keyboard.press('ArrowDown'); // Move focus to next (last) option "Kickboxing"
       await expectSingleCombobox(page, {
         filterValue: 'b',
-        visibleOptions: ['Badminton', 'Kickboxing'],
+        visibleOptions: ['Blue', 'Kickboxing'],
         focusedOption: 'Kickboxing',
         optionsExpanded: true,
       });
@@ -430,7 +408,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Badminton', 'Kickboxing'],
+        visibleOptions: ['Blue', 'Kickboxing'],
         optionsExpanded: true,
       });
     });
@@ -444,8 +422,8 @@ test.describe('ADG-Combobox (single)', () => {
         filterFocused: true,
         filterValue: 'a',
         visibleOptions: [
-          'Badminton',
-          'Gardening',
+          'Blue',
+          'Green',
           'Dancing',
           'Painting',
           'Reading',
@@ -454,19 +432,19 @@ test.describe('ADG-Combobox (single)', () => {
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Blue"
       await expectSingleCombobox(page, {
         filterValue: 'a',
         visibleOptions: [
-          'Badminton',
-          'Gardening',
+          'Blue',
+          'Green',
           'Dancing',
           'Painting',
           'Reading',
           'Programming',
         ],
         optionsExpanded: true,
-        focusedOption: 'Badminton',
+        focusedOption: 'Blue',
       });
 
       await page.keyboard.press('a'); // Add "d", so filter is "ba", and focus should be back on filter input
@@ -474,7 +452,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'ba',
-        visibleOptions: ['Badminton'],
+        visibleOptions: ['Blue'],
         optionsExpanded: true,
       });
     });
