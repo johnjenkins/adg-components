@@ -70,6 +70,7 @@ export const expectSingleCombobox = async (
   await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: internalId,
     label: 'Farbe wählen',
+    filterLabel: 'Farbe',
     multi: false,
     lang: 'de',
   });
@@ -117,6 +118,7 @@ export const expectCombobox = async (
   options: {
     internalId: string;
     label: string;
+    filterLabel: string;
     multi: boolean;
     lang: string;
   }
@@ -204,13 +206,13 @@ export const expectCombobox = async (
     await expect(unselectAllButton).toHaveText(
       `${selectedOptions.length} ${
         options.label
-      } selected:${selectedOptions.join(', ')},`
+      } selected: ${selectedOptions.join(', ')},`
     );
   } else {
     await expect(unselectAllButton).toHaveText(
       `${options.label} ${
         options.multi ? 'selected' : 'gewählt'
-      }:${selectedOptions.join(', ')},`
+      }: ${selectedOptions.join(', ')},`
     );
   }
 
@@ -231,7 +233,7 @@ export const expectCombobox = async (
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
     `${options.label} ${
       options.multi ? 'selected' : 'gewählt'
-    }:${selectedOptions.join(', ')},`
+    }: ${selectedOptions.join(', ')},`
   );
   // TODO: No colon, no comma!
 

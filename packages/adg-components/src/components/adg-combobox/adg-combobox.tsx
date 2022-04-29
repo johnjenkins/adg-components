@@ -19,6 +19,8 @@ interface OptionModel {
   hidden: boolean;
 }
 
+const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
+
 let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefer any passed ID (as this results in race conditions when there are many instances of the component on the same page).
 
 @Component({
@@ -84,8 +86,6 @@ export class AdgComboboxComponent {
     this.selectedOptionModels = this.optionModels.filter(
       (optionModel) => optionModel.checked
     );
-
-    this.displaySelectedItems();
   }
 
   async componentWillLoad(): Promise<void> {
@@ -105,7 +105,6 @@ export class AdgComboboxComponent {
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
-      console.log(100);
       this.closeOptionsContainer(false);
     }
   }
@@ -115,7 +114,6 @@ export class AdgComboboxComponent {
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
-      console.log(111);
       this.closeOptionsContainer(false);
     }
   }
@@ -141,7 +139,8 @@ export class AdgComboboxComponent {
     }
   }
 
-  handleUnselectAllButtonClick() {
+  handleUnselectAllButtonClick(event: MouseEvent) {
+    console.log(event);
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       checked: false,
@@ -159,6 +158,7 @@ export class AdgComboboxComponent {
   handleFilterInputChange(event: Event) {
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase().trim();
+
     this.filterTermText = filterTerm;
 
     let optionModels = this.optionModels.map((optionModel) => ({
@@ -172,13 +172,11 @@ export class AdgComboboxComponent {
     this.filteredOptionsStartingWith = shownOptions.length
       ? shownOptions[0].label
       : '';
-
     this.openOptionsContainer(false);
   }
 
   handleKeyUpForPageUpAndPageDown(event: KeyboardEvent) {
     if (event.key === 'PageDown' || event.key === 'PageUp') {
-
       this.openOptionsContainer(false);
 
       const shownElems = this.availableOptionsListItems.filter(
@@ -209,7 +207,8 @@ export class AdgComboboxComponent {
   }
 
   handleOptionInputClick(event: MouseEvent) {
-    if (event.x && event.y) { // todo: check if it is click
+    if (event.x && event.y) {
+      // todo: check if it is click
       if (!this.multi) {
         this.closeOptionsContainer();
       }
@@ -226,9 +225,11 @@ export class AdgComboboxComponent {
     } else {
       this.optionModels = this.optionModels.map((optionModel) => ({
         ...optionModel,
-        checked: optionModel.value === value,
+        checked: optionModel.value === value ? !optionModel.checked : false,
       }));
     }
+
+    this.displaySelectedItems();
   }
 
   handleKeyDown(event: KeyboardEvent) {
@@ -263,10 +264,17 @@ export class AdgComboboxComponent {
       }
 
       this.lastArrowSelectedElem = index;
-
     }
 
     if (event.key === '?') console.log('Help not yet implemented!');
+
+    if (
+      event.key.match(textInputRegexp) &&
+      document.activeElement !== this.filterInputElementRef
+    ) {
+      this.filterInputElementRef.focus();
+      this.lastArrowSelectedElem = 0;
+    }
   }
 
   handleOptionSelectedButtonClick(value: string, clickedIndex: number) {
@@ -315,7 +323,7 @@ export class AdgComboboxComponent {
 
   closeOptionsContainer(selectInput = true) {
     if (!this.isOptionsContainerOpen) {
-      return
+      return;
     }
 
     this.isOptionsContainerOpen = false;
@@ -374,7 +382,7 @@ export class AdgComboboxComponent {
             class="adg-combobox--unselect-all-button"
             type="button"
             ref={(el) => (this.unselectAllButtonElementRef = el)}
-            onClick={() => this.handleUnselectAllButtonClick()}
+            onClick={(ev) => this.handleUnselectAllButtonClick(ev)}
             onKeyUp={(ev) => this.handleUnselectAllButtonKeyUp(ev)}
             hidden={this.selectedOptionModels.length === 0}
           >
@@ -388,7 +396,6 @@ export class AdgComboboxComponent {
                 {this.$t('results_selected', {
                   filterLabel: this.filterLabel,
                 })}
-                :
                 <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(', ')}
                 </span>
@@ -453,35 +460,32 @@ export class AdgComboboxComponent {
               </span>
             </legend>
             <ol class="adg-combobox--available-options-list">
-              {this.optionModels
-                .map((option) => (
-                  <li
-                    key={option.value}
-                    class="adg-combobox--available-options-list-item"
-                    hidden={option.hidden}
-                    ref={(el) => this.availableOptionsListItems.push(el)}
-                  >
-                    <label data-inline-block>
-                      <input
-                        type={this.multi ? 'checkbox' : 'radio'}
-                        name={`${this.name}${this.multi ? '[]' : ''}`}
-                        value={option.value}
-                        checked={option.checked}
-                        onKeyDown={(ev) =>
-                          this.handleOptionInputKeyDown(ev, option.value)
-                        }
-                        onClick={(ev) => this.handleOptionInputClick(ev)}
-                        onInput={() =>
-                          this.handleOptionInputChange(option.value)
-                        }
-                      />
-                      <span>
-                        {option.label}
-                        <span class="check"></span>
-                      </span>
-                    </label>
-                  </li>
-                ))}
+              {this.optionModels.map((option) => (
+                <li
+                  key={option.value}
+                  class="adg-combobox--available-options-list-item"
+                  hidden={option.hidden}
+                  ref={(el) => this.availableOptionsListItems.push(el)}
+                >
+                  <label data-inline-block>
+                    <input
+                      type={this.multi ? 'checkbox' : 'radio'}
+                      name={`${this.name}${this.multi ? '[]' : ''}`}
+                      value={option.value}
+                      checked={option.checked}
+                      onKeyDown={(ev) =>
+                        this.handleOptionInputKeyDown(ev, option.value)
+                      }
+                      onClick={(ev) => this.handleOptionInputClick(ev)}
+                      onInput={() => this.handleOptionInputChange(option.value)}
+                    />
+                    <span>
+                      {option.label}
+                      <span class="check"></span>
+                    </span>
+                  </label>
+                </li>
+              ))}
             </ol>
           </fieldset>
         </span>
