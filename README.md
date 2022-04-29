@@ -68,5 +68,5 @@ You can also run Playwright tests from within VSCode with the [Playwright Test f
 - **[Nothing](https://www.nothing.ch/)** ([Josua Muheim](https://github.com/jmuheim) & Xaver Fleer): initiators of the original [proof of concept](https://github.com/NothingAG/accessible-dropdown/), implementation
 - **[Lambda IT](https://lambda-it.ch/)** ([Wayne Maurer](https://github.com/wmaurer) & [Thomas Schneiter](https://github.com/thomasschneiter)): implementation
 - **[Dept](https://www.deptagency.com/)** ([Jürgen Rudigier](https://github.com/rudigier)): implementation
-- **[Iterativ](https://www.iterativ.ch/):** ([Ramon Wenger](https://github.com/ramonwenger)): automated testing
+- **[Iterativ](https://www.iterativ.ch/)** ([Ramon Wenger](https://github.com/ramonwenger)): automated testing
 - **[Access for all](https://www.access-for-all.ch/)** (Gianfranco Giudice & Petra Ritter): accessibility testing
