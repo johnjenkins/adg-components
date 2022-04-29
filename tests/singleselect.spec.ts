@@ -28,7 +28,7 @@ test.describe('ADG-Combobox (single)', () => {
       });
     });
 
-    test.only('Tab out of filter input', async ({ page }) => {
+    test('Tab out of filter input', async ({ page }) => {
       await tabIntoFilter(page, 'coloursCombobox');
       await expectSingleCombobox(page, {
         filterFocused: true,
