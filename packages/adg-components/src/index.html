@@ -36,9 +36,9 @@
     <hr />
 
     <form action="/" method="get">
-      <adg-combobox id="hobbiesCombobox" name="hobbies"></adg-combobox>
+      <adg-combobox id="hobbies" name="hobbies"></adg-combobox>
       <br />
-      <adg-combobox id="coloursCombobox" label="Farbe wählen" filterLabel="Colours" name="colours" lang="de"></adg-combobox>
+      <adg-combobox id="colours" label="Farben" filterLabel="Colours" name="colours" lang="de"></adg-combobox>
       <button type="submit">submit</button>
     </form>
 
@@ -49,10 +49,10 @@
     </p>
 
     <script>
-      const hobbiesCombobox = document.querySelector('#hobbiesCombobox');
-      hobbiesCombobox.multi = true;
-      hobbiesCombobox.label = 'Hobbies';
-      hobbiesCombobox.options = [
+      const hobbies = document.querySelector('#hobbies');
+      hobbies.multi = true;
+      hobbies.label = 'Hobbies';
+      hobbies.options = [
         'Soccer',
         'Badminton',
         'Movies',
@@ -66,8 +66,8 @@
         'Sleeping',
         'Programming',
       ];
-      const coloursCombobox = document.querySelector('#coloursCombobox');
-      coloursCombobox.options = [
+      const colours = document.querySelector('#colours');
+      colours.options = [
         {value: '000000', label: 'Black'},
         {value: '0000FF', label: 'Blue'},
         {value: 'A52A2A', label: 'Brown'},

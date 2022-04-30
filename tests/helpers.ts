@@ -33,6 +33,7 @@ export const ALL_SINGLE_OPTIONS = [
 interface ComboboxExpectations {
   filterFocused?: boolean;
   filterValue?: string;
+  filterTerm?: string; // For multi-selects, this always equals filterValue. For single-selects, this may be different: when I select an option, the filter is set to the option's label, but this does NOT represent the filter term!
   optionsExpanded?: boolean;
   visibleOptions?: string[];
   focusedOption?: string;
@@ -44,13 +45,23 @@ export const expectSingleCombobox = async (
   page: Page,
   expectations: ComboboxExpectations
 ) => {
-  const adgCombobox = page.locator(`adg-combobox#coloursCombobox`);
+  const adgCombobox = page.locator(`adg-combobox#colours`);
 
+  if (expectations.filterValue || expectations.filterTerm) {
+    if (
+      expectations.filterValue === undefined ||
+      expectations.filterTerm === undefined
+    )
+      throw new Error(
+        `If you pass a "filterValue", it must always be accompanied by a "filterTerm" in single-selects!`
+      );
+  }
   const mergedExpectations = Object.assign(
     {},
     {
       filterFocused: false,
       filterValue: '',
+      filterTerm: '',
       optionsExpanded: false,
       visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
       focusedOption: null,
@@ -60,16 +71,9 @@ export const expectSingleCombobox = async (
     expectations
   );
 
-  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
-  const internalId = await (
-    await adgCombobox
-      .locator('label.adg-combobox--filter-label')
-      .getAttribute('for')
-  ).replace('--input', '');
-
   await expectCombobox(adgCombobox, mergedExpectations, {
-    internalId: internalId,
-    label: 'Farbe wählen',
+    internalId: 'colours',
+    label: 'Farben',
     filterLabel: 'Farbe',
     multi: false,
     lang: 'de',
@@ -81,13 +85,19 @@ export const expectMultiCombobox = async (
   page: Page,
   expectations: ComboboxExpectations
 ) => {
-  const adgCombobox = page.locator(`adg-combobox#hobbiesCombobox`);
+  const adgCombobox = page.locator(`adg-combobox#hobbies`);
 
+  if (expectations.filterTerm) {
+    throw new Error(
+      `You don't need to pass an expectation for "filterTerm", as it always is the same like "filterValue" in multi-selects!`
+    );
+  }
   const mergedExpectations = Object.assign(
     {},
     {
       filterFocused: false,
       filterValue: '',
+      filterTerm: expectations.filterValue, // In multi-select, the filterValue always corresponds to the filterTerm!
       optionsExpanded: false,
       visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
       focusedOption: null,
@@ -97,15 +107,8 @@ export const expectMultiCombobox = async (
     expectations
   );
 
-  // Gets created automatically with a consecutive number, so it's sometimes 0, sometimes 1. So we have to manually find the value here. Maybe we should just use the ID specified by the user? */
-  const internalId = await (
-    await adgCombobox
-      .locator('label.adg-combobox--filter-label')
-      .getAttribute('for')
-  ).replace('--input', '');
-
   await expectCombobox(adgCombobox, mergedExpectations, {
-    internalId: internalId,
+    internalId: 'hobbies',
     label: 'Hobbies',
     filterLabel: 'Hobbies',
     multi: true,
@@ -127,6 +130,7 @@ export const expectCombobox = async (
   const {
     filterFocused,
     filterValue,
+    filterTerm,
     optionsExpanded,
     visibleOptions,
     focusedOption,
@@ -183,7 +187,7 @@ export const expectCombobox = async (
   await expect(filterInput).toHaveAttribute('autocomplete', 'off'); // Default browser autocompletion should not be confused (or interfere) with our filter feature!
   await expect(filterInput).toHaveAttribute(
     'placeholder',
-    options.lang == 'en' ? 'Enter filter term' : 'Eingabe Suchbegriff'
+    options.lang == 'en' ? 'Enter filter term' : 'Suchbegriff eingeben'
   );
   await expect(filterInput).toHaveAttribute(
     'aria-describedby',
@@ -265,14 +269,12 @@ export const expectCombobox = async (
   if (optionsExpanded) {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      options.multi
-        ? 'Close Hobbies Options'
-        : 'Farbe wählen Auswahl schliessen'
+      options.multi ? 'Close Hobbies Options' : 'Farben Auswahl schliessen'
     );
   } else {
     await expect(toggleOptionsButtonImage).toHaveAttribute(
       'alt',
-      options.multi ? 'Open Hobbies Options' : 'Farbe wählen Auswahl öffnen'
+      options.multi ? 'Open Hobbies Options' : 'Farben Auswahl öffnen'
     );
   }
 
@@ -285,26 +287,46 @@ export const expectCombobox = async (
     availableOptionsContainer.locator('legend');
 
   let expectedXOfYForFilterTextValue = '';
-  if (visibleOptions.length < ALL_MULTI_OPTIONS.length) {
-    expectedXOfYForFilterTextValue += ` ${visibleOptions.length} of`;
+  let allOptions = [];
+  if (options.multi) {
+    allOptions = ALL_MULTI_OPTIONS;
+  } else {
+    allOptions = ALL_SINGLE_OPTIONS;
   }
-  expectedXOfYForFilterTextValue += ` ${ALL_MULTI_OPTIONS.length} Hobbies`;
+  if (visibleOptions.length < allOptions.length) {
+    expectedXOfYForFilterTextValue += ` ${visibleOptions.length} ${
+      options.multi ? 'of' : 'von'
+    }`;
+  }
+  expectedXOfYForFilterTextValue += ` ${allOptions.length} ${
+    options.multi ? 'Hobbies' : 'Farben'
+  }`;
   if (filterValue == '') {
     // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
-  } else {
-    expectedXOfYForFilterTextValue += ` for filter "${filterValue}"`;
+  }
+  if (filterTerm) {
+    expectedXOfYForFilterTextValue += ` ${
+      options.multi ? 'for filter' : 'für Filter'
+    } "${filterTerm}"`;
+  }
 
-    if (visibleOptions.length > 0) {
-      expectedXOfYForFilterTextValue += `, starting with "{first}"`; // Bug in I18n!, see https://github.com/NothingAG/adg-components/issues/25
-    }
+  if (visibleOptions.length > 0) {
+    expectedXOfYForFilterTextValue += `, ${
+      options.multi ? 'starting with' : 'beginnend mit'
+    } "${visibleOptions[0]}"`;
   }
   if (optionsExpanded) {
-    expectedXOfYForFilterTextValue += ' (enter question mark for help)';
+    // expectedXOfYForFilterTextValue += ' (enter question mark for help)';
   }
-  // UNCOMMENT!
-  // await expect(availableOptionsContainerLegend).toHaveText(
-  //   `Available Hobbies: ${expectedXOfYForFilterTextValue}`
-  // );
+  if (options.multi) {
+    await expect(availableOptionsContainerLegend).toHaveText(
+      `Available Hobbies: ${expectedXOfYForFilterTextValue}`
+    );
+  } else {
+    await expect(availableOptionsContainerLegend).toHaveText(
+      `Verfügbare Farben: ${expectedXOfYForFilterTextValue}`
+    );
+  }
 
   const availableOptionsContainerLegendVisuallyHidden =
     availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
@@ -405,7 +427,7 @@ export const assertAvailableOption = async (
 
 export const tabIntoFilter = async (page: Page, id: string) => {
   // todo: this is what right now needs to be pressed to get from page load to the filter, but it's easily breakable, if someone changes the example
-  const tabIndex = id == 'hobbiesCombobox' ? 3 : 4;
+  const tabIndex = id == 'hobbies' ? 3 : 4;
   for (let i = 0; i < tabIndex; i++) {
     // press tab 4 times
     await page.keyboard.press('Tab');

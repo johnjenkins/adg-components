@@ -82,6 +82,7 @@ export class AdgComboboxComponent {
       checked: false,
       hidden: false,
     }));
+    this.filteredOptionsStartingWith = this.optionModels[0].label;
   }
 
   @State() optionModels: OptionModel[] = [];
@@ -322,7 +323,7 @@ export class AdgComboboxComponent {
       // namely the instructions. We append them with a little delay so each
       // and every screen reader realises that the live region was changed and
       // hence needs to be announced.
-      this.showInstructions = true;
+      // this.showInstructions = true;
     }, 200);
   }
 
