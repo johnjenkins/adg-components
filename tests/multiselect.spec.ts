@@ -453,12 +453,28 @@ test.describe('ADG-Combobox (multi)', () => {
         focusedOption: 'Badminton',
       });
 
-      await page.keyboard.press('a'); // Add "d", so filter is "ba", and focus should be back on filter input
-      test.fixme(); // Focus is not put back to filter input
+      await page.keyboard.press('d'); // Add "d", so filter is "ad", and focus should be back on filter input
       await expectMultiCombobox(page, {
         filterFocused: true,
-        filterValue: 'ba',
-        visibleOptions: ['Badminton'],
+        filterValue: 'ad',
+        visibleOptions: ['Badminton', 'Reading'],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Badminton"
+      await page.keyboard.press('ArrowDown'); // Move focus to next option "Reading"
+      await expectMultiCombobox(page, {
+        filterValue: 'ad',
+        visibleOptions: ['Badminton', 'Reading'],
+        optionsExpanded: true,
+        focusedOption: 'Reading',
+      });
+
+      await page.keyboard.press('x'); // Add "x", so filter is "adx", and focus should be back on filter input
+      await expectMultiCombobox(page, {
+        filterFocused: true,
+        filterValue: 'adx',
+        visibleOptions: [],
         optionsExpanded: true,
       });
     });
