@@ -235,12 +235,12 @@ test.describe('ADG-Combobox (multi)', () => {
     });
 
     test.describe('Activate "Unselect all" button', () => {
-      test('"Unselect all" button', async ({ page }) => {
+      test('With empty filter', async ({ page }) => {
         await tabIntoFilter(page, 'hobbiesCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
         await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
-        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
+        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus to "Unselect all" button
         await expectMultiCombobox(page, {
           filterFocused: true,
           optionsExpanded: false,
@@ -259,6 +259,45 @@ test.describe('ADG-Combobox (multi)', () => {
           filterFocused: true,
           optionsExpanded: false,
           selectedOptions: [],
+        });
+      });
+
+      test('With filter term', async ({ page }) => {
+        await tabIntoFilter(page, 'hobbiesCombobox');
+        await page.keyboard.press('b'); // Press "b" to filter options
+        await expectMultiCombobox(page, {
+          filterFocused: true,
+          filterValue: 'b',
+          optionsExpanded: true,
+          visibleOptions: ['Badminton', 'Kickboxing'],
+        });
+
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+        await page.keyboard.press('Space'); // Press `Space` to check option "Badminton"
+        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter
+        await expectMultiCombobox(page, {
+          filterFocused: true,
+          filterValue: 'b',
+          optionsExpanded: false,
+          selectedOptions: ['Badminton'],
+          visibleOptions: ['Badminton', 'Kickboxing'],
+        });
+
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await expectMultiCombobox(page, {
+          unselectAllButtonFocused: true,
+          filterValue: 'b',
+          optionsExpanded: false,
+          selectedOptions: ['Badminton'],
+          visibleOptions: ['Badminton', 'Kickboxing'],
+        });
+
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await expectMultiCombobox(page, {
+          filterFocused: true,
+          optionsExpanded: false,
+          selectedOptions: [],
+          visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
         });
       });
     });

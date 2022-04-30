@@ -227,12 +227,12 @@ test.describe('ADG-Combobox (single)', () => {
     });
 
     test.describe('Activate "Unselect all" button', () => {
-      test('"Unselect all" button', async ({ page }) => {
+      test('With empty filter', async ({ page }) => {
         await tabIntoFilter(page, 'coloursCombobox');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
         await page.keyboard.press('Space'); // Press `Space` to check option "Black"
-        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus
+        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter
         await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'Black',
@@ -253,6 +253,45 @@ test.describe('ADG-Combobox (single)', () => {
           filterFocused: true,
           optionsExpanded: false,
           selectedOptions: [],
+        });
+      });
+
+      test('With filter term', async ({ page }) => {
+        await tabIntoFilter(page, 'coloursCombobox');
+        await page.keyboard.press('a'); // Press "a" to filter options
+        await expectSingleCombobox(page, {
+          filterFocused: true,
+          filterValue: 'a',
+          optionsExpanded: true,
+          visibleOptions: ['Black', 'Orange'],
+        });
+
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+        await page.keyboard.press('Space'); // Press `Space` to check option "Black"
+        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus back to filter
+        await expectSingleCombobox(page, {
+          filterFocused: true,
+          filterValue: 'Black',
+          optionsExpanded: false,
+          selectedOptions: ['Black'],
+          visibleOptions: ['Black', 'Orange'],
+        });
+
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await expectSingleCombobox(page, {
+          unselectAllButtonFocused: true,
+          filterValue: 'Black',
+          optionsExpanded: false,
+          selectedOptions: ['Black'],
+          visibleOptions: ['Black', 'Orange'],
+        });
+
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await expectSingleCombobox(page, {
+          filterFocused: true,
+          optionsExpanded: false,
+          selectedOptions: [],
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         });
       });
     });
