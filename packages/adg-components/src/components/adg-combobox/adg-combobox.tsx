@@ -11,7 +11,6 @@ import {
 
 import { Translator } from '../../utils/locale';
 
-
 interface OptionModel {
   value: string;
   label: string;
@@ -32,9 +31,8 @@ let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefe
 export class AdgComboboxComponent {
   private $t: Function;
 
-  private _id = `adg-combobox-${nextUniqueId++}`;
-  private _inputId = `${this._id}--input`;
-  private _optionsSelectedId = `${this._id}--options-selected`;
+  private _inputId: string;
+  private _optionsSelectedId: string;
 
   selectedOptionModels: OptionModel[] = [];
   lastArrowSelectedElem = 0;
@@ -50,10 +48,10 @@ export class AdgComboboxComponent {
 
   @Element() el: HTMLElement;
 
-  @Prop() label = '';
+  @Prop() label = 'Label';
   @Prop() filterLabel = this.label;
   @Prop() options: string[] = [];
-  @Prop() name = this._id;
+  @Prop() name: string;
   @Prop() multi = false;
   @Prop() showInstructions = false;
   @Prop() ariaLiveAssertive = false;
@@ -65,6 +63,12 @@ export class AdgComboboxComponent {
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
+    const internalId = this.el.id  || `adg-combobox-${nextUniqueId++}`;
+    this._inputId = `${internalId}--input`;
+    this._optionsSelectedId = `${internalId}--options-selected`;
+
+    this.name = this.name || internalId;
+
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
   }
@@ -146,7 +150,7 @@ export class AdgComboboxComponent {
       checked: false,
     }));
     this.filterInputElementRef.focus();
-     this.filterInputElementRef.value = ""
+    this.filterInputElementRef.value = '';
   }
 
   handleUnselectAllButtonKeyUp(event: KeyboardEvent) {
