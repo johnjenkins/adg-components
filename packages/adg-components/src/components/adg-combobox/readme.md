@@ -9,7 +9,7 @@
 | ------------------- | --------------------- | ----------- | ---------- | ------------ |
 | `ariaLiveAssertive` | `aria-live-assertive` |             | `boolean`  | `false`      |
 | `filterlabel`       | `filter-label`        |             | `string`   | `this.label` |
-| `label`             | `label`               |             | `string`   | `''`         |
+| `label`             | `label`               |             | `string`   | `'Options'`         |
 | `multi`             | `multi`               |             | `boolean`  | `false`      |
 | `name`              | `name`                |             | `string`   | `this._id`   |
 | `options`           | --                    |             | `string[]` | `[]`         |

@@ -109,7 +109,7 @@ export const expectMultiCombobox = async (
 
   await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: 'hobbies',
-    label: 'Hobbies',
+    label: null,
     filterlabel: 'Hobbies',
     multi: true,
     lang: 'en',
@@ -141,19 +141,19 @@ export const expectCombobox = async (
   const filterInputId = `${options.internalId}--input`;
   const xOptionsSelectedId = `${options.internalId}--options-selected`;
 
-  await expect(combobox).toHaveClass('hydrated'); // TODO: Where does this come from an what's it for actually?
+  await expect(combobox).toHaveClass(/hydrated/); // TODO: Where does this come from an what's it for actually?
 
-  const widgetContainer = combobox.locator('.adg-combobox--container');
-  await expect(widgetContainer).toHaveCSS('display', 'block');
 
-  const filterlabel = widgetContainer.locator(
+  const filterlabel = combobox.locator(
     'label.adg-combobox--filter-label'
   );
-  await expect(filterlabel).toHaveText(options.label);
-  await expect(filterlabel).toHaveAttribute('for', filterInputId);
-  await expect(filterlabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
+  if (options.label) {
+    await expect(filterlabel).toHaveText(options.label);
+    await expect(filterlabel).toHaveAttribute('for', filterInputId);
+    await expect(filterlabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
+  }
 
-  const filterAndOptionsContainer = widgetContainer.locator(
+  const filterAndOptionsContainer = combobox.locator(
     '.adg-combobox--filter-and-options-container'
   );
   await expect(filterAndOptionsContainer).toHaveCSS('display', 'inline-block');
@@ -166,7 +166,7 @@ export const expectCombobox = async (
   const filterInput = filterContainer.locator(
     'input.adg-combobox--filter-input'
   );
-  await expect(filterInput).toHaveId(filterInputId);
+  options.label && (await expect(filterInput).toHaveId(filterInputId));
   await expect(filterInput).toHaveAttribute('type', 'text');
   await expect(filterInput).toHaveAttribute('role', 'combobox'); // Needed for a) that certain screen readers and browsers announce aria-expanded change (ie. Chrome on Desktop), and to let certain screen readers give some more details about the element's purpose (ie. VoiceOver/iOS would say "combobox")
   if (options.multi) {
@@ -210,7 +210,7 @@ export const expectCombobox = async (
     // TODO: When there is no option selected, then there should be no colon and no comma!
     await expect(unselectAllButton).toHaveText(
       `${selectedOptions.length} ${
-        options.label
+        options.filterlabel
       } selected: ${selectedOptions.join(', ')},`
     );
   } else {
@@ -446,7 +446,9 @@ export const clickIntoFilter = async (page: Page, id: string) => {
 
 export const clickOutsideFilter = async (page: Page) => {
   const buttonAfter = page.locator('button#buttonAfter');
+  console.log(buttonAfter);
   await buttonAfter.click();
+  console.log('clicked');
 };
 
 export const clickOpenCloseButton = async (page: Page, id: string) => {
