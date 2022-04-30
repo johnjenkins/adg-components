@@ -1,10 +1,10 @@
 {
   "input_placeholder": "Enter filter term",
-  "close": "Close $(filterLabel) Options",
-  "open": "Open $(filterLabel) Options",
-  "results_title": "Available $(filterLabel)",
-  "results": "$(optionsTotal) $(filterLabel)",
-  "results_selected": "$(filterLabel) selected: ",
-  "results_filtered": "$(optionsShown) of $(optionsTotal) $(filterLabel) for filter \"$(filterTerm)\"",
+  "close": "Close $(filterlabel) Options",
+  "open": "Open $(filterlabel) Options",
+  "results_title": "Available $(filterlabel)",
+  "results": "$(optionsTotal) $(filterlabel)",
+  "results_selected": "$(filterlabel) selected: ",
+  "results_filtered": "$(optionsShown) of $(optionsTotal) $(filterlabel) for filter \"$(filterTerm)\"",
   "results_first": "starting with \"$(first)\""
 }

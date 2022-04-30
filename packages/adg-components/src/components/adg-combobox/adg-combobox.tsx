@@ -1,6 +1,7 @@
 import {
   Component,
   getAssetPath,
+  Host,
   h,
   Listen,
   Prop,
@@ -48,29 +49,39 @@ export class AdgComboboxComponent {
 
   @Element() el: HTMLElement;
 
-  @Prop() label = 'Label';
-  @Prop() filterLabel = this.label;
+  @Prop() label: string = null;
+  @Prop() filterlabel: string = this.label || 'Options';
+
   @Prop() options: string[] = [];
-  @Prop() name: string;
-  @Prop() multi = false;
-  @Prop() showInstructions = false;
-  @Prop() ariaLiveAssertive = false;
-  @Prop() roleAlert = false;
+  @Prop() name: string = this.filterlabel.replace(/\W+/g, '-');
+  @Prop() multi: boolean = false;
+  @Prop() showInstructions: boolean = false;
+  @Prop() ariaLiveAssertive: boolean = false;
+  @Prop() roleAlert: boolean = false;
 
   @State() filterTermText: string = '';
-  @State() numberOfShownOptions = 0;
+  @State() numberOfShownOptions: number = 0;
   @State() filteredOptionsStartingWith: string = '';
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
-    const internalId = this.el.id  || `adg-combobox-${nextUniqueId++}`;
+    const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
     this._inputId = `${internalId}--input`;
     this._optionsSelectedId = `${internalId}--options-selected`;
 
-    this.name = this.name || internalId;
-
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
+
+    if (!this.label) {
+      if (
+        !document.querySelector('label[for=' + this._inputId + ']') &&
+        !this.el.closest('label')
+      ) {
+        console.warn(
+          "Every form control needs an associated label, see https://a11y-dev.guide/examples/forms/good-example/. If you set option label='My cool combobox', we will create one for you."
+        );
+      }
+    }
   }
 
   @Watch('options')
@@ -347,17 +358,16 @@ export class AdgComboboxComponent {
 
   render() {
     return (
-      <div
-        class="adg-combobox--container"
-        onKeyDown={(ev) => this.handleKeyDown(ev)}
-      >
-        <label
-          htmlFor={this._inputId}
-          class="adg-combobox--filter-label"
-          data-inline-block
-        >
-          {this.label}
-        </label>
+      <Host onKeyDown={(ev) => this.handleKeyDown(ev)} class="adg-combobox">
+        {this.label ? (
+          <label
+            htmlFor={this._inputId}
+            class="adg-combobox--filter-label"
+            data-inline-block
+          >
+            {this.label}
+          </label>
+        ) : null}
         <span
           class={{
             'adg-combobox--filter-and-options-container': true,
@@ -373,7 +383,7 @@ export class AdgComboboxComponent {
           >
             <input
               class="adg-combobox--filter-input"
-              id={this._inputId}
+              id={this.label ? this._inputId : null}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
@@ -402,7 +412,7 @@ export class AdgComboboxComponent {
               ) : null}
               <span data-visually-hidden>
                 {this.$t('results_selected', {
-                  filterLabel: this.filterLabel,
+                  filterlabel: this.filterlabel,
                 })}
                 <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(', ')}
@@ -422,7 +432,7 @@ export class AdgComboboxComponent {
               src={getAssetPath(`./assets/close.svg`)}
               class="adg-combobox--toggle-options-button-icon"
               alt={this.$t(this.isOptionsContainerOpen ? 'close' : 'open', {
-                filterLabel: this.filterLabel,
+                filterlabel: this.filterlabel,
               })}
             />
           </button>
@@ -435,7 +445,7 @@ export class AdgComboboxComponent {
             <legend class="adg-combobox--available-options-legend">
               <span data-visually-hidden>
                 {this.$t('results_title', {
-                  filterLabel: this.filterLabel,
+                  filterlabel: this.filterlabel,
                 })}
                 :&nbsp;
               </span>
@@ -446,7 +456,7 @@ export class AdgComboboxComponent {
                 role={this.roleAlert ? 'alert' : null}
               >
                 {this.$t(this.filterTermText ? 'results_filtered' : 'results', {
-                  filterLabel: this.filterLabel,
+                  filterlabel: this.filterlabel,
                   optionsShown: this.numberOfShownOptions,
                   optionsTotal: this.options.length,
                   filterTerm: this.filterTermText,
@@ -502,7 +512,7 @@ export class AdgComboboxComponent {
           <fieldset class="adg-combobox--selected-options-container">
             <legend data-visually-hidden>
               {this.$t('results_selected', {
-                filterLabel: this.filterLabel,
+                filterlabel: this.filterlabel,
               })}
             </legend>
 
@@ -528,7 +538,7 @@ export class AdgComboboxComponent {
             </ol>
           </fieldset>
         ) : null}
-      </div>
+      </Host>
     );
   }
 }
