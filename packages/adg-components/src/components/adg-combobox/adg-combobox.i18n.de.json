@@ -6,5 +6,5 @@
   "results": "$(optionsTotal) $(filterLabel)",
   "results_selected": "$(filterLabel) gewählt: ",
   "results_filtered": "$(optionsShown) von $(optionsTotal) $(filterLabel) für Filter \"$(filterTerm)\"",
-  "results_first": "erstes Resultat \"{first}\""
+  "results_first": "erstes Resultat \"$(first)\""
 }
