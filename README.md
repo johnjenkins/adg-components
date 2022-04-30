@@ -16,17 +16,17 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 <script nomodule src="/build/adg-components.js"></script>
 
 <adg-combobox
-  id="hobbiesCombobox"
+  id="hobbies"
   name="hobbies"
   label="Hobbies"
   lang="de"
 ></adg-combobox>
 
 <script>
-  const hobbiesCombobox = document.querySelector('#hobbiesCombobox');
-  hobbiesCombobox.formControlName = 'hobbies';
-  hobbiesCombobox.filterLabel = 'Hobbies';
-  hobbiesCombobox.options = [
+  const hobbies = document.querySelector('#hobbies');
+  hobbies.formControlName = 'hobbies';
+  hobbies.filterLabel = 'Hobbies';
+  hobbies.options = [
     'Soccer',
     'Badminton',
     'Movies',
