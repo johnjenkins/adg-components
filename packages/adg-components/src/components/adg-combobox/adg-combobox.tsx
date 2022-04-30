@@ -146,6 +146,7 @@ export class AdgComboboxComponent {
       checked: false,
     }));
     this.filterInputElementRef.focus();
+     this.filterInputElementRef.value = ""
   }
 
   handleUnselectAllButtonKeyUp(event: KeyboardEvent) {
