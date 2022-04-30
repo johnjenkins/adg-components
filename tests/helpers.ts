@@ -107,6 +107,7 @@ export const expectMultiCombobox = async (
   await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: internalId,
     label: 'Hobbies',
+    filterLabel: 'Hobbies',
     multi: true,
     lang: 'en',
   });
