@@ -334,7 +334,7 @@ test.describe('ADG-Combobox (single)', () => {
     });
   });
 
-  test.describe.skip('Filter', () => {
+  test.describe('Filter', () => {
     test('Change filter term to expand options', async ({ page }) => {
       await tabIntoFilter(page, 'coloursCombobox'); // Focus filter term (does not expand options)
       await expectSingleCombobox(page, {
@@ -346,7 +346,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Blue', 'Kickboxing'],
+        visibleOptions: ['Black', 'Blue', 'Brown'],
         optionsExpanded: true,
       });
     });
@@ -357,22 +357,22 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Blue', 'Kickboxing'],
+        visibleOptions: ['Black', 'Blue', 'Brown'],
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('a'); // Add "a", so filter is "ba"
+      await page.keyboard.press('l'); // Add "a", so filter is "bl"
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'ba',
-        visibleOptions: ['Blue'],
+        visibleOptions: ['Black', 'Blue'],
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('t'); // Add "t", so filter is "bat"
+      await page.keyboard.press('x'); // Add "x", so filter is "blx"
       await expectSingleCombobox(page, {
         filterFocused: true,
-        filterValue: 'bat',
+        filterValue: 'blx',
         visibleOptions: [],
         optionsExpanded: true,
       });
@@ -384,23 +384,24 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Blue', 'Kickboxing'],
+        visibleOptions: ['Black', 'Blue', 'Brown'],
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('ArrowDown'); // Move focus to first option "Blue"
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Black"
       await expectSingleCombobox(page, {
         filterValue: 'b',
-        visibleOptions: ['Blue', 'Kickboxing'],
-        focusedOption: 'Blue',
+        visibleOptions: ['Black', 'Blue', 'Brown'],
+        focusedOption: 'Black',
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('ArrowDown'); // Move focus to next (last) option "Kickboxing"
+      await page.keyboard.press('ArrowDown'); // Move focus to next option "Blue"
+      await page.keyboard.press('ArrowDown'); // Move focus to next (last) option "Brown"
       await expectSingleCombobox(page, {
         filterValue: 'b',
-        visibleOptions: ['Blue', 'Kickboxing'],
-        focusedOption: 'Kickboxing',
+        visibleOptions: ['Black', 'Blue', 'Brown'],
+        focusedOption: 'Brown',
         optionsExpanded: true,
       });
 
@@ -408,7 +409,7 @@ test.describe('ADG-Combobox (single)', () => {
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'b',
-        visibleOptions: ['Blue', 'Kickboxing'],
+        visibleOptions: ['Black', 'Blue', 'Brown'],
         optionsExpanded: true,
       });
     });
@@ -417,42 +418,43 @@ test.describe('ADG-Combobox (single)', () => {
       page,
     }) => {
       await clickIntoFilter(page, 'coloursCombobox'); // Expand options
-      await page.keyboard.press('a'); // Start filtering with "a"
+      await page.keyboard.press('l'); // Start filtering with "a"
       await expectSingleCombobox(page, {
         filterFocused: true,
-        filterValue: 'a',
-        visibleOptions: [
-          'Blue',
-          'Green',
-          'Dancing',
-          'Painting',
-          'Reading',
-          'Programming',
-        ],
+        filterValue: 'l',
+        visibleOptions: ['Black', 'Blue', 'Yellow'],
         optionsExpanded: true,
       });
 
-      await page.keyboard.press('ArrowDown'); // Move focus to first option "Blue"
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Black"
       await expectSingleCombobox(page, {
-        filterValue: 'a',
-        visibleOptions: [
-          'Blue',
-          'Green',
-          'Dancing',
-          'Painting',
-          'Reading',
-          'Programming',
-        ],
+        filterValue: 'l',
+        visibleOptions: ['Black', 'Blue', 'Yellow'],
         optionsExpanded: true,
-        focusedOption: 'Blue',
+        focusedOption: 'Black',
       });
 
-      await page.keyboard.press('a'); // Add "d", so filter is "ba", and focus should be back on filter input
-      test.fixme(); // Focus is not put back to filter input
+      await page.keyboard.press('a'); // Add "a", so filter is "la", and focus should be back on filter input
       await expectSingleCombobox(page, {
         filterFocused: true,
-        filterValue: 'ba',
-        visibleOptions: ['Blue'],
+        filterValue: 'la',
+        visibleOptions: ['Black'],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Black"
+      await expectSingleCombobox(page, {
+        filterValue: 'la',
+        visibleOptions: ['Black'],
+        optionsExpanded: true,
+        focusedOption: 'Black',
+      });
+
+      await page.keyboard.press('x'); // Add "x", so filter is "lax", and focus should be back on filter input
+      await expectSingleCombobox(page, {
+        filterFocused: true,
+        filterValue: 'lax',
+        visibleOptions: [],
         optionsExpanded: true,
       });
     });
