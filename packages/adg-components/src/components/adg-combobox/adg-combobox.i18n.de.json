@@ -1,10 +1,10 @@
 {
   "input_placeholder": "Suchbegriff eingeben",
-  "close": "$(filterLabel) Auswahl schliessen",
-  "open": "$(filterLabel) Auswahl öffnen",
-  "results_title": "Verfügbare $(filterLabel)",
-  "results": "$(optionsTotal) $(filterLabel)",
-  "results_selected": "$(filterLabel) gewählt: ",
-  "results_filtered": "$(optionsShown) von $(optionsTotal) $(filterLabel) für Filter \"$(filterTerm)\"",
+  "close": "$(filterlabel) Auswahl schliessen",
+  "open": "$(filterlabel) Auswahl öffnen",
+  "results_title": "Verfügbare $(filterlabel)",
+  "results": "$(optionsTotal) $(filterlabel)",
+  "results_selected": "$(filterlabel) gewählt: ",
+  "results_filtered": "$(optionsShown) von $(optionsTotal) $(filterlabel) für Filter \"$(filterTerm)\"",
   "results_first": "beginnend mit \"$(first)\""
 }

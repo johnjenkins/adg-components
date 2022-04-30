@@ -8,7 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AdgCombobox {
         "ariaLiveAssertive": boolean;
-        "filterLabel": string;
+        "filterlabel": string;
         "label": string;
         "multi": boolean;
         "name": string;
@@ -31,7 +31,7 @@ declare global {
 declare namespace LocalJSX {
     interface AdgCombobox {
         "ariaLiveAssertive"?: boolean;
-        "filterLabel"?: string;
+        "filterlabel"?: string;
         "label"?: string;
         "multi"?: boolean;
         "name"?: string;

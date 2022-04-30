@@ -73,8 +73,8 @@ export const expectSingleCombobox = async (
 
   await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: 'colours',
-    label: 'Farben',
-    filterLabel: 'Farbe',
+    label: 'Farben wählen',
+    filterlabel: 'Farben',
     multi: false,
     lang: 'de',
   });
@@ -110,7 +110,7 @@ export const expectMultiCombobox = async (
   await expectCombobox(adgCombobox, mergedExpectations, {
     internalId: 'hobbies',
     label: 'Hobbies',
-    filterLabel: 'Hobbies',
+    filterlabel: 'Hobbies',
     multi: true,
     lang: 'en',
   });
@@ -122,7 +122,7 @@ export const expectCombobox = async (
   options: {
     internalId: string;
     label: string;
-    filterLabel: string;
+    filterlabel: string;
     multi: boolean;
     lang: string;
   }
@@ -146,12 +146,12 @@ export const expectCombobox = async (
   const widgetContainer = combobox.locator('.adg-combobox--container');
   await expect(widgetContainer).toHaveCSS('display', 'block');
 
-  const filterLabel = widgetContainer.locator(
+  const filterlabel = widgetContainer.locator(
     'label.adg-combobox--filter-label'
   );
-  await expect(filterLabel).toHaveText(options.label);
-  await expect(filterLabel).toHaveAttribute('for', filterInputId);
-  await expect(filterLabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
+  await expect(filterlabel).toHaveText(options.label);
+  await expect(filterlabel).toHaveAttribute('for', filterInputId);
+  await expect(filterlabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
 
   const filterAndOptionsContainer = widgetContainer.locator(
     '.adg-combobox--filter-and-options-container'
@@ -215,7 +215,7 @@ export const expectCombobox = async (
     );
   } else {
     await expect(unselectAllButton).toHaveText(
-      `${options.label} ${
+      `${options.filterlabel} ${
         options.multi ? 'selected' : 'gewählt'
       }: ${selectedOptions.join(', ')},`
     );
@@ -236,7 +236,7 @@ export const expectCombobox = async (
   );
 
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
-    `${options.label} ${
+    `${options.filterlabel} ${
       options.multi ? 'selected' : 'gewählt'
     }: ${selectedOptions.join(', ')},`
   );
@@ -324,14 +324,14 @@ export const expectCombobox = async (
     );
   } else {
     await expect(availableOptionsContainerLegend).toHaveText(
-      `Verfügbare Farben: ${expectedXOfYForFilterTextValue}`
+      `Verfügbare ${options.filterlabel}: ${expectedXOfYForFilterTextValue}`
     );
   }
 
   const availableOptionsContainerLegendVisuallyHidden =
     availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
   await expect(availableOptionsContainerLegendVisuallyHidden).toHaveText(
-    `${options.multi ? 'Available' : 'Verfügbare'} ${options.label}:`
+    `${options.multi ? 'Available' : 'Verfügbare'} ${options.filterlabel}:`
   );
 
   const xOfYForFilterText = availableOptionsContainerLegend.locator(

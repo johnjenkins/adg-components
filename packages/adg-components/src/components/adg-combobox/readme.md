@@ -8,7 +8,7 @@
 | Property            | Attribute             | Description | Type       | Default      |
 | ------------------- | --------------------- | ----------- | ---------- | ------------ |
 | `ariaLiveAssertive` | `aria-live-assertive` |             | `boolean`  | `false`      |
-| `filterLabel`       | `filter-label`        |             | `string`   | `this.label` |
+| `filterlabel`       | `filter-label`        |             | `string`   | `this.label` |
 | `label`             | `label`               |             | `string`   | `''`         |
 | `multi`             | `multi`               |             | `boolean`  | `false`      |
 | `name`              | `name`                |             | `string`   | `this._id`   |

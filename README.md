@@ -25,7 +25,7 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 <script>
   const hobbies = document.querySelector('#hobbies');
   hobbies.formControlName = 'hobbies';
-  hobbies.filterLabel = 'Hobbies';
+  hobbies.filterlabel = 'Hobbies';
   hobbies.options = [
     'Soccer',
     'Badminton',
