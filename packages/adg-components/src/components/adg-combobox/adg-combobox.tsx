@@ -157,14 +157,23 @@ export class AdgComboboxComponent {
     }
   }
 
+  setInputValue(val: string, focus: boolean = true) {
+    if(focus) {
+      this.filterInputElementRef.focus();
+    }
+    this.filterInputElementRef.value = val;
+    this.filterInputElementRef.dispatchEvent(
+      new Event('input', { bubbles: true })
+    );
+  }
+
   handleUnselectAllButtonClick(event: MouseEvent) {
     console.log(event);
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       checked: false,
     }));
-    this.filterInputElementRef.focus();
-    this.filterInputElementRef.value = '';
+    this.setInputValue('');
   }
 
   handleUnselectAllButtonKeyUp(event: KeyboardEvent) {
@@ -316,7 +325,7 @@ export class AdgComboboxComponent {
   displaySelectedItems() {
     if (!this.multi && this.filterInputElementRef) {
       const selectedOption = this.selectedOptionModels.find((a) => a.checked);
-      this.filterInputElementRef.value = selectedOption?.label || '';
+      this.setInputValue(selectedOption?.label || '', false);
     }
   }
 
