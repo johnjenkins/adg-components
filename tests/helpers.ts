@@ -143,10 +143,7 @@ export const expectCombobox = async (
 
   await expect(combobox).toHaveClass(/hydrated/); // TODO: Where does this come from an what's it for actually?
 
-
-  const filterlabel = combobox.locator(
-    'label.adg-combobox--filter-label'
-  );
+  const filterlabel = combobox.locator('label.adg-combobox--filter-label');
   if (options.label) {
     await expect(filterlabel).toHaveText(options.label);
     await expect(filterlabel).toHaveAttribute('for', filterInputId);
@@ -427,7 +424,7 @@ export const assertAvailableOption = async (
 
 export const tabIntoFilter = async (page: Page, id: string) => {
   // todo: this is what right now needs to be pressed to get from page load to the filter, but it's easily breakable, if someone changes the example
-  const tabIndex = id == 'hobbies' ? 3 : 4;
+  const tabIndex = id == 'hobbies' ? 2 : 3;
   for (let i = 0; i < tabIndex; i++) {
     // press tab 4 times
     await page.keyboard.press('Tab');
@@ -446,9 +443,7 @@ export const clickIntoFilter = async (page: Page, id: string) => {
 
 export const clickOutsideFilter = async (page: Page) => {
   const buttonAfter = page.locator('button#buttonAfter');
-  console.log(buttonAfter);
   await buttonAfter.click();
-  console.log('clicked');
 };
 
 export const clickOpenCloseButton = async (page: Page, id: string) => {
