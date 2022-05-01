@@ -19,33 +19,29 @@
   </head>
   <body>
     <p>
-      <button>Focusable element before</button>
+      <button>Before</button>
     </p>
-
-    <fieldset>
-      <label>
-        apples
-        <input type="radio" name="fruit" value="apples" />
-      </label>
-      <label>
-        bananas
-        <input type="radio" name="fruit" value="bananas" />
-      </label>
-    </fieldset>
 
     <hr />
 
+
     <form action="/" method="get">
-      <adg-combobox id="hobbies" name="hobbies"></adg-combobox>
-      <br />
-      <adg-combobox id="colours" label="Farben wählen" filterlabel="Farben" name="colours" lang="de"></adg-combobox>
+      <div>
+        <label for="hobbies">Hobbies:</label>
+        <adg-combobox id="hobbies" name="hobbies"></adg-combobox>
+      </div>
+
+      <div>
+        <adg-combobox id="colours" label="Farben wählen" filterlabel="Farben" name="colours" lang="de"></adg-combobox>
+      </div>
+
       <button type="submit">submit</button>
     </form>
 
     <hr />
 
     <p>
-      <button id="buttonAfter">Focusable element after</button>
+      <button id="buttonAfter">After</button>
     </p>
 
     <script>
