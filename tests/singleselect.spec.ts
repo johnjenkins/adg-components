@@ -553,4 +553,55 @@ test.describe('ADG-Combobox (single)', () => {
       selectedOptions: ['Pink'],
     });
   });
+
+  test.describe('Custom events', () => {
+    test('Events optionsDropdownOpened/Closed are fired upon opening/closing options dropdown', async ({
+      page,
+    }) => {
+      await clickIntoFilter(page, 'colours'); // Click into the filter to expand options
+      await expect(page.locator('#events p:nth-child(1)')).toHaveText(
+        '1: optionsDropdownOpened, null'
+      );
+
+      await clickOutsideFilter(page); // Click into the filter to expand options
+      await expect(page.locator('#events p:nth-child(2)')).toHaveText(
+        '2: optionsDropdownClosed, null'
+      );
+    });
+
+    test('Event optionChanged(selected: true) is fired upon selecting an option', async ({
+      page,
+    }) => {
+      await clickIntoFilter(page, 'colours'); // Click into the filter to expand options
+      await clickOption(page, 'Black', 'colours'); // Select option "Black"
+      await expect(page.locator('#events p:nth-child(3)')).toHaveText(
+        '3: optionChanged, {"value":"000000","selected":true}'
+      );
+    });
+
+    test('Events optionChanged(selected: false) and allOptionsUnselected are fired upon activating "Unselect all" button', async ({
+      page,
+    }) => {
+      await clickIntoFilter(page, 'colours'); // Click into the filter to expand options
+      await clickOption(page, 'Black', 'colours'); // Select option "Black"
+      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+      await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+      await expect(page.locator('#events p:nth-child(4)')).toHaveText(
+        '4: optionChanged, {"value":"000000","selected":false}'
+      );
+      await expect(page.locator('#events p:nth-child(5)')).toHaveText(
+        '5: allOptionsUnselected, null'
+      );
+    });
+
+    test('Event filterTermChanged is fired upon changing filter term', async ({
+      page,
+    }) => {
+      await clickIntoFilter(page, 'colours'); // Click into the filter to expand options
+      await page.keyboard.press('a'); // Press "a" set change filter
+      await expect(page.locator('#events p:nth-child(2)')).toHaveText(
+        '2: filterTermChanged, {"previousFilterTerm":"","filterTerm":"a"}'
+      );
+    });
+  });
 });

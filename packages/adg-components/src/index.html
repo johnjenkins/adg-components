@@ -52,6 +52,8 @@
       <a href="?preselectValues">Go to example with preselect values!</a>
     </p>
 
+    <div id="events"></div>
+
     <script>
       const hobbies = document.querySelector('#hobbies');
       // Instead of using HTML attributes, you can set some variables also here, ie.:
@@ -95,10 +97,13 @@
         colours.value = 'FFC0CB';
       }
 
+      let eventCounter = 1;
+      let events = document.querySelector('#events');
       [hobbies, colours].forEach((combobox) => {
         ['optionChanged', 'allOptionsUnselected', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
           combobox.addEventListener(eventName, (event) => {
-            console.log(event);
+            events.innerHTML += `<p>${eventCounter}: ${eventName}, ${JSON.stringify(event.detail)}</p>`;
+            eventCounter++;
           })
         })
       })
