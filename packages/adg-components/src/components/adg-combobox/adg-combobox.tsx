@@ -165,8 +165,10 @@ export class AdgComboboxComponent {
       : this.openOptionsContainer();
   }
 
-  handleFilterInputKeyup(event: KeyboardEvent) {
+  handleFilterInputKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
+      event.preventDefault();
+      
       this.closeOptionsContainer();
       if (document.activeElement === this.filterInputElementRef) {
         this.unselectAllButtonElementRef.focus();
@@ -444,7 +446,7 @@ export class AdgComboboxComponent {
               placeholder={this.$t('input_placeholder')}
               aria-describedby={this._optionsSelectedId}
               onInput={(ev) => this.handleFilterInputChange(ev)}
-              onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
+              onKeyDown={(ev) => this.handleFilterInputKeyDown(ev)}
               onClick={() => this.handleFilterInputClick()}
               ref={(el) => (this.filterInputElementRef = el)}
               value={this.filterTerm}
