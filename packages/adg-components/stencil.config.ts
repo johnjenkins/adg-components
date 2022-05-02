@@ -1,4 +1,7 @@
+import path  from 'path';
+
 import { Config } from '@stencil/core';
+import { sass } from '@stencil/sass';
 
 export const config: Config = {
   namespace: 'adg-components',
@@ -25,4 +28,12 @@ export const config: Config = {
       ],
     },
   ],
+  plugins: [
+    sass({
+      injectGlobalPaths: [
+        path.resolve(__dirname, 'src/styles/mixins.scss'),
+        path.resolve(__dirname, 'src/styles/base.scss'),
+      ],
+    }),
+  ]
 };
