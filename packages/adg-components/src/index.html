@@ -70,6 +70,10 @@
       hobbies.addEventListener('optionChanged', (x) => {
         console.log(x);
       });
+      hobbies.addEventListener('allOptionsUnselected', (x) => {
+        console.log(x);
+      });
+
       const colours = document.querySelector('#colours');
       colours.options = [
         { value: '000000', label: 'Black' },

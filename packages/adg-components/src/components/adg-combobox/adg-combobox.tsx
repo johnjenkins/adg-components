@@ -87,6 +87,7 @@ export class AdgComboboxComponent {
   }
 
   @Event() optionChanged: EventEmitter<AdgComboboxOptionChange>;
+  @Event() allOptionsUnselected: EventEmitter<never>;
 
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
@@ -169,12 +170,18 @@ export class AdgComboboxComponent {
     );
   }
 
-  handleUnselectAllButtonClick(event: MouseEvent) {
-    console.log(event);
+  handleUnselectAllButtonClick() {
+    const selectedOptions = this.optionModels
+      .filter(({ checked }) => checked)
+      .map(({ value }) => value);
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       checked: false,
     }));
+    selectedOptions.forEach((option) =>
+      this.optionChanged.emit({ option, selected: false })
+    );
+    this.allOptionsUnselected.emit();
     this.setInputValue('');
   }
 
@@ -418,7 +425,7 @@ export class AdgComboboxComponent {
             class="adg-combobox--unselect-all-button"
             type="button"
             ref={(el) => (this.unselectAllButtonElementRef = el)}
-            onClick={(ev) => this.handleUnselectAllButtonClick(ev)}
+            onClick={() => this.handleUnselectAllButtonClick()}
             onKeyUp={(ev) => this.handleUnselectAllButtonKeyUp(ev)}
             hidden={this.selectedOptionModels.length === 0}
           >
