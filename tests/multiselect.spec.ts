@@ -295,7 +295,7 @@ test.describe('ADG-Combobox (multi)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
         await expectMultiCombobox(page, {
           filterFocused: true,
-          optionsExpanded: false,
+          optionsExpanded: true,
           selectedOptions: [],
           visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
         });
