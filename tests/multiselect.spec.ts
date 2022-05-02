@@ -516,4 +516,12 @@ test.describe('ADG-Combobox (multi)', () => {
       });
     });
   });
+
+  test('Pre-selected values', async ({ page }) => {
+    await page.goto('http://localhost:3333?preselectValues');
+    await expectMultiCombobox(page, {
+      filterValue: '',
+      selectedOptions: ['Soccer', 'Hiking', 'Cooking'],
+    });
+  });
 });

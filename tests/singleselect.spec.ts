@@ -543,4 +543,14 @@ test.describe('ADG-Combobox (single)', () => {
       });
     });
   });
+
+  test('Pre-selected values', async ({ page }) => {
+    test.skip();
+    await page.goto('http://localhost:3333?preselectValues');
+    await expectSingleCombobox(page, {
+      filterValue: '',
+      filterTerm: '',
+      selectedOptions: ['Pink'],
+    });
+  });
 });

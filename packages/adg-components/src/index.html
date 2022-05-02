@@ -48,6 +48,10 @@
       <button id="buttonAfter">After</button>
     </p>
 
+    <p>
+      <a href="?preselectValues">Go to example with preselect values!</a>
+    </p>
+
     <script>
       const hobbies = document.querySelector('#hobbies');
       // Instead of using HTML attributes, you can set some variables also here, ie.:
@@ -67,8 +71,11 @@
         'Sleeping',
         'Programming',
       ];
-      // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
-      // hobbies.value = ['soccer', 'hiking', 'cooking'];
+
+      if(window.location.search == '?preselectValues') {
+        // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
+        hobbies.value = ['soccer', 'hiking', 'cooking'];
+      }
 
       const colours = document.querySelector('#colours');
       colours.options = [
@@ -83,7 +90,10 @@
         { value: 'FFFFFF', label: 'White' },
         { value: 'FFFF00', label: 'Yellow' },
       ];
-      // colours.value = 'FFC0CB'; // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
+
+      if(window.location.search == '?preselectValues') {
+        colours.value = 'FFC0CB';
+      }
 
       [hobbies, colours].forEach((combobox) => {
         ['optionChanged', 'allOptionsUnselected', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
