@@ -139,16 +139,9 @@ export class AdgComboboxComponent {
   }
 
   @Listen('click', { target: 'document' })
-  handleDocumentClick(event: MouseEvent) {
-    if (
-      !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
-    ) {
-      this.closeOptionsContainer(false);
-    }
-  }
-
-  @Listen('focus', { target: 'document' })
-  handleDocumentFocus(event: KeyboardEvent) {
+  @Listen('focusin', { target: 'document' })
+  handleDocumentClick(event: CustomEvent) {
+    console.log(typeof event);
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
