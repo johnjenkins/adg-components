@@ -88,6 +88,9 @@ export class AdgComboboxComponent {
 
   @Event() optionChanged: EventEmitter<AdgComboboxOptionChange>;
   @Event() allOptionsUnselected: EventEmitter<never>;
+  @Event() filterTermTextChanged: EventEmitter<AdgComboboxFilterTermTextChange>;
+  @Event() optionsDropdownOpened: EventEmitter<never>;
+  @Event() optionsDropdownClosed: EventEmitter<never>;
 
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
@@ -171,9 +174,7 @@ export class AdgComboboxComponent {
   }
 
   handleUnselectAllButtonClick() {
-    const selectedOptions = this.optionModels
-      .filter(({ checked }) => checked)
-      .map(({ value }) => value);
+    const selectedOptions = this.selectedOptionModels.map(({ value }) => value);
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       checked: false,
@@ -196,6 +197,7 @@ export class AdgComboboxComponent {
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase().trim();
 
+    const prevFilterTermText = this.filterTermText;
     this.filterTermText = filterTerm;
 
     let optionModels = this.optionModels.map((optionModel) => ({
@@ -209,6 +211,12 @@ export class AdgComboboxComponent {
     this.filteredOptionsStartingWith = shownOptions.length
       ? shownOptions[0].label
       : '';
+
+    this.filterTermTextChanged.emit({
+      prevFilterTermText,
+      filterTermText: filterTerm,
+    });
+
     this.openOptionsContainer(false);
   }
 
@@ -355,6 +363,8 @@ export class AdgComboboxComponent {
 
     selectInput && this.filterInputElementRef.select();
 
+    this.optionsDropdownOpened.emit();
+
     setTimeout(() => {
       // Some screen readers do not announce the changed `aria-expanded`
       // attribute. So we give them some additional fodder to announce,
@@ -374,6 +384,8 @@ export class AdgComboboxComponent {
     this.showInstructions = false;
 
     selectInput && this.filterInputElementRef.select();
+
+    this.optionsDropdownClosed.emit();
   }
 
   componentWillRender() {
@@ -574,4 +586,11 @@ function modulo(a: number, n: number) {
 
 class AdgComboboxOptionChange {
   constructor(public option: string, public selected: boolean) {}
+}
+
+class AdgComboboxFilterTermTextChange {
+  constructor(
+    public prevFilterTermText: string,
+    public filterTermText: string
+  ) {}
 }

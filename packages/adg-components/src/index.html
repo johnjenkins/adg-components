@@ -67,11 +67,20 @@
         'Sleeping',
         'Programming',
       ];
-      hobbies.addEventListener('optionChanged', (x) => {
-        console.log(x);
+      hobbies.addEventListener('optionChanged', (ev) => {
+        console.log(ev);
       });
-      hobbies.addEventListener('allOptionsUnselected', (x) => {
-        console.log(x);
+      hobbies.addEventListener('allOptionsUnselected', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('filterTermTextChanged', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('optionsDropdownOpened', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('optionsDropdownClosed', (ev) => {
+        console.log(ev);
       });
 
       const colours = document.querySelector('#colours');
