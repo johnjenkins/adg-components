@@ -471,7 +471,7 @@ export class AdgComboboxComponent {
                   {this.selectedOptionModels.length}&nbsp;
                 </span>
               ) : null}
-              <span class="adg-visuallyhidden">
+              <span class="adg-visually-hidden">
                 {this.$t('results_selected', {
                   filterlabel: this.filterlabel,
                 })}
@@ -504,7 +504,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span class="adg-visuallyhidden">
+              <span class="adg-visually-hidden">
                 {this.$t('results_title', {
                   filterlabel: this.filterlabel,
                 })}
@@ -524,7 +524,7 @@ export class AdgComboboxComponent {
                 })}
 
                 {!!this.filteredOptionsStartingWith ? (
-                  <span class="adg-visuallyhidden">
+                  <span class="adg-visually-hidden">
                     ,{' '}
                     {this.$t('results_first', {
                       first: this.filteredOptionsStartingWith,
@@ -532,7 +532,7 @@ export class AdgComboboxComponent {
                   </span>
                 ) : null}
                 {this.showInstructions ? (
-                  <span class="adg-combobox--instructions adg-visuallyhidden">
+                  <span class="adg-combobox--instructions adg-visually-hidden">
                     &nbsp;(enter question mark for help)
                   </span>
                 ) : null}
@@ -571,7 +571,7 @@ export class AdgComboboxComponent {
 
         {this.multi ? (
           <fieldset class="adg-combobox--selected-options-container">
-            <legend class="adg-visuallyhidden">
+            <legend class="adg-visually-hidden">
               {this.$t('results_selected', {
                 filterlabel: this.filterlabel,
               })}
