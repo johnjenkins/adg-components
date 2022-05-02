@@ -65,7 +65,7 @@ export class AdgComboboxComponent {
 
   connectedCallback() {
     const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
-    this._inputId = `${internalId}--input`;
+    this._inputId = `${internalId}--filter`;
     this._optionsSelectedId = `${internalId}--options-selected`;
 
     this.setupLiveRegion();
@@ -426,10 +426,11 @@ export class AdgComboboxComponent {
           >
             <input
               class="adg-combobox--filter-input"
-              id={this.label ? this._inputId : null}
+              id={this._inputId}
               type="text"
               role="combobox"
               aria-expanded={this.isOptionsContainerOpen ? 'true' : 'false'}
+              aria-multiselectable={this.multi.toString()}
               autocomplete="off"
               placeholder={this.$t('input_placeholder')}
               aria-describedby={this._optionsSelectedId}

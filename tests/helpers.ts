@@ -138,7 +138,7 @@ export const expectCombobox = async (
     unselectAllButtonFocused,
   } = expectations;
 
-  const filterInputId = `${options.internalId}--input`;
+  const filterInputId = `${options.internalId}--filter`;
   const xOptionsSelectedId = `${options.internalId}--options-selected`;
 
   await expect(combobox).toHaveClass(/hydrated/); // TODO: Where does this come from an what's it for actually?
