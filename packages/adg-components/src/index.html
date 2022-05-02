@@ -70,25 +70,6 @@
       // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
       // hobbies.value = ['soccer', 'hiking', 'cooking'];
 
-      hobbies.addEventListener('optionChanged', (ev) => {
-        console.log(ev);
-      });
-      hobbies.addEventListener('allOptionsUnselected', (ev) => {
-        console.log(ev);
-      });
-      hobbies.addEventListener('filterTermChanged', (ev) => {
-        console.log(ev);
-      });
-      hobbies.addEventListener('optionsDropdownOpened', (ev) => {
-        console.log(ev);
-      });
-      hobbies.addEventListener('optionsDropdownClosed', (ev) => {
-        console.log(ev);
-      });
-      hobbies.addEventListener('valueChanged', (ev) => {
-        console.log(ev);
-      });
-
       const colours = document.querySelector('#colours');
       colours.options = [
         { value: '000000', label: 'Black' },
@@ -103,6 +84,14 @@
         { value: 'FFFF00', label: 'Yellow' },
       ];
       // colours.value = 'FFC0CB'; // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
+
+      [hobbies, colours].forEach((combobox) => {
+        ['optionChanged', 'allOptionsUnselected', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
+          combobox.addEventListener(eventName, (event) => {
+            console.log(event);
+          })
+        })
+      })
 
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {

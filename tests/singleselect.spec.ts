@@ -519,5 +519,28 @@ test.describe('ADG-Combobox (single)', () => {
         optionsExpanded: true,
       });
     });
+
+    test('Choose an option after filtering', async ({ page }) => {
+      await clickIntoFilter(page, 'colours'); // Expand options
+      await page.keyboard.press('l'); // Start filtering with "l"
+      await expectSingleCombobox(page, {
+        filterFocused: true,
+        filterValue: 'l',
+        filterTerm: 'l',
+        visibleOptions: ['Black', 'Blue', 'Yellow'],
+        optionsExpanded: true,
+      });
+
+      await page.keyboard.press('ArrowDown'); // Move focus to first option "Black"
+      await page.keyboard.press('Enter'); // Press "Enter" to select and close options
+      await expectSingleCombobox(page, {
+        filterFocused: true,
+        filterValue: 'Black',
+        filterTerm: 'l',
+        visibleOptions: ['Black', 'Blue', 'Yellow'],
+        optionsExpanded: false,
+        selectedOptions: ['Black'],
+      });
+    });
   });
 });

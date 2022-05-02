@@ -54,10 +54,9 @@ export class AdgComboboxComponent {
   @Prop() value?: string[] | string;
   @Prop() name: string = this.filterlabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
-  @Prop() showInstructions: boolean = false;
-  @Prop() ariaLiveAssertive: boolean = false;
   @Prop() roleAlert: boolean = false;
 
+  @State() ariaLiveAssertive: boolean = false;
   @State() filterTerm: string = '';
   @State() numberOfShownOptions: number = 0;
   @State() filteredOptionsStartingWith: string = '';
@@ -88,8 +87,6 @@ export class AdgComboboxComponent {
   @Event() optionsDropdownOpened: EventEmitter<never>;
   @Event() optionsDropdownClosed: EventEmitter<never>;
 
-  @Event() valueChanged: EventEmitter<string[] | string>;
-
   @Watch('options')
   watchOptionsHandler(newValue: Option[]) {
     this.numberOfShownOptions = newValue.length;
@@ -108,18 +105,6 @@ export class AdgComboboxComponent {
     this.selectedOptionModels = this.optionModels.filter(
       (optionModel) => optionModel.checked
     );
-    if (this._componentWillLoadComplete) {
-      if (this.multi) {
-        this.valueChanged.emit(
-          this.selectedOptionModels.map(({ value }) => value)
-        );
-      } else {
-        const optionModel = this.selectedOptionModels.find(
-          ({ value }) => value
-        );
-        this.valueChanged.emit(optionModel.value);
-      }
-    }
   }
 
   async componentWillLoad(): Promise<void> {
@@ -287,6 +272,7 @@ export class AdgComboboxComponent {
       (optionModel) => optionModel.value === value
     );
     if (option) {
+      console.log(option.checked)
       this.optionChanged.emit({ value, selected: option.checked });
     }
 
@@ -373,15 +359,6 @@ export class AdgComboboxComponent {
     selectInput && this.filterInputElementRef.select();
 
     this.optionsDropdownOpened.emit();
-
-    setTimeout(() => {
-      // Some screen readers do not announce the changed `aria-expanded`
-      // attribute. So we give them some additional fodder to announce,
-      // namely the instructions. We append them with a little delay so each
-      // and every screen reader realises that the live region was changed and
-      // hence needs to be announced.
-      // this.showInstructions = true;
-    }, 200);
   }
 
   closeOptionsContainer(selectInput = true) {
@@ -390,7 +367,6 @@ export class AdgComboboxComponent {
     }
 
     this.isOptionsContainerOpen = false;
-    this.showInstructions = false;
 
     selectInput && this.filterInputElementRef.select();
 
@@ -512,11 +488,6 @@ export class AdgComboboxComponent {
                     {this.$t('results_first', {
                       first: this.filteredOptionsStartingWith,
                     })}
-                  </span>
-                ) : null}
-                {this.showInstructions ? (
-                  <span class="adg-combobox--instructions adg-visually-hidden">
-                    &nbsp;(enter question mark for help)
                   </span>
                 ) : null}
               </span>
