@@ -27,18 +27,22 @@
     <form action="/" method="get">
       <div>
         <label for="hobbies">Hobbies:</label>
-        <adg-combobox id="hobbies"
-                      name="hobbies"
-                      label="Hobbies"
-                      multi="true"></adg-combobox>
+        <adg-combobox
+          id="hobbies"
+          name="hobbies"
+          label="Hobbies"
+          multi="true"
+        ></adg-combobox>
       </div>
 
       <div>
-        <adg-combobox id="colours"
-                      label="Farben wählen"
-                      filterlabel="Farben"
-                      name="colours"
-                      lang="de"></adg-combobox>
+        <adg-combobox
+          id="colours"
+          label="Farben wählen"
+          filterlabel="Farben"
+          name="colours"
+          lang="de"
+        ></adg-combobox>
       </div>
 
       <button type="submit">submit</button>
@@ -102,6 +106,7 @@
         { value: 'FFFFFF', label: 'White' },
         { value: 'FFFF00', label: 'Yellow' },
       ];
+      colours.value = '008000';
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {
         const form = document.querySelector('form');

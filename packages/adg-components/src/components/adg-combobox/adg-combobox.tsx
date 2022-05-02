@@ -14,13 +14,6 @@ import {
 
 import { Translator } from '../../utils/locale';
 
-interface OptionModel {
-  value: string;
-  label: string;
-  checked: boolean;
-  hidden: boolean;
-}
-
 const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
 
 let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefer any passed ID (as this results in race conditions when there are many instances of the component on the same page).
@@ -55,8 +48,8 @@ export class AdgComboboxComponent {
   @Prop() label: string = null;
   @Prop() filterlabel: string = this.label || 'Options';
 
-  @Prop() options: string[] = [];
-  @Prop() value: string[] = [];
+  @Prop() options: Option[] = [];
+  @Prop() value?: string[] | string;
   @Prop() name: string = this.filterlabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
   @Prop() showInstructions: boolean = false;
@@ -94,14 +87,14 @@ export class AdgComboboxComponent {
   @Event() optionsDropdownOpened: EventEmitter<never>;
   @Event() optionsDropdownClosed: EventEmitter<never>;
 
-  @Event() valueChanged: EventEmitter<string[]>;
+  @Event() valueChanged: EventEmitter<string[] | string>;
 
   @Watch('options')
-  watchOptionsHandler(newValue: string[]) {
+  watchOptionsHandler(newValue: Option[]) {
     this.numberOfShownOptions = newValue.length;
-    this.optionModels = newValue.map((option: any) => ({
-      value: option.value || option.toLowerCase(),
-      label: option.label || option,
+    this.optionModels = newValue.map((option: Option) => ({
+      value: typeof option === 'string' ? option.toLowerCase() : option.value,
+      label: typeof option === 'string' ? option : option.label,
       checked: false,
       hidden: false,
     }));
@@ -115,18 +108,31 @@ export class AdgComboboxComponent {
       (optionModel) => optionModel.checked
     );
     if (this._componentWillLoadComplete) {
-      this.valueChanged.emit(
-        this.selectedOptionModels.map(({ value }) => value)
-      );
+      if (this.multi) {
+        this.valueChanged.emit(
+          this.selectedOptionModels.map(({ value }) => value)
+        );
+      } else {
+        const optionModel = this.selectedOptionModels.find(
+          ({ value }) => value
+        );
+        this.valueChanged.emit(optionModel.value);
+      }
     }
   }
 
   async componentWillLoad(): Promise<void> {
     this.$t = await Translator(this.el);
-    this.optionModels = this.optionModels.map((optionModel) => ({
-      ...optionModel,
-      checked: this.value.includes(optionModel.value),
-    }));
+    this.optionModels = this.optionModels.map((optionModel) => {
+      let checked = false;
+      if (this.multi && Array.isArray(this.value)) {
+        checked = this.value.includes(optionModel.value);
+      } else if (!this.multi && typeof this.value === 'string') {
+        checked = this.value === optionModel.value;
+        if (checked) this.filterTerm = optionModel.label;
+      }
+      return { ...optionModel, checked };
+    });
     this._componentWillLoadComplete = true;
   }
 
@@ -180,13 +186,15 @@ export class AdgComboboxComponent {
   }
 
   handleUnselectAllButtonClick() {
-    const selectedOptions = this.selectedOptionModels.map(({ value }) => value);
+    const selectedOptionValues = this.selectedOptionModels.map(
+      ({ value }) => value
+    );
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       checked: false,
     }));
-    selectedOptions.forEach((option) =>
-      this.optionChanged.emit({ option, selected: false })
+    selectedOptionValues.forEach((value) =>
+      this.optionChanged.emit({ value, selected: false })
     );
     this.allOptionsUnselected.emit();
     this.setInputValue('');
@@ -281,7 +289,7 @@ export class AdgComboboxComponent {
       (optionModel) => optionModel.value === value
     );
     if (option) {
-      this.optionChanged.emit({ option: value, selected: option.checked });
+      this.optionChanged.emit({ value, selected: option.checked });
     }
 
     this.displaySelectedItems();
@@ -434,6 +442,7 @@ export class AdgComboboxComponent {
               onKeyUp={(ev) => this.handleFilterInputKeyup(ev)}
               onClick={() => this.handleFilterInputClick()}
               ref={(el) => (this.filterInputElementRef = el)}
+              value={this.filterTerm}
             />
           </span>
           <button
@@ -587,8 +596,17 @@ function modulo(a: number, n: number) {
   return ((a % n) + n) % n;
 }
 
+type OptionBase = { label: string; value: string };
+
+export type Option = OptionBase | string;
+
+interface OptionModel extends OptionBase {
+  checked: boolean;
+  hidden: boolean;
+}
+
 class AdgComboboxOptionChange {
-  constructor(public option: string, public selected: boolean) {}
+  constructor(public value: string, public selected: boolean) {}
 }
 
 class AdgComboboxFilterTermChange {
