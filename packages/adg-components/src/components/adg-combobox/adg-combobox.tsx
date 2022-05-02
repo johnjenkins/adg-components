@@ -64,10 +64,6 @@ export class AdgComboboxComponent {
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
-
-
-  }
-  componentDidLoad() {
     const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
     this._inputId = `${internalId}--input`;
     this._optionsSelectedId = `${internalId}--options-selected`;
