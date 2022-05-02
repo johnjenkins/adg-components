@@ -458,9 +458,7 @@ test.describe('ADG-Combobox (multi)', () => {
       });
     });
 
-    test('Filter can be changed while toggling through options', async ({
-      page,
-    }) => {
+    test('Change filter while toggling through options', async ({ page }) => {
       await clickIntoFilter(page, 'hobbies'); // Expand options
       await page.keyboard.press('a'); // Start filtering with "a"
       await expectMultiCombobox(page, {

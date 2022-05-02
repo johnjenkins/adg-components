@@ -472,11 +472,9 @@ test.describe('ADG-Combobox (single)', () => {
       });
     });
 
-    test('Filter can be changed while toggling through options', async ({
-      page,
-    }) => {
+    test('Change filter while toggling through options', async ({ page }) => {
       await clickIntoFilter(page, 'colours'); // Expand options
-      await page.keyboard.press('l'); // Start filtering with "a"
+      await page.keyboard.press('l'); // Start filtering with "l"
       await expectSingleCombobox(page, {
         filterFocused: true,
         filterValue: 'l',
