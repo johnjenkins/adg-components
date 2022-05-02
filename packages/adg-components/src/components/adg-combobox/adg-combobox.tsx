@@ -215,8 +215,6 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputChange(event: Event) {
-    console.log('filter change!');
-
     if(!this.applyFilterOnTermChange) {
       return;
     }
@@ -292,7 +290,6 @@ export class AdgComboboxComponent {
           : optionModel
       );
     } else {
-      console.log('single option input change, don not update filter!')
       this.applyFilterOnTermChange = false;
       this.optionModels = this.optionModels.map((optionModel) => ({
         ...optionModel,
