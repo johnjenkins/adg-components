@@ -170,11 +170,6 @@ export class AdgComboboxComponent {
       event.preventDefault();
       
       this.closeOptionsContainer();
-      if (document.activeElement === this.filterInputElementRef) {
-        this.unselectAllButtonElementRef.focus();
-      } else {
-        this.filterInputElementRef.focus();
-      }
     }
 
     this.applyFilterOnTermChange = true;
@@ -203,13 +198,6 @@ export class AdgComboboxComponent {
     );
     this.allOptionsUnselected.emit();
     this.setInputValue('');
-  }
-
-  handleUnselectAllButtonKeyUp(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.closeOptionsContainer();
-      this.filterInputElementRef.focus();
-    }
   }
 
   handleFilterInputChange(event: Event) {
@@ -457,7 +445,6 @@ export class AdgComboboxComponent {
             type="button"
             ref={(el) => (this.unselectAllButtonElementRef = el)}
             onClick={() => this.handleUnselectAllButtonClick()}
-            onKeyUp={(ev) => this.handleUnselectAllButtonKeyUp(ev)}
             hidden={this.selectedOptionModels.length === 0}
           >
             <span id={this._optionsSelectedId}>
