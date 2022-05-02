@@ -67,6 +67,8 @@
         'Sleeping',
         'Programming',
       ];
+      hobbies.value = ['soccer', 'hiking', 'cooking'];
+
       hobbies.addEventListener('optionChanged', (ev) => {
         console.log(ev);
       });
@@ -80,6 +82,9 @@
         console.log(ev);
       });
       hobbies.addEventListener('optionsDropdownClosed', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('valueChanged', (ev) => {
         console.log(ev);
       });
 

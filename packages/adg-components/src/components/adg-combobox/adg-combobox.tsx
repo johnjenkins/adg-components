@@ -36,6 +36,7 @@ export class AdgComboboxComponent {
 
   private _inputId: string;
   private _optionsSelectedId: string;
+  private _componentWillLoadComplete = false;
 
   selectedOptionModels: OptionModel[] = [];
   lastArrowSelectedElem = 0;
@@ -55,6 +56,7 @@ export class AdgComboboxComponent {
   @Prop() filterlabel: string = this.label || 'Options';
 
   @Prop() options: string[] = [];
+  @Prop() value: string[] = [];
   @Prop() name: string = this.filterlabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
   @Prop() showInstructions: boolean = false;
@@ -92,6 +94,8 @@ export class AdgComboboxComponent {
   @Event() optionsDropdownOpened: EventEmitter<never>;
   @Event() optionsDropdownClosed: EventEmitter<never>;
 
+  @Event() valueChanged: EventEmitter<string[]>;
+
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
     this.numberOfShownOptions = newValue.length;
@@ -110,10 +114,20 @@ export class AdgComboboxComponent {
     this.selectedOptionModels = this.optionModels.filter(
       (optionModel) => optionModel.checked
     );
+    if (this._componentWillLoadComplete) {
+      this.valueChanged.emit(
+        this.selectedOptionModels.map(({ value }) => value)
+      );
+    }
   }
 
   async componentWillLoad(): Promise<void> {
     this.$t = await Translator(this.el);
+    this.optionModels = this.optionModels.map((optionModel) => ({
+      ...optionModel,
+      checked: this.value.includes(optionModel.value),
+    }));
+    this._componentWillLoadComplete = true;
   }
 
   setupLiveRegion() {

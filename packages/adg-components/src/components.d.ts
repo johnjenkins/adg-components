@@ -15,6 +15,7 @@ export namespace Components {
         "options": string[];
         "roleAlert": boolean;
         "showInstructions": boolean;
+        "value": string[];
     }
 }
 declare global {
@@ -40,9 +41,11 @@ declare namespace LocalJSX {
         "onOptionChanged"?: (event: CustomEvent<AdgComboboxOptionChange>) => void;
         "onOptionsDropdownClosed"?: (event: CustomEvent<never>) => void;
         "onOptionsDropdownOpened"?: (event: CustomEvent<never>) => void;
+        "onValueChanged"?: (event: CustomEvent<string[]>) => void;
         "options"?: string[];
         "roleAlert"?: boolean;
         "showInstructions"?: boolean;
+        "value"?: string[];
     }
     interface IntrinsicElements {
         "adg-combobox": AdgCombobox;
