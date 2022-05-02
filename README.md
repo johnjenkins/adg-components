@@ -38,14 +38,14 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 
 ### HTML attributes
 
-| Attribute     | Type      | Description                                                                                                                                                                    |
-| ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `id`          | `string`  | Provide an (optional) value, ie. `my-cool-hobbies`. Otherwise a unique value is generated, ie. `adg-combobox-0`.                                                               |
-| `label`       | `string`  | If given, a `<label>` element will be created automatically.                                                                                                                   |
-| `filterlabel` | `string`  | The bare name of the given options. For example, while the `label` might be something like `Please select some hobbies`, the `filterlabel` should be something like `Hobbies`. |
-| `name`        | `string`  | The value of the `name` attribute(s).                                                                                                                                          |
-| `lang`        | `string`  | The language of the component. If none is given, the language will be detected from the `<html>` tag.                                                                          |
-| `multi`       | `boolean` | If set to `true`, the combobox will allow selection of multiple values. Defaults to `false`.                                                                                   |
+| Attribute     | Type      | Description                                                                                                                                                                                     |
+| ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | `string`  | Provide an (optional) value, ie. `my-cool-hobbies`. Otherwise a unique value is generated, ie. `adg-combobox-0`.                                                                                |
+| `multi`       | `boolean` | If set to `true`, the combobox will allow selection of multiple values, ie. checkboxes will be created instead of radio buttons. Defaults to `false`.                                           |
+| `label`       | `string`  | If given, a `<label>` element will be created automatically, with the given string as inner text.                                                                                               |
+| `filterlabel` | `string`  | The "bare", natural name of the given options. For example, while the `label` might be something like `Please select your hobbies`, the `filterlabel` should be something like `Hobbies` alone. |
+| `name`        | `string`  | The value of the `name` attribute(s), as submitted by the form through `GET` or `POST`.                                                                                                         |
+| `lang`        | `string`  | The language of the component. If none is given, the language will be detected from the document's `<html>` tag.                                                                                |
 
 ### JavaScript variables
 
