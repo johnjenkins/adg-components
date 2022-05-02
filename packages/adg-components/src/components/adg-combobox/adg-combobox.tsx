@@ -43,6 +43,8 @@ export class AdgComboboxComponent {
   optionSelectedButtons: HTMLButtonElement[] = [];
   currentlyFocusedOption?: HTMLInputElement;
 
+  applyFilterOnTermChange: boolean = true;
+
   @Element() el: HTMLElement;
 
   @Prop() label: string = null;
@@ -176,6 +178,8 @@ export class AdgComboboxComponent {
         this.filterInputElementRef.focus();
       }
     }
+
+    this.applyFilterOnTermChange = true;
   }
 
   setInputValue(val: string, focus: boolean = true) {
@@ -211,6 +215,10 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputChange(event: Event) {
+    if(!this.applyFilterOnTermChange) {
+      return;
+    }
+
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase().trim();
 
@@ -282,6 +290,7 @@ export class AdgComboboxComponent {
           : optionModel
       );
     } else {
+      this.applyFilterOnTermChange = false;
       this.optionModels = this.optionModels.map((optionModel) => ({
         ...optionModel,
         checked: optionModel.value === value ? !optionModel.checked : false,
@@ -459,7 +468,7 @@ export class AdgComboboxComponent {
                   {this.selectedOptionModels.length}&nbsp;
                 </span>
               ) : null}
-              <span class="adg-visuallyhidden">
+              <span class="adg-visually-hidden">
                 {this.$t('results_selected', {
                   filterlabel: this.filterlabel,
                 })}
@@ -492,7 +501,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span class="adg-visuallyhidden">
+              <span class="adg-visually-hidden">
                 {this.$t('results_title', {
                   filterlabel: this.filterlabel,
                 })}
@@ -512,7 +521,7 @@ export class AdgComboboxComponent {
                 })}
 
                 {!!this.filteredOptionsStartingWith ? (
-                  <span class="adg-visuallyhidden">
+                  <span class="adg-visually-hidden">
                     ,{' '}
                     {this.$t('results_first', {
                       first: this.filteredOptionsStartingWith,
@@ -520,7 +529,7 @@ export class AdgComboboxComponent {
                   </span>
                 ) : null}
                 {this.showInstructions ? (
-                  <span class="adg-combobox--instructions adg-visuallyhidden">
+                  <span class="adg-combobox--instructions adg-visually-hidden">
                     &nbsp;(enter question mark for help)
                   </span>
                 ) : null}
@@ -559,7 +568,7 @@ export class AdgComboboxComponent {
 
         {this.multi ? (
           <fieldset class="adg-combobox--selected-options-container">
-            <legend class="adg-visuallyhidden">
+            <legend class="adg-visually-hidden">
               {this.$t('results_selected', {
                 filterlabel: this.filterlabel,
               })}
