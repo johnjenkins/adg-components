@@ -15,7 +15,9 @@ test.describe('ADG-Combobox (multi)', () => {
   });
 
   test('Initial display', async ({ page }) => {
-    await expectMultiCombobox(page, {}); // Default state
+    await expectMultiCombobox(page, {
+      selectedOptions: ['Soccer', 'Hiking', 'Cooking'],
+    }); // Default state
   });
 
   test.describe('Keyboard interaction', () => {

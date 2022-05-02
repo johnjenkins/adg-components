@@ -25,21 +25,18 @@
     <hr />
 
     <form action="/" method="get">
-      <div>
-        <label for="hobbies">Hobbies:</label>
-        <adg-combobox id="hobbies"
-                      name="hobbies"
-                      label="Hobbies"
-                      multi="true"></adg-combobox>
-      </div>
+      <label for="hobbies">Hobbies:</label>
+      <adg-combobox id="hobbies"
+                    name="hobbies"
+                    multi="true"></adg-combobox>
 
-      <div>
-        <adg-combobox id="colours"
-                      label="Farben wählen"
-                      filterlabel="Farben"
-                      name="colours"
-                      lang="de"></adg-combobox>
-      </div>
+      <hr>
+
+      <adg-combobox id="colours"
+                    label="Farben wählen"
+                    filterlabel="Farben"
+                    name="colours"
+                    lang="de"></adg-combobox>
 
       <button type="submit">submit</button>
     </form>
@@ -52,6 +49,7 @@
 
     <script>
       const hobbies = document.querySelector('#hobbies');
+      // Instead of using HTML attributes, you can set some variables also here, ie.:
       // hobbies.multi = true;
       // hobbies.filterlabel = 'Hobbies';
       hobbies.options = [
@@ -102,6 +100,8 @@
         { value: 'FFFFFF', label: 'White' },
         { value: 'FFFF00', label: 'Yellow' },
       ];
+      colours.value = 'FFC0CB';
+
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {
         const form = document.querySelector('form');
