@@ -63,7 +63,7 @@ export class AdgComboboxComponent {
   @Prop() ariaLiveAssertive: boolean = false;
   @Prop() roleAlert: boolean = false;
 
-  @State() filterTermText: string = '';
+  @State() filterTerm: string = '';
   @State() numberOfShownOptions: number = 0;
   @State() filteredOptionsStartingWith: string = '';
   @State() isOptionsContainerOpen: boolean = false;
@@ -90,7 +90,7 @@ export class AdgComboboxComponent {
 
   @Event() optionChanged: EventEmitter<AdgComboboxOptionChange>;
   @Event() allOptionsUnselected: EventEmitter<never>;
-  @Event() filterTermTextChanged: EventEmitter<AdgComboboxFilterTermTextChange>;
+  @Event() filterTermChanged: EventEmitter<AdgComboboxFilterTermChange>;
   @Event() optionsDropdownOpened: EventEmitter<never>;
   @Event() optionsDropdownClosed: EventEmitter<never>;
 
@@ -211,8 +211,8 @@ export class AdgComboboxComponent {
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase().trim();
 
-    const prevFilterTermText = this.filterTermText;
-    this.filterTermText = filterTerm;
+    const previousFilterTerm = this.filterTerm;
+    this.filterTerm = filterTerm;
 
     let optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
@@ -226,10 +226,7 @@ export class AdgComboboxComponent {
       ? shownOptions[0].label
       : '';
 
-    this.filterTermTextChanged.emit({
-      prevFilterTermText,
-      filterTermText: filterTerm,
-    });
+    this.filterTermChanged.emit({ previousFilterTerm, filterTerm });
 
     this.openOptionsContainer(false);
   }
@@ -506,11 +503,11 @@ export class AdgComboboxComponent {
                 aria-live={this.ariaLiveAssertive ? 'assertive' : null}
                 role={this.roleAlert ? 'alert' : null}
               >
-                {this.$t(this.filterTermText ? 'results_filtered' : 'results', {
+                {this.$t(this.filterTerm ? 'results_filtered' : 'results', {
                   filterlabel: this.filterlabel,
                   optionsShown: this.numberOfShownOptions,
                   optionsTotal: this.options.length,
-                  filterTerm: this.filterTermText,
+                  filterTerm: this.filterTerm,
                 })}
 
                 {!!this.filteredOptionsStartingWith ? (
@@ -602,9 +599,6 @@ class AdgComboboxOptionChange {
   constructor(public option: string, public selected: boolean) {}
 }
 
-class AdgComboboxFilterTermTextChange {
-  constructor(
-    public prevFilterTermText: string,
-    public filterTermText: string
-  ) {}
+class AdgComboboxFilterTermChange {
+  constructor(public previousFilterTerm: string, public filterTerm: string) {}
 }
