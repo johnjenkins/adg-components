@@ -43,6 +43,8 @@ export class AdgComboboxComponent {
   optionSelectedButtons: HTMLButtonElement[] = [];
   currentlyFocusedOption?: HTMLInputElement;
 
+  applyFilterOnTermChange: boolean = true;
+
   @Element() el: HTMLElement;
 
   @Prop() label: string = null;
@@ -176,6 +178,8 @@ export class AdgComboboxComponent {
         this.filterInputElementRef.focus();
       }
     }
+
+    this.applyFilterOnTermChange = true;
   }
 
   setInputValue(val: string, focus: boolean = true) {
@@ -211,6 +215,12 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputChange(event: Event) {
+    console.log('filter change!');
+
+    if(!this.applyFilterOnTermChange) {
+      return;
+    }
+
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase().trim();
 
@@ -282,6 +292,8 @@ export class AdgComboboxComponent {
           : optionModel
       );
     } else {
+      console.log('single option input change, don not update filter!')
+      this.applyFilterOnTermChange = false;
       this.optionModels = this.optionModels.map((optionModel) => ({
         ...optionModel,
         checked: optionModel.value === value ? !optionModel.checked : false,
