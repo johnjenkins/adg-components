@@ -48,6 +48,8 @@
       <button id="buttonAfter">After</button>
     </p>
 
+    <div id="events"></div>
+
     <script>
       const hobbies = document.querySelector('#hobbies');
       // Instead of using HTML attributes, you can set some variables also here, ie.:
@@ -85,10 +87,13 @@
       ];
       // colours.value = 'FFC0CB'; // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
 
+      let eventCounter = 1;
+      let events = document.querySelector('#events');
       [hobbies, colours].forEach((combobox) => {
         ['optionChanged', 'allOptionsUnselected', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
           combobox.addEventListener(eventName, (event) => {
-            console.log(event);
+            events.innerHTML += `<p>${eventCounter}: ${eventName}, ${JSON.stringify(event.detail)}</p>`;
+            eventCounter++;
           })
         })
       })
