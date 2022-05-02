@@ -73,7 +73,7 @@ The following events will be fired upon interaction with a combobox:
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `optionChanged`         | Fired when an option is selected of unselected. See `event.detail.option` and `event.detail.selected` for details.           |
 | `allOptionsUnselected`  | Fired when all options are unselected.                                                                                       |
-| `filterTermTextChanged` | Fired when the filter term was changed. See `event.detail.prevFilterTermText` and `event.detail.filterTermText` for details. |
+| `filterTermChanged`     | Fired when the filter term was changed. See `event.detail.prevFilterTermText` and `event.detail.filterTermText` for details. |
 | `optionsDropdownOpened` | Fired when options were opened.                                                                                              |
 | `optionsDropdownClosed` | Fired when options were closed.                                                                                              |
 
