@@ -36,6 +36,47 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 </script>
 ```
 
+### HTML attributes
+
+| Attribute     | Type      | Description                                                                                                                                                                    |
+| ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`          | `string`  | Provide an (optional) value, ie. `my-cool-hobbies`. Otherwise a unique value is generated, ie. `adg-combobox-0`.                                                               |
+| `label`       | `string`  | If given, a `<label>` element will be created automatically.                                                                                                                   |
+| `filterlabel` | `string`  | The bare name of the given options. For example, while the `label` might be something like `Please select some hobbies`, the `filterlabel` should be something like `Hobbies`. |
+| `name`        | `string`  | The value of the `name` attribute(s).                                                                                                                                          |
+| `lang`        | `string`  | The language of the component. If none is given, the language will be detected from the `<html>` tag.                                                                          |
+| `multi`       | `boolean` | If set to `true`, the combobox will allow selection of multiple values. Defaults to `false`.                                                                                   |
+
+### JavaScript variables
+
+Many of the HTML attributes above can also be set using JavaScript:
+
+```js
+const hobbiesCombobox = document.querySelector('#my-cool-hobbies');
+hobbiesCombobox.multi = true;
+```
+
+In addition, the following can be set:
+
+| Attribute | Type       | Description                                                                          |
+| --------- | ---------- | ------------------------------------------------------------------------------------ |
+| `options` | `string[]` | Either an array of strings, ie. `['Green', 'Blue', 'Black']`.                        |
+|           | `{}[]`     | Or an array of objects in the following form: `[{label: 'Green', value: '008000'}]`. |
+| `value`   | `string`   | Either a single string, ie. `'Green'`.                                               |
+|           | `string[]` | Or an array of strings, ie. `['Green', 'Black']` (for multi selection).              |
+
+### Custom events
+
+The following events will be fired upon interaction with a combobox:
+
+| Event                   | Description                                                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `optionChanged`         | Fired when an option is selected of unselected. See `event.detail.option` and `event.detail.selected` for details.           |
+| `allOptionsUnselected`  | Fired when all options are unselected.                                                                                       |
+| `filterTermTextChanged` | Fired when the filter term was changed. See `event.detail.prevFilterTermText` and `event.detail.filterTermText` for details. |
+| `optionsDropdownOpened` | Fired when options were opened.                                                                                              |
+| `optionsDropdownClosed` | Fired when options were closed.                                                                                              |
+
 ## Development
 
 Our components are based on [Stencil](https://stenciljs.com/).

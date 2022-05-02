@@ -27,17 +27,18 @@
     <form action="/" method="get">
       <div>
         <label for="hobbies">Hobbies:</label>
-        <adg-combobox id="hobbies" name="hobbies"></adg-combobox>
+        <adg-combobox id="hobbies"
+                      name="hobbies"
+                      label="Hobbies"
+                      multi="true"></adg-combobox>
       </div>
 
       <div>
-        <adg-combobox
-          id="colours"
-          label="Farben wählen"
-          filterlabel="Farben"
-          name="colours"
-          lang="de"
-        ></adg-combobox>
+        <adg-combobox id="colours"
+                      label="Farben wählen"
+                      filterlabel="Farben"
+                      name="colours"
+                      lang="de"></adg-combobox>
       </div>
 
       <button type="submit">submit</button>
@@ -51,8 +52,8 @@
 
     <script>
       const hobbies = document.querySelector('#hobbies');
-      hobbies.multi = true;
-      hobbies.filterlabel = 'Hobbies';
+      // hobbies.multi = true;
+      // hobbies.filterlabel = 'Hobbies';
       hobbies.options = [
         'Soccer',
         'Badminton',
