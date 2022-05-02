@@ -229,7 +229,7 @@ export const expectCombobox = async (
   }
 
   const xOptionSelectedVisuallyHidden = xOptionsSelected.locator(
-    'span[data-visually-hidden]'
+    'span.adg-visually-hidden'
   );
 
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
@@ -326,7 +326,7 @@ export const expectCombobox = async (
   }
 
   const availableOptionsContainerLegendVisuallyHidden =
-    availableOptionsContainerLegend.locator('> span[data-visually-hidden]');
+    availableOptionsContainerLegend.locator('> span.adg-visually-hidden');
   await expect(availableOptionsContainerLegendVisuallyHidden).toHaveText(
     `${options.multi ? 'Available' : 'Verfügbare'} ${options.filterlabel}:`
   );

@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Option } from "./components/adg-combobox/adg-combobox";
 export namespace Components {
     interface AdgCombobox {
         "ariaLiveAssertive": boolean;
@@ -12,9 +13,10 @@ export namespace Components {
         "label": string;
         "multi": boolean;
         "name": string;
-        "options": string[];
+        "options": Option[];
         "roleAlert": boolean;
         "showInstructions": boolean;
+        "value"?: string[] | string;
     }
 }
 declare global {
@@ -35,9 +37,16 @@ declare namespace LocalJSX {
         "label"?: string;
         "multi"?: boolean;
         "name"?: string;
-        "options"?: string[];
+        "onAllOptionsUnselected"?: (event: CustomEvent<never>) => void;
+        "onFilterTermChanged"?: (event: CustomEvent<AdgComboboxFilterTermChange>) => void;
+        "onOptionChanged"?: (event: CustomEvent<AdgComboboxOptionChange>) => void;
+        "onOptionsDropdownClosed"?: (event: CustomEvent<never>) => void;
+        "onOptionsDropdownOpened"?: (event: CustomEvent<never>) => void;
+        "onValueChanged"?: (event: CustomEvent<string[] | string>) => void;
+        "options"?: Option[];
         "roleAlert"?: boolean;
         "showInstructions"?: boolean;
+        "value"?: string[] | string;
     }
     interface IntrinsicElements {
         "adg-combobox": AdgCombobox;

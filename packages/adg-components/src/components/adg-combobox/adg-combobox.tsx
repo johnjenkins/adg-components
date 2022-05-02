@@ -1,6 +1,7 @@
 import {
   Component,
   getAssetPath,
+  Event,
   Host,
   h,
   Listen,
@@ -8,16 +9,10 @@ import {
   State,
   Element,
   Watch,
+  EventEmitter,
 } from '@stencil/core';
 
 import { Translator } from '../../utils/locale';
-
-interface OptionModel {
-  value: string;
-  label: string;
-  checked: boolean;
-  hidden: boolean;
-}
 
 const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
 
@@ -25,7 +20,7 @@ let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefe
 
 @Component({
   tag: 'adg-combobox',
-  styleUrl: 'adg-combobox.css',
+  styleUrl: 'adg-combobox.scss',
   shadow: false,
   assetsDirs: ['assets'],
 })
@@ -34,6 +29,7 @@ export class AdgComboboxComponent {
 
   private _inputId: string;
   private _optionsSelectedId: string;
+  private _componentWillLoadComplete = false;
 
   selectedOptionModels: OptionModel[] = [];
   lastArrowSelectedElem = 0;
@@ -47,31 +43,37 @@ export class AdgComboboxComponent {
   optionSelectedButtons: HTMLButtonElement[] = [];
   currentlyFocusedOption?: HTMLInputElement;
 
+  applyFilterOnTermChange: boolean = true;
+
   @Element() el: HTMLElement;
 
   @Prop() label: string = null;
   @Prop() filterlabel: string = this.label || 'Options';
 
-  @Prop() options: string[] = [];
+  @Prop() options: Option[] = [];
+  @Prop() value?: string[] | string;
   @Prop() name: string = this.filterlabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
   @Prop() showInstructions: boolean = false;
   @Prop() ariaLiveAssertive: boolean = false;
   @Prop() roleAlert: boolean = false;
 
-  @State() filterTermText: string = '';
+  @State() filterTerm: string = '';
   @State() numberOfShownOptions: number = 0;
   @State() filteredOptionsStartingWith: string = '';
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
+
+
+  }
+  componentDidLoad() {
     const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
     this._inputId = `${internalId}--input`;
     this._optionsSelectedId = `${internalId}--options-selected`;
 
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
-
     if (!this.label) {
       if (
         !document.querySelector('label[for=' + this._inputId + ']') &&
@@ -84,12 +86,20 @@ export class AdgComboboxComponent {
     }
   }
 
+  @Event() optionChanged: EventEmitter<AdgComboboxOptionChange>;
+  @Event() allOptionsUnselected: EventEmitter<never>;
+  @Event() filterTermChanged: EventEmitter<AdgComboboxFilterTermChange>;
+  @Event() optionsDropdownOpened: EventEmitter<never>;
+  @Event() optionsDropdownClosed: EventEmitter<never>;
+
+  @Event() valueChanged: EventEmitter<string[] | string>;
+
   @Watch('options')
-  watchOptionsHandler(newValue: string[]) {
+  watchOptionsHandler(newValue: Option[]) {
     this.numberOfShownOptions = newValue.length;
-    this.optionModels = newValue.map((option: any) => ({
-      value: option.value || option.toLowerCase(),
-      label: option.label || option,
+    this.optionModels = newValue.map((option: Option) => ({
+      value: typeof option === 'string' ? option.toLowerCase() : option.value,
+      label: typeof option === 'string' ? option : option.label,
       checked: false,
       hidden: false,
     }));
@@ -102,10 +112,33 @@ export class AdgComboboxComponent {
     this.selectedOptionModels = this.optionModels.filter(
       (optionModel) => optionModel.checked
     );
+    if (this._componentWillLoadComplete) {
+      if (this.multi) {
+        this.valueChanged.emit(
+          this.selectedOptionModels.map(({ value }) => value)
+        );
+      } else {
+        const optionModel = this.selectedOptionModels.find(
+          ({ value }) => value
+        );
+        this.valueChanged.emit(optionModel.value);
+      }
+    }
   }
 
   async componentWillLoad(): Promise<void> {
     this.$t = await Translator(this.el);
+    this.optionModels = this.optionModels.map((optionModel) => {
+      let checked = false;
+      if (this.multi && Array.isArray(this.value)) {
+        checked = this.value.includes(optionModel.value);
+      } else if (!this.multi && typeof this.value === 'string') {
+        checked = this.value === optionModel.value;
+        if (checked) this.filterTerm = optionModel.label;
+      }
+      return { ...optionModel, checked };
+    });
+    this._componentWillLoadComplete = true;
   }
 
   setupLiveRegion() {
@@ -117,16 +150,8 @@ export class AdgComboboxComponent {
   }
 
   @Listen('click', { target: 'document' })
-  handleDocumentClick(event: MouseEvent) {
-    if (
-      !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
-    ) {
-      this.closeOptionsContainer(false);
-    }
-  }
-
-  @Listen('focus', { target: 'document' })
-  handleDocumentFocus(event: KeyboardEvent) {
+  @Listen('focusin', { target: 'document' })
+  handleDocumentClick(event: CustomEvent) {
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
@@ -155,24 +180,32 @@ export class AdgComboboxComponent {
         this.filterInputElementRef.focus();
       }
     }
+
+    this.applyFilterOnTermChange = true;
   }
 
   setInputValue(val: string, focus: boolean = true) {
-    if(focus) {
+    if (focus) {
       this.filterInputElementRef.focus();
     }
     this.filterInputElementRef.value = val;
     this.filterInputElementRef.dispatchEvent(
-      new Event('input', { bubbles: true })
+      new window.Event('input', { bubbles: true })
     );
   }
 
-  handleUnselectAllButtonClick(event: MouseEvent) {
-    console.log(event);
+  handleUnselectAllButtonClick() {
+    const selectedOptionValues = this.selectedOptionModels.map(
+      ({ value }) => value
+    );
     this.optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
       checked: false,
     }));
+    selectedOptionValues.forEach((value) =>
+      this.optionChanged.emit({ value, selected: false })
+    );
+    this.allOptionsUnselected.emit();
     this.setInputValue('');
   }
 
@@ -184,10 +217,15 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputChange(event: Event) {
+    if(!this.applyFilterOnTermChange) {
+      return;
+    }
+
     const targetElement = event.target as HTMLInputElement;
     const filterTerm = targetElement.value.toLowerCase().trim();
 
-    this.filterTermText = filterTerm;
+    const previousFilterTerm = this.filterTerm;
+    this.filterTerm = filterTerm;
 
     let optionModels = this.optionModels.map((optionModel) => ({
       ...optionModel,
@@ -200,6 +238,9 @@ export class AdgComboboxComponent {
     this.filteredOptionsStartingWith = shownOptions.length
       ? shownOptions[0].label
       : '';
+
+    this.filterTermChanged.emit({ previousFilterTerm, filterTerm });
+
     this.openOptionsContainer(false);
   }
 
@@ -251,10 +292,18 @@ export class AdgComboboxComponent {
           : optionModel
       );
     } else {
+      this.applyFilterOnTermChange = false;
       this.optionModels = this.optionModels.map((optionModel) => ({
         ...optionModel,
         checked: optionModel.value === value ? !optionModel.checked : false,
       }));
+    }
+
+    const option = this.optionModels.find(
+      (optionModel) => optionModel.value === value
+    );
+    if (option) {
+      this.optionChanged.emit({ value, selected: option.checked });
     }
 
     this.displaySelectedItems();
@@ -339,6 +388,8 @@ export class AdgComboboxComponent {
 
     selectInput && this.filterInputElementRef.select();
 
+    this.optionsDropdownOpened.emit();
+
     setTimeout(() => {
       // Some screen readers do not announce the changed `aria-expanded`
       // attribute. So we give them some additional fodder to announce,
@@ -358,6 +409,8 @@ export class AdgComboboxComponent {
     this.showInstructions = false;
 
     selectInput && this.filterInputElementRef.select();
+
+    this.optionsDropdownClosed.emit();
   }
 
   componentWillRender() {
@@ -372,7 +425,6 @@ export class AdgComboboxComponent {
           <label
             htmlFor={this._inputId}
             class="adg-combobox--filter-label"
-            data-inline-block
           >
             {this.label}
           </label>
@@ -383,11 +435,9 @@ export class AdgComboboxComponent {
             'adg-combobox--open': this.isOptionsContainerOpen,
           }}
           ref={(el) => (this.filterAndOptionsContainerElementRef = el)}
-          data-inline-block
         >
           <span
             class="adg-combobox--filter-container"
-            data-inline-block
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <input
@@ -403,13 +453,14 @@ export class AdgComboboxComponent {
               onKeyDown={(ev) => this.handleFilterInputKeyDown(ev)}
               onClick={() => this.handleFilterInputClick()}
               ref={(el) => (this.filterInputElementRef = el)}
+              value={this.filterTerm}
             />
           </span>
           <button
             class="adg-combobox--unselect-all-button"
             type="button"
             ref={(el) => (this.unselectAllButtonElementRef = el)}
-            onClick={(ev) => this.handleUnselectAllButtonClick(ev)}
+            onClick={() => this.handleUnselectAllButtonClick()}
             onKeyUp={(ev) => this.handleUnselectAllButtonKeyUp(ev)}
             hidden={this.selectedOptionModels.length === 0}
           >
@@ -419,7 +470,7 @@ export class AdgComboboxComponent {
                   {this.selectedOptionModels.length}&nbsp;
                 </span>
               ) : null}
-              <span data-visually-hidden>
+              <span class="adg-visually-hidden">
                 {this.$t('results_selected', {
                   filterlabel: this.filterlabel,
                 })}
@@ -452,7 +503,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span data-visually-hidden>
+              <span class="adg-visually-hidden">
                 {this.$t('results_title', {
                   filterlabel: this.filterlabel,
                 })}
@@ -464,15 +515,15 @@ export class AdgComboboxComponent {
                 aria-live={this.ariaLiveAssertive ? 'assertive' : null}
                 role={this.roleAlert ? 'alert' : null}
               >
-                {this.$t(this.filterTermText ? 'results_filtered' : 'results', {
+                {this.$t(this.filterTerm ? 'results_filtered' : 'results', {
                   filterlabel: this.filterlabel,
                   optionsShown: this.numberOfShownOptions,
                   optionsTotal: this.options.length,
-                  filterTerm: this.filterTermText,
+                  filterTerm: this.filterTerm,
                 })}
 
                 {!!this.filteredOptionsStartingWith ? (
-                  <span data-visually-hidden>
+                  <span class="adg-visually-hidden">
                     ,{' '}
                     {this.$t('results_first', {
                       first: this.filteredOptionsStartingWith,
@@ -480,7 +531,7 @@ export class AdgComboboxComponent {
                   </span>
                 ) : null}
                 {this.showInstructions ? (
-                  <span class="adg-combobox--instructions" data-visually-hidden>
+                  <span class="adg-combobox--instructions adg-visually-hidden">
                     &nbsp;(enter question mark for help)
                   </span>
                 ) : null}
@@ -494,7 +545,7 @@ export class AdgComboboxComponent {
                   hidden={option.hidden}
                   ref={(el) => this.availableOptionsListItems.push(el)}
                 >
-                  <label data-inline-block>
+                  <label>
                     <input
                       type={this.multi ? 'checkbox' : 'radio'}
                       name={`${this.name}${this.multi ? '[]' : ''}`}
@@ -519,7 +570,7 @@ export class AdgComboboxComponent {
 
         {this.multi ? (
           <fieldset class="adg-combobox--selected-options-container">
-            <legend data-visually-hidden>
+            <legend class="adg-visually-hidden">
               {this.$t('results_selected', {
                 filterlabel: this.filterlabel,
               })}
@@ -554,4 +605,21 @@ export class AdgComboboxComponent {
 
 function modulo(a: number, n: number) {
   return ((a % n) + n) % n;
+}
+
+type OptionBase = { label: string; value: string };
+
+export type Option = OptionBase | string;
+
+interface OptionModel extends OptionBase {
+  checked: boolean;
+  hidden: boolean;
+}
+
+class AdgComboboxOptionChange {
+  constructor(public value: string, public selected: boolean) {}
+}
+
+class AdgComboboxFilterTermChange {
+  constructor(public previousFilterTerm: string, public filterTerm: string) {}
 }

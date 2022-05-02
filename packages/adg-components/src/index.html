@@ -24,16 +24,20 @@
 
     <hr />
 
-
     <form action="/" method="get">
-      <div>
-        <label for="hobbies">Hobbies:</label>
-        <adg-combobox id="hobbies" name="hobbies"></adg-combobox>
-      </div>
+      <label for="hobbies">Hobbies:</label>
+      <adg-combobox id="hobbies"
+                    name="hobbies"
+                    filterlabel="Hobbies"
+                    multi="true"></adg-combobox>
 
-      <div>
-        <adg-combobox id="colours" label="Farben wählen" filterlabel="Farben" name="colours" lang="de"></adg-combobox>
-      </div>
+      <hr>
+
+      <adg-combobox id="colours"
+                    label="Farben wählen"
+                    filterlabel="Farben"
+                    name="colours"
+                    lang="de"></adg-combobox>
 
       <button type="submit">submit</button>
     </form>
@@ -46,8 +50,9 @@
 
     <script>
       const hobbies = document.querySelector('#hobbies');
-      hobbies.multi = true;
-      hobbies.filterlabel = 'Hobbies';
+      // Instead of using HTML attributes, you can set some variables also here, ie.:
+      // hobbies.multi = true;
+      // hobbies.filterlabel = 'Hobbies';
       hobbies.options = [
         'Soccer',
         'Badminton',
@@ -62,19 +67,43 @@
         'Sleeping',
         'Programming',
       ];
+      // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
+      // hobbies.value = ['soccer', 'hiking', 'cooking'];
+
+      hobbies.addEventListener('optionChanged', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('allOptionsUnselected', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('filterTermChanged', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('optionsDropdownOpened', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('optionsDropdownClosed', (ev) => {
+        console.log(ev);
+      });
+      hobbies.addEventListener('valueChanged', (ev) => {
+        console.log(ev);
+      });
+
       const colours = document.querySelector('#colours');
       colours.options = [
-        {value: '000000', label: 'Black'},
-        {value: '0000FF', label: 'Blue'},
-        {value: 'A52A2A', label: 'Brown'},
-        {value: '008000', label: 'Green'},
-        {value: '808080', label: 'Grey'},
-        {value: 'FFA500', label: 'Orange'},
-        {value: 'FFC0CB', label: 'Pink'},
-        {value: 'FF0000', label: 'Red'},
-        {value: 'FFFFFF', label: 'White'},
-        {value: 'FFFF00', label: 'Yellow'},
+        { value: '000000', label: 'Black' },
+        { value: '0000FF', label: 'Blue' },
+        { value: 'A52A2A', label: 'Brown' },
+        { value: '008000', label: 'Green' },
+        { value: '808080', label: 'Grey' },
+        { value: 'FFA500', label: 'Orange' },
+        { value: 'FFC0CB', label: 'Pink' },
+        { value: 'FF0000', label: 'Red' },
+        { value: 'FFFFFF', label: 'White' },
+        { value: 'FFFF00', label: 'Yellow' },
       ];
+      // colours.value = 'FFC0CB'; // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
+
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {
         const form = document.querySelector('form');
