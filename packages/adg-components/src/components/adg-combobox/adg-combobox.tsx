@@ -20,7 +20,7 @@ let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefe
 
 @Component({
   tag: 'adg-combobox',
-  styleUrl: 'adg-combobox.css',
+  styleUrl: 'adg-combobox.scss',
   shadow: false,
   assetsDirs: ['assets'],
 })
@@ -62,13 +62,16 @@ export class AdgComboboxComponent {
   @State() isOptionsContainerOpen: boolean = false;
 
   connectedCallback() {
+
+
+  }
+  componentDidLoad() {
     const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
     this._inputId = `${internalId}--input`;
     this._optionsSelectedId = `${internalId}--options-selected`;
 
     this.setupLiveRegion();
     this.watchOptionsHandler(this.options);
-
     if (!this.label) {
       if (
         !document.querySelector('label[for=' + this._inputId + ']') &&
@@ -411,7 +414,6 @@ export class AdgComboboxComponent {
           <label
             htmlFor={this._inputId}
             class="adg-combobox--filter-label"
-            data-inline-block
           >
             {this.label}
           </label>
@@ -422,11 +424,9 @@ export class AdgComboboxComponent {
             'adg-combobox--open': this.isOptionsContainerOpen,
           }}
           ref={(el) => (this.filterAndOptionsContainerElementRef = el)}
-          data-inline-block
         >
           <span
             class="adg-combobox--filter-container"
-            data-inline-block
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <input
@@ -459,7 +459,7 @@ export class AdgComboboxComponent {
                   {this.selectedOptionModels.length}&nbsp;
                 </span>
               ) : null}
-              <span data-visually-hidden>
+              <span class="adg-visuallyhidden">
                 {this.$t('results_selected', {
                   filterlabel: this.filterlabel,
                 })}
@@ -492,7 +492,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <legend class="adg-combobox--available-options-legend">
-              <span data-visually-hidden>
+              <span class="adg-visuallyhidden">
                 {this.$t('results_title', {
                   filterlabel: this.filterlabel,
                 })}
@@ -512,7 +512,7 @@ export class AdgComboboxComponent {
                 })}
 
                 {!!this.filteredOptionsStartingWith ? (
-                  <span data-visually-hidden>
+                  <span class="adg-visuallyhidden">
                     ,{' '}
                     {this.$t('results_first', {
                       first: this.filteredOptionsStartingWith,
@@ -520,7 +520,7 @@ export class AdgComboboxComponent {
                   </span>
                 ) : null}
                 {this.showInstructions ? (
-                  <span class="adg-combobox--instructions" data-visually-hidden>
+                  <span class="adg-combobox--instructions adg-visuallyhidden">
                     &nbsp;(enter question mark for help)
                   </span>
                 ) : null}
@@ -534,7 +534,7 @@ export class AdgComboboxComponent {
                   hidden={option.hidden}
                   ref={(el) => this.availableOptionsListItems.push(el)}
                 >
-                  <label data-inline-block>
+                  <label>
                     <input
                       type={this.multi ? 'checkbox' : 'radio'}
                       name={`${this.name}${this.multi ? '[]' : ''}`}
@@ -559,7 +559,7 @@ export class AdgComboboxComponent {
 
         {this.multi ? (
           <fieldset class="adg-combobox--selected-options-container">
-            <legend data-visually-hidden>
+            <legend class="adg-visuallyhidden">
               {this.$t('results_selected', {
                 filterlabel: this.filterlabel,
               })}
