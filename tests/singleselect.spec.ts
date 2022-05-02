@@ -257,7 +257,7 @@ test.describe('ADG-Combobox (single)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
         await expectSingleCombobox(page, {
           filterFocused: true,
-          optionsExpanded: false,
+          optionsExpanded: true,
           selectedOptions: [],
         });
       });
@@ -268,6 +268,7 @@ test.describe('ADG-Combobox (single)', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'a',
+          filterTerm: 'a',
           optionsExpanded: true,
           visibleOptions: ['Black', 'Orange'],
         });
@@ -278,6 +279,7 @@ test.describe('ADG-Combobox (single)', () => {
         await expectSingleCombobox(page, {
           filterFocused: true,
           filterValue: 'Black',
+          filterTerm: 'a',
           optionsExpanded: false,
           selectedOptions: ['Black'],
           visibleOptions: ['Black', 'Orange'],
@@ -287,6 +289,7 @@ test.describe('ADG-Combobox (single)', () => {
         await expectSingleCombobox(page, {
           unselectAllButtonFocused: true,
           filterValue: 'Black',
+          filterTerm: 'a',
           optionsExpanded: false,
           selectedOptions: ['Black'],
           visibleOptions: ['Black', 'Orange'],
@@ -295,7 +298,7 @@ test.describe('ADG-Combobox (single)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
         await expectSingleCombobox(page, {
           filterFocused: true,
-          optionsExpanded: false,
+          optionsExpanded: true,
           selectedOptions: [],
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         });
