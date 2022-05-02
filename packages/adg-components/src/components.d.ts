@@ -35,6 +35,7 @@ declare namespace LocalJSX {
         "label"?: string;
         "multi"?: boolean;
         "name"?: string;
+        "onOptionChanged"?: (event: CustomEvent<AdgComboboxOptionChange>) => void;
         "options"?: string[];
         "roleAlert"?: boolean;
         "showInstructions"?: boolean;

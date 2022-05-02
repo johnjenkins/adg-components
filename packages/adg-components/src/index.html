@@ -24,7 +24,6 @@
 
     <hr />
 
-
     <form action="/" method="get">
       <div>
         <label for="hobbies">Hobbies:</label>
@@ -32,7 +31,13 @@
       </div>
 
       <div>
-        <adg-combobox id="colours" label="Farben wählen" filterlabel="Farben" name="colours" lang="de"></adg-combobox>
+        <adg-combobox
+          id="colours"
+          label="Farben wählen"
+          filterlabel="Farben"
+          name="colours"
+          lang="de"
+        ></adg-combobox>
       </div>
 
       <button type="submit">submit</button>
@@ -62,18 +67,21 @@
         'Sleeping',
         'Programming',
       ];
+      hobbies.addEventListener('optionChanged', (x) => {
+        console.log(x);
+      });
       const colours = document.querySelector('#colours');
       colours.options = [
-        {value: '000000', label: 'Black'},
-        {value: '0000FF', label: 'Blue'},
-        {value: 'A52A2A', label: 'Brown'},
-        {value: '008000', label: 'Green'},
-        {value: '808080', label: 'Grey'},
-        {value: 'FFA500', label: 'Orange'},
-        {value: 'FFC0CB', label: 'Pink'},
-        {value: 'FF0000', label: 'Red'},
-        {value: 'FFFFFF', label: 'White'},
-        {value: 'FFFF00', label: 'Yellow'},
+        { value: '000000', label: 'Black' },
+        { value: '0000FF', label: 'Blue' },
+        { value: 'A52A2A', label: 'Brown' },
+        { value: '008000', label: 'Green' },
+        { value: '808080', label: 'Grey' },
+        { value: 'FFA500', label: 'Orange' },
+        { value: 'FFC0CB', label: 'Pink' },
+        { value: 'FF0000', label: 'Red' },
+        { value: 'FFFFFF', label: 'White' },
+        { value: 'FFFF00', label: 'Yellow' },
       ];
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {

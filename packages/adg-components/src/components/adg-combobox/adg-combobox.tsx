@@ -1,6 +1,7 @@
 import {
   Component,
   getAssetPath,
+  Event,
   Host,
   h,
   Listen,
@@ -8,6 +9,7 @@ import {
   State,
   Element,
   Watch,
+  EventEmitter,
 } from '@stencil/core';
 
 import { Translator } from '../../utils/locale';
@@ -84,6 +86,8 @@ export class AdgComboboxComponent {
     }
   }
 
+  @Event() optionChanged: EventEmitter<AdgComboboxOptionChange>;
+
   @Watch('options')
   watchOptionsHandler(newValue: string[]) {
     this.numberOfShownOptions = newValue.length;
@@ -156,12 +160,12 @@ export class AdgComboboxComponent {
   }
 
   setInputValue(val: string, focus: boolean = true) {
-    if(focus) {
+    if (focus) {
       this.filterInputElementRef.focus();
     }
     this.filterInputElementRef.value = val;
     this.filterInputElementRef.dispatchEvent(
-      new Event('input', { bubbles: true })
+      new window.Event('input', { bubbles: true })
     );
   }
 
@@ -253,6 +257,13 @@ export class AdgComboboxComponent {
         ...optionModel,
         checked: optionModel.value === value ? !optionModel.checked : false,
       }));
+    }
+
+    const option = this.optionModels.find(
+      (optionModel) => optionModel.value === value
+    );
+    if (option) {
+      this.optionChanged.emit({ option: value, selected: option.checked });
     }
 
     this.displaySelectedItems();
@@ -552,4 +563,8 @@ export class AdgComboboxComponent {
 
 function modulo(a: number, n: number) {
   return ((a % n) + n) % n;
+}
+
+class AdgComboboxOptionChange {
+  constructor(public option: string, public selected: boolean) {}
 }
