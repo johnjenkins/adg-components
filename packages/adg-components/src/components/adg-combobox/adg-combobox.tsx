@@ -141,7 +141,6 @@ export class AdgComboboxComponent {
   @Listen('click', { target: 'document' })
   @Listen('focusin', { target: 'document' })
   handleDocumentClick(event: CustomEvent) {
-    console.log(typeof event);
     if (
       !event.composedPath().includes(this.filterAndOptionsContainerElementRef)
     ) {
