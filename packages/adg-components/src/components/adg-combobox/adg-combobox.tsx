@@ -440,7 +440,7 @@ export class AdgComboboxComponent {
                 ,
               </span>
             </span>
-            <img src={getAssetPath(`./assets/clear.svg`)} alt="clear selection" />
+            <img src={getAssetPath(`./assets/clear.svg`)} alt={this.$t('clear_selection')} />
           </button>
           <button
             class="adg-combobox--toggle-options-button"

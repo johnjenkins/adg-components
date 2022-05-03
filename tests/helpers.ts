@@ -256,7 +256,7 @@ export const expectCombobox = async (
   );
   await expect(selectionClearedButtonImage).toHaveAttribute(
     'alt',
-    'clear selection'
+    options.multi ? 'clear selection' : 'Auswahl löschen'
   );
 
   const toggleOptionsButton = filterAndOptionsContainer.locator(
