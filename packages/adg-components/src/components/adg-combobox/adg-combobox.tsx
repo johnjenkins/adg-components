@@ -123,7 +123,9 @@ export class AdgComboboxComponent {
   }
 
   setupLiveRegion() {
-    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ||
+        navigator.platform.toLowerCase() === 'iphone' ||
+        navigator.platform.toLowerCase() === 'ipad') {
       this.ariaLiveAssertive = true;
     } else {
       this.roleAlert = true;
@@ -473,7 +475,7 @@ export class AdgComboboxComponent {
               <span
                 class="adg-combobox--x-of-y-for-filter-text"
                 data-live-region
-                aria-live={this.ariaLiveAssertive ? 'assertive' : null}
+                aria-live={this.ariaLiveAssertive ? 'polite' : null}
                 role={this.roleAlert ? 'alert' : null}
               >
                 {this.$t(this.filterTerm ? 'results_filtered' : 'results', {
