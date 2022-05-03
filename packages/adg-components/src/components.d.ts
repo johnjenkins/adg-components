@@ -34,11 +34,11 @@ declare namespace LocalJSX {
         "label"?: string;
         "multi"?: boolean;
         "name"?: string;
-        "onAllOptionsUnselected"?: (event: CustomEvent<never>) => void;
         "onFilterTermChanged"?: (event: CustomEvent<AdgComboboxFilterTermChange>) => void;
         "onOptionChanged"?: (event: CustomEvent<AdgComboboxOptionChange>) => void;
         "onOptionsDropdownClosed"?: (event: CustomEvent<never>) => void;
         "onOptionsDropdownOpened"?: (event: CustomEvent<never>) => void;
+        "onSelectionCleared"?: (event: CustomEvent<never>) => void;
         "options"?: Option[];
         "roleAlert"?: boolean;
         "value"?: string[] | string;

@@ -234,27 +234,27 @@ test.describe('ADG-Combobox (multi)', () => {
       });
     });
 
-    test.describe('Activate "Unselect all" button', () => {
+    test.describe('Activate "Clear selection" button', () => {
       test('With empty filter', async ({ page }) => {
         await tabIntoFilter(page, 'hobbies');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
         await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
-        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus to "Unselect all" button
+        await page.keyboard.press('Escape'); // Press `Esc` to collapse options and set focus to "Clear Selection" button
         await expectMultiCombobox(page, {
           filterFocused: true,
           optionsExpanded: false,
           selectedOptions: ['Soccer'],
         });
 
-        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Clear Selection" button
         await expectMultiCombobox(page, {
-          unselectAllButtonFocused: true,
+          selectionClearedButtonFocused: true,
           optionsExpanded: false,
           selectedOptions: ['Soccer'],
         });
 
-        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectMultiCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
@@ -283,16 +283,16 @@ test.describe('ADG-Combobox (multi)', () => {
           visibleOptions: ['Badminton', 'Kickboxing'],
         });
 
-        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Clear Selection" button
         await expectMultiCombobox(page, {
-          unselectAllButtonFocused: true,
+          selectionClearedButtonFocused: true,
           filterValue: 'b',
           optionsExpanded: false,
           selectedOptions: ['Badminton'],
           visibleOptions: ['Badminton', 'Kickboxing'],
         });
 
-        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectMultiCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
@@ -561,19 +561,19 @@ test.describe('ADG-Combobox (multi)', () => {
       );
     });
 
-    test('Event allOptionsUnselected is fired upon activating "Unselect all" button', async ({
+    test('Event selectionCleared is fired upon activating "Clear Selection" button', async ({
       page,
     }) => {
       await clickIntoFilter(page, 'hobbies'); // Click into the filter to expand options
       await clickOption(page, 'Soccer', 'hobbies'); // Select option "Black"
       await page.keyboard.press('Escape'); // Press `Escape` to move focus back to filter term
-      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
-      await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Clear Selection" button
+      await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
       await expect(page.locator('#events p:nth-child(4)')).toHaveText(
         '4: optionChanged, {"value":"soccer","selected":false}'
       );
       await expect(page.locator('#events p:nth-child(5)')).toHaveText(
-        '5: allOptionsUnselected, null'
+        '5: selectionCleared, null'
       );
     });
 

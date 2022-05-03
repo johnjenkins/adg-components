@@ -230,7 +230,7 @@ test.describe('ADG-Combobox (single)', () => {
       });
     });
 
-    test.describe('Activate "Unselect all" button', () => {
+    test.describe('Activate "Clear Selection" button', () => {
       test('With empty filter', async ({ page }) => {
         await tabIntoFilter(page, 'colours');
         await page.keyboard.press('ArrowDown'); // Press `Down` to expand options
@@ -245,16 +245,16 @@ test.describe('ADG-Combobox (single)', () => {
           selectedOptions: ['Black'],
         });
 
-        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Clear Selection" button
         await expectSingleCombobox(page, {
-          unselectAllButtonFocused: true,
+          selectionClearedButtonFocused: true,
           filterValue: 'Black',
           filterTerm: '',
           optionsExpanded: false,
           selectedOptions: ['Black'],
         });
 
-        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
@@ -285,9 +285,9 @@ test.describe('ADG-Combobox (single)', () => {
           visibleOptions: ['Black', 'Orange'],
         });
 
-        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
+        await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Clear Selection" button
         await expectSingleCombobox(page, {
-          unselectAllButtonFocused: true,
+          selectionClearedButtonFocused: true,
           filterValue: 'Black',
           filterTerm: 'a',
           optionsExpanded: false,
@@ -295,7 +295,7 @@ test.describe('ADG-Combobox (single)', () => {
           visibleOptions: ['Black', 'Orange'],
         });
 
-        await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectSingleCombobox(page, {
           filterFocused: true,
           optionsExpanded: true,
@@ -579,18 +579,18 @@ test.describe('ADG-Combobox (single)', () => {
       );
     });
 
-    test('Events optionChanged(selected: false) and allOptionsUnselected are fired upon activating "Unselect all" button', async ({
+    test('Events optionChanged(selected: false) and selectionCleared are fired upon activating "Clear Selection" button', async ({
       page,
     }) => {
       await clickIntoFilter(page, 'colours'); // Click into the filter to expand options
       await clickOption(page, 'Black', 'colours'); // Select option "Black"
-      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Unselect all" button
-      await page.keyboard.press('Enter'); // Press `Enter` to activate "Unselect all" button
+      await page.keyboard.press('Tab'); // Press `Tab` to move focus to "Clear Selection" button
+      await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
       await expect(page.locator('#events p:nth-child(4)')).toHaveText(
         '4: optionChanged, {"value":"000000","selected":false}'
       );
       await expect(page.locator('#events p:nth-child(5)')).toHaveText(
-        '5: allOptionsUnselected, null'
+        '5: selectionCleared, null'
       );
     });
 

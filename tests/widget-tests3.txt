@@ -130,18 +130,18 @@ DESCRIBE ADG Combobox
       SPECIFY Tab out of filter input
         // Still unclear of the optimal interplay of browser default behaviour and keyboard-only optimisations, see https://github.com/NothingAG/adg-components/issues/8 and https://github.com/NothingAG/adg-components/issues/16.
 
-      SPECIFY Activate "unselect all" button
+      SPECIFY Activate "Clear Selection" button
         tab_into_filter()
         press("Down") // Displays options
         press("Space") // Selects an option
         press("Esc") // Close options and moves focus to filter input
-        press("Esc") // Moves focus to "unselect all" button
+        press("Esc") // Moves focus to "Clear Selection" button
         has_multi_state(unselect_all_button_focused: true,
                         selected_options: ["Badminton"])
         press("Enter")
         has_multi_state(filter_input_focused: true)
 
-        // TODO: currently, the "unselect all" button is also reachable by Tab. But we are not yet sure whether this will remain, see https://github.com/NothingAG/adg-components/issues/16
+        // TODO: currently, the "Clear Selection" button is also reachable by Tab. But we are not yet sure whether this will remain, see https://github.com/NothingAG/adg-components/issues/16
 
       SPECIFY Propagate Enter key
         // TODO: When filter input is focused, the options are closed, and Enter is pressed, then the form should be submitted.
@@ -167,7 +167,7 @@ DESCRIBE ADG Combobox
       SPECIFY Click open/close button
         // TODO
 
-      SPECIFY Click "unselect all" button
+      SPECIFY Click "Clear Selection" button
         // TODO
 
       SPECIFY Toggle options
@@ -249,7 +249,7 @@ DESCRIBE ADG Combobox
           
         // TODO: More edge cases to test here, but not 100% sure how to handle them yet, see https://github.com/NothingAG/adg-components/issues/13.
 
-    DESCRIBE Click "unselect all" button
+    DESCRIBE Click "Clear Selection" button
       // TODO: Unsure whether we need a specific click-test for this... Doesn't the keyboard-test suffice?
 
     DESCRIBE Pills

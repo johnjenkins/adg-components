@@ -6,5 +6,6 @@
   "results": "$(optionsTotal) $(filterlabel)",
   "results_selected": "$(filterlabel) gewählt: ",
   "results_filtered": "$(optionsShown) von $(optionsTotal) $(filterlabel) für Filter \"$(filterTerm)\"",
-  "results_first": "beginnend mit \"$(first)\""
+  "results_first": "beginnend mit \"$(first)\"",
+  "clear_selection": "Auswahl löschen"
 }
