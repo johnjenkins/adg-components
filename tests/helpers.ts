@@ -259,22 +259,21 @@ export const expectCombobox = async (
     options.multi ? 'clear selection' : 'Auswahl löschen'
   );
 
-  const toggleOptionsButton = filterAndOptionsContainer.locator(
-    'button.adg-combobox--toggle-options-button'
+  const toggleAvailableOptionsButton = filterAndOptionsContainer.locator(
+    'button.adg-combobox--toggle-available-options-button'
   );
-  await expect(toggleOptionsButton).toHaveAttribute('type', 'button');
+  await expect(toggleAvailableOptionsButton).toHaveAttribute('type', 'button');
 
-  const toggleOptionsButtonImage = toggleOptionsButton.locator(
-    'img[src$="close.svg"]'
-  );
+  const toggleAvailableOptionsButtonImage =
+    toggleAvailableOptionsButton.locator('img[src$="close.svg"]');
 
   if (optionsExpanded) {
-    await expect(toggleOptionsButtonImage).toHaveAttribute(
+    await expect(toggleAvailableOptionsButtonImage).toHaveAttribute(
       'alt',
       options.multi ? 'Close Hobbies Options' : 'Farben Auswahl schliessen'
     );
   } else {
-    await expect(toggleOptionsButtonImage).toHaveAttribute(
+    await expect(toggleAvailableOptionsButtonImage).toHaveAttribute(
       'alt',
       options.multi ? 'Open Hobbies Options' : 'Farben Auswahl öffnen'
     );
@@ -453,7 +452,7 @@ export const clickOutsideFilter = async (page: Page) => {
 
 export const clickOpenCloseButton = async (page: Page, id: string) => {
   const buttonAfter = page.locator(
-    `adg-combobox#${id} .adg-combobox--toggle-options-button`
+    `adg-combobox#${id} .adg-combobox--toggle-available-options-button`
   );
   await buttonAfter.click();
 };

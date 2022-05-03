@@ -144,7 +144,7 @@ export class AdgComboboxComponent {
     this.openOptionsContainer(false);
   }
 
-  handleToggleOptionsButtonClicked() {
+  handleToggleAvailableOptionsButtonClicked() {
     this.isOptionsContainerOpen
       ? this.closeOptionsContainer()
       : this.openOptionsContainer();
@@ -443,14 +443,14 @@ export class AdgComboboxComponent {
             <img src={getAssetPath(`./assets/clear.svg`)} alt={this.$t('clear_selection')} />
           </button>
           <button
-            class="adg-combobox--toggle-options-button"
+            class="adg-combobox--toggle-available-options-button"
             type="button"
             tabindex="-1"
-            onClick={() => this.handleToggleOptionsButtonClicked()}
+            onClick={() => this.handleToggleAvailableOptionsButtonClicked()}
           >
             <img
               src={getAssetPath(`./assets/close.svg`)}
-              class="adg-combobox--toggle-options-button-icon"
+              class="adg-combobox--toggle-available-options-button-icon"
               alt={this.$t(this.isOptionsContainerOpen ? 'close' : 'open', {
                 filterlabel: this.filterlabel,
               })}

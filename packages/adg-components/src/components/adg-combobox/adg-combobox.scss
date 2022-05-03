@@ -75,7 +75,7 @@
   }
 }
 
-.adg-combobox--toggle-options-button {
+.adg-combobox--toggle-available-options-button {
   height: 24px;
   border: 1px solid #000;
   margin-left: -1px;
@@ -89,7 +89,7 @@
   outline: none;
 }
 
-.adg-combobox--toggle-options-button {
+.adg-combobox--toggle-available-options-button {
   &:hover, &:focus {
     cursor: pointer;
     outline: none;
@@ -104,7 +104,7 @@
   border-radius: 8px;
 }
 
-.adg-combobox--toggle-options-button {
+.adg-combobox--toggle-available-options-button {
   &:hover img, &:focus img {
     outline: 1px solid red;
     background-color: rgb(255, 212, 212);
@@ -118,7 +118,7 @@
   }
 }
 
-.adg-combobox--filter-and-options-container:not(.adg-combobox--open) .adg-combobox--toggle-options-button {
+.adg-combobox--filter-and-options-container:not(.adg-combobox--open) .adg-combobox--toggle-available-options-button {
   border-bottom-right-radius: 6px;
 
   img {
