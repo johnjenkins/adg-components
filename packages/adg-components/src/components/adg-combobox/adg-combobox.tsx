@@ -210,7 +210,9 @@ export class AdgComboboxComponent {
 
     this.filterTermChanged.emit({ previousFilterTerm, filterTerm });
 
-    this.openOptionsContainer(false);
+    if(filterTerm !== '') {
+      this.openOptionsContainer(false);
+    }
   }
 
   handleKeyUpForPageUpAndPageDown(event: KeyboardEvent) {

@@ -257,7 +257,7 @@ test.describe('ADG-Combobox (multi)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectMultiCombobox(page, {
           filterFocused: true,
-          optionsExpanded: true,
+          optionsExpanded: false,
           selectedOptions: [],
         });
       });
@@ -290,6 +290,27 @@ test.describe('ADG-Combobox (multi)', () => {
           optionsExpanded: false,
           selectedOptions: ['Badminton'],
           visibleOptions: ['Badminton', 'Kickboxing'],
+        });
+
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
+        await expectMultiCombobox(page, {
+          filterFocused: true,
+          optionsExpanded: false,
+          selectedOptions: [],
+          visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
+        });
+      });
+      test('Does not affect options dropdown visibility', async ({ page }) => {
+        await clickIntoFilter(page, 'hobbies'); // Click into the filter to expand options
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+        await page.keyboard.press('Space'); // Press `Space` to check option "Soccer"
+        await page.keyboard.press('Shift+Tab'); // Press `Shift+Tab` to focus "Clear selection" button
+        await expectMultiCombobox(page, {
+          selectionClearedButtonFocused: true,
+          filterValue: '',
+          optionsExpanded: true,
+          selectedOptions: ['Soccer'],
+          visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
         });
 
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
