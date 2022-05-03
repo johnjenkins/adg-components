@@ -386,7 +386,7 @@ export class AdgComboboxComponent {
             htmlFor={this._inputId}
             class="adg-combobox--filter-label"
           >
-            {this.label}
+            {this.label}:&nbsp;
           </label>
         ) : null}
         <span

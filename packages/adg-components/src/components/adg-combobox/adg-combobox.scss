@@ -1,10 +1,5 @@
 .adg-combobox--filter-label {
   display: inline-block;
-  width: 100px;
-
-  &::after {
-    content: ':';
-  }
 }
 
 .adg-combobox--filter-input {
