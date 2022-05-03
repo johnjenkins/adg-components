@@ -14,7 +14,7 @@ export namespace Components {
         "options": Option[];
         "optionslabel": string;
         "roleAlert": boolean;
-        "value"?: string[] | string;
+        "selected"?: string[] | string;
     }
 }
 declare global {
@@ -41,7 +41,7 @@ declare namespace LocalJSX {
         "options"?: Option[];
         "optionslabel"?: string;
         "roleAlert"?: boolean;
-        "value"?: string[] | string;
+        "selected"?: string[] | string;
     }
     interface IntrinsicElements {
         "adg-combobox": AdgCombobox;

@@ -51,7 +51,7 @@ export class AdgComboboxComponent {
   @Prop() optionslabel: string = this.label || 'Options';
 
   @Prop() options: Option[] = [];
-  @Prop() value?: string[] | string;
+  @Prop() selected?: string[] | string;
   @Prop() name: string = this.optionslabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
   @Prop() roleAlert: boolean = false;
@@ -111,10 +111,10 @@ export class AdgComboboxComponent {
     this.$t = await Translator(this.el);
     this.optionModels = this.optionModels.map((optionModel) => {
       let checked = false;
-      if (this.multi && Array.isArray(this.value)) {
-        checked = this.value.includes(optionModel.value);
-      } else if (!this.multi && typeof this.value === 'string') {
-        checked = this.value === optionModel.value;
+      if (this.multi && Array.isArray(this.selected)) {
+        checked = this.selected.includes(optionModel.value);
+      } else if (!this.multi && typeof this.selected === 'string') {
+        checked = this.selected === optionModel.value;
         if (checked) this.filterTerm = optionModel.label;
       }
       return { ...optionModel, checked };
