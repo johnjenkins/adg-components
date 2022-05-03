@@ -300,6 +300,7 @@ test.describe('ADG-Combobox (multi)', () => {
           visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
         });
       });
+
       test('Does not affect options dropdown visibility', async ({ page }) => {
         await clickIntoFilter(page, 'hobbies'); // Click into the filter to expand options
         await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option

@@ -145,7 +145,7 @@ export const expectCombobox = async (
 
   const filterlabel = combobox.locator('label.adg-combobox--filter-label');
   if (options.label) {
-    await expect(filterlabel).toHaveText(options.label);
+    await expect(filterlabel).toHaveText(`${options.label}:`);
     await expect(filterlabel).toHaveAttribute('for', filterInputId);
     await expect(filterlabel).toHaveCSS('display', 'inline-block'); // So label and filter input are read "in one go" in most screen readers => TODO: factor out into custom matcher, ie. `toNotIntroduceSemanticLineBreak`!
   }
