@@ -35,7 +35,7 @@ export class AdgComboboxComponent {
   lastArrowSelectedElem = 0;
 
   filterInputElementRef: HTMLInputElement;
-  unselectAllButtonElementRef: HTMLButtonElement;
+  selectionClearedButtonElementRef: HTMLButtonElement;
   fieldsetElementRef: HTMLFieldSetElement;
   filterAndOptionsContainerElementRef: HTMLSpanElement;
 
@@ -82,7 +82,7 @@ export class AdgComboboxComponent {
   }
 
   @Event() optionChanged: EventEmitter<AdgComboboxOptionChange>;
-  @Event() allOptionsUnselected: EventEmitter<never>;
+  @Event() selectionCleared: EventEmitter<never>;
   @Event() filterTermChanged: EventEmitter<AdgComboboxFilterTermChange>;
   @Event() optionsDropdownOpened: EventEmitter<never>;
   @Event() optionsDropdownClosed: EventEmitter<never>;
@@ -170,7 +170,7 @@ export class AdgComboboxComponent {
     );
   }
 
-  handleUnselectAllButtonClick() {
+  handleSelectionClearedButtonClick() {
     const selectedOptionValues = this.selectedOptionModels.map(
       ({ value }) => value
     );
@@ -181,7 +181,7 @@ export class AdgComboboxComponent {
     selectedOptionValues.forEach((value) =>
       this.optionChanged.emit({ value, selected: false })
     );
-    this.allOptionsUnselected.emit();
+    this.selectionCleared.emit();
     this.setInputValue('');
   }
 
@@ -418,10 +418,10 @@ export class AdgComboboxComponent {
             />
           </span>
           <button
-            class="adg-combobox--unselect-all-button"
+            class="adg-combobox--clear-selection-button"
             type="button"
-            ref={(el) => (this.unselectAllButtonElementRef = el)}
-            onClick={() => this.handleUnselectAllButtonClick()}
+            ref={(el) => (this.selectionClearedButtonElementRef = el)}
+            onClick={() => this.handleSelectionClearedButtonClick()}
             hidden={this.selectedOptionModels.length === 0}
           >
             <span id={this._optionsSelectedId}>
@@ -440,7 +440,7 @@ export class AdgComboboxComponent {
                 ,
               </span>
             </span>
-            <img src={getAssetPath(`./assets/clear.svg`)} alt="unselect all" />
+            <img src={getAssetPath(`./assets/clear.svg`)} alt="clear selection" />
           </button>
           <button
             class="adg-combobox--toggle-options-button"

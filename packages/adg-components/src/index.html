@@ -100,7 +100,7 @@
       let eventCounter = 1;
       let events = document.querySelector('#events');
       [hobbies, colours].forEach((combobox) => {
-        ['optionChanged', 'allOptionsUnselected', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
+        ['optionChanged', 'selectionCleared', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
           combobox.addEventListener(eventName, (event) => {
             events.innerHTML += `<p>${eventCounter}: ${eventName}, ${JSON.stringify(event.detail)}</p>`;
             eventCounter++;

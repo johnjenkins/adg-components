@@ -38,7 +38,7 @@ interface ComboboxExpectations {
   visibleOptions?: string[];
   focusedOption?: string;
   selectedOptions?: string[];
-  unselectAllButtonFocused?: boolean;
+  selectionClearedButtonFocused?: boolean;
 }
 
 export const expectSingleCombobox = async (
@@ -66,7 +66,7 @@ export const expectSingleCombobox = async (
       visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
       focusedOption: null,
       selectedOptions: [],
-      unselectAllButtonFocused: false,
+      selectionClearedButtonFocused: false,
     },
     expectations
   );
@@ -102,7 +102,7 @@ export const expectMultiCombobox = async (
       visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
       focusedOption: null,
       selectedOptions: [],
-      unselectAllButtonFocused: false,
+      selectionClearedButtonFocused: false,
     },
     expectations
   );
@@ -135,7 +135,7 @@ export const expectCombobox = async (
     visibleOptions,
     focusedOption,
     selectedOptions,
-    unselectAllButtonFocused,
+    selectionClearedButtonFocused,
   } = expectations;
 
   const filterInputId = `${options.internalId}--filter`;
@@ -191,34 +191,36 @@ export const expectCombobox = async (
     xOptionsSelectedId
   );
 
-  const unselectAllButton = filterAndOptionsContainer.locator(
-    'button.adg-combobox--unselect-all-button'
+  const selectionClearedButton = filterAndOptionsContainer.locator(
+    'button.adg-combobox--clear-selection-button'
   );
-  await expect(unselectAllButton).toHaveAttribute('type', 'button');
-  await expect(unselectAllButton).toHaveAttribute('hidden', '');
+  await expect(selectionClearedButton).toHaveAttribute('type', 'button');
+  await expect(selectionClearedButton).toHaveAttribute('hidden', '');
 
-  if (unselectAllButtonFocused) {
-    await expect(unselectAllButton).toBeFocused();
+  if (selectionClearedButtonFocused) {
+    await expect(selectionClearedButton).toBeFocused();
   } else {
-    await expect(unselectAllButton).not.toBeFocused();
+    await expect(selectionClearedButton).not.toBeFocused();
   }
 
   if (options.multi) {
     // TODO: When there is no option selected, then there should be no colon and no comma!
-    await expect(unselectAllButton).toHaveText(
+    await expect(selectionClearedButton).toHaveText(
       `${selectedOptions.length} ${
         options.filterlabel
       } selected: ${selectedOptions.join(', ')},`
     );
   } else {
-    await expect(unselectAllButton).toHaveText(
+    await expect(selectionClearedButton).toHaveText(
       `${options.filterlabel} ${
         options.multi ? 'selected' : 'gewählt'
       }: ${selectedOptions.join(', ')},`
     );
   }
 
-  const xOptionsSelected = unselectAllButton.locator(`#${xOptionsSelectedId}`);
+  const xOptionsSelected = selectionClearedButton.locator(
+    `#${xOptionsSelectedId}`
+  );
   const xSelectedCount = xOptionsSelected.locator(
     '.adg-combobox--x-selected-count'
   );
@@ -249,10 +251,13 @@ export const expectCombobox = async (
     await expect(xSelectedLabels).toHaveText(selectedOptions.join(', '));
   }
 
-  const unselectAllButtonImage = unselectAllButton.locator(
+  const selectionClearedButtonImage = selectionClearedButton.locator(
     'img[src$="clear.svg"]'
   );
-  await expect(unselectAllButtonImage).toHaveAttribute('alt', 'unselect all');
+  await expect(selectionClearedButtonImage).toHaveAttribute(
+    'alt',
+    'clear selection'
+  );
 
   const toggleOptionsButton = filterAndOptionsContainer.locator(
     'button.adg-combobox--toggle-options-button'
