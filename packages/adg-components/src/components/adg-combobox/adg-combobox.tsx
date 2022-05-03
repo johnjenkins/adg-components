@@ -274,7 +274,6 @@ export class AdgComboboxComponent {
       (optionModel) => optionModel.value === value
     );
     if (option) {
-      console.log(option.checked)
       this.optionChanged.emit({ value, selected: option.checked });
     }
 
