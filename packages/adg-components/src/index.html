@@ -32,14 +32,14 @@
       <label for="hobbies--filter">My cool hobbies:</label>
       <adg-combobox id="hobbies"
                     name="hobbies"
-                    filterlabel="Hobbies"
+                    optionslabel="Hobbies"
                     multi="true"></adg-combobox>
 
       <hr>
 
       <adg-combobox id="colours"
                     label="Farben wählen"
-                    filterlabel="Farben"
+                    optionslabel="Farben"
                     name="colours"
                     lang="de"></adg-combobox>
 
@@ -62,7 +62,7 @@
       const hobbies = document.querySelector('#hobbies');
       // Instead of using HTML attributes, you can set some variables also here, ie.:
       // hobbies.multi = true;
-      // hobbies.filterlabel = 'Hobbies';
+      // hobbies.optionslabel = 'Hobbies';
       hobbies.options = [
         'Soccer',
         'Badminton',

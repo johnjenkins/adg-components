@@ -7,7 +7,7 @@
 | Property            | Attribute             | Description | Type       | Default      |
 | ------------------- | --------------------- | ----------- | ---------- | ------------ |
 | `ariaLiveAssertive` | `aria-live-assertive` |             | `boolean`  | `false`      |
-| `filterlabel`       | `filter-label`        |             | `string`   | `this.label` |
+| `optionslabel`      | `optionslabel`        |             | `string`   | `this.label` |
 | `label`             | `label`               |             | `string`   | `'Options'`  |
 | `multi`             | `multi`               |             | `boolean`  | `false`      |
 | `name`              | `name`                |             | `string`   | `this._id`   |

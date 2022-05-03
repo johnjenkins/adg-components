@@ -48,11 +48,11 @@ export class AdgComboboxComponent {
   @Element() el: HTMLElement;
 
   @Prop() label: string = null;
-  @Prop() filterlabel: string = this.label || 'Options';
+  @Prop() optionslabel: string = this.label || 'Options';
 
   @Prop() options: Option[] = [];
   @Prop() value?: string[] | string;
-  @Prop() name: string = this.filterlabel.replace(/\W+/g, '-');
+  @Prop() name: string = this.optionslabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
   @Prop() roleAlert: boolean = false;
 
@@ -433,7 +433,7 @@ export class AdgComboboxComponent {
               ) : null}
               <span class="adg--visually-hidden">
                 {this.$t('results_selected', {
-                  filterlabel: this.filterlabel,
+                  optionslabel: this.optionslabel,
                 })}
                 <span class="adg-combobox--x-selected-labels">
                   {this.selectedOptionModels.map((a) => a.label).join(', ')}
@@ -453,7 +453,7 @@ export class AdgComboboxComponent {
               src={getAssetPath(`./assets/close.svg`)}
               class="adg-combobox--toggle-available-options-button-icon"
               alt={this.$t(this.isOptionsContainerOpen ? 'close' : 'open', {
-                filterlabel: this.filterlabel,
+                optionslabel: this.optionslabel,
               })}
             />
           </button>
@@ -466,7 +466,7 @@ export class AdgComboboxComponent {
             <legend class="adg-combobox--available-options-legend">
               <span class="adg--visually-hidden">
                 {this.$t('results_title', {
-                  filterlabel: this.filterlabel,
+                  optionslabel: this.optionslabel,
                 })}
                 :&nbsp;
               </span>
@@ -477,7 +477,7 @@ export class AdgComboboxComponent {
                 role={this.roleAlert ? 'alert' : null}
               >
                 {this.$t(this.filterTerm ? 'results_filtered' : 'results', {
-                  filterlabel: this.filterlabel,
+                  optionslabel: this.optionslabel,
                   optionsShown: this.numberOfShownOptions,
                   optionsTotal: this.options.length,
                   filterTerm: this.filterTerm,
@@ -528,7 +528,7 @@ export class AdgComboboxComponent {
           <fieldset class="adg-combobox--selected-options-container">
             <legend class="adg--visually-hidden">
               {this.$t('results_selected', {
-                filterlabel: this.filterlabel,
+                optionslabel: this.optionslabel,
               })}
             </legend>
 
