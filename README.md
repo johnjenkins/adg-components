@@ -76,7 +76,6 @@ The following events will be fired upon interaction with a combobox:
 | `filterTermChanged`     | Fired when the filter term was changed. See `event.detail.previousFilterTerm` and `event.detail.filterText` for details. |
 | `optionsDropdownOpened` | Fired when options were opened.                                                                                          |
 | `optionsDropdownClosed` | Fired when options were closed.                                                                                          |
-| `valueChanged`          | Fired when options were closed. The `detail` property is either a string or an array of strings.                         |
 
 ## Development
 
