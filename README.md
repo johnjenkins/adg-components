@@ -87,7 +87,7 @@ Our components are based on [Stencil](https://stenciljs.com/).
 - `$ npm i` to install dependencies
 - `$ npm run start` starts a local server on <http://localhost:3333/> (with hot reload)
 
-We are happy to receive pull requests.
+We are happy to receive pull requests. Please verify that all automated tests are still passing.
 
 ### Automated tests
 
