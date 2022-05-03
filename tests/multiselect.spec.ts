@@ -257,7 +257,7 @@ test.describe('ADG-Combobox (multi)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectMultiCombobox(page, {
           filterFocused: true,
-          optionsExpanded: true,
+          optionsExpanded: false,
           selectedOptions: [],
         });
       });
@@ -295,7 +295,7 @@ test.describe('ADG-Combobox (multi)', () => {
         await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
         await expectMultiCombobox(page, {
           filterFocused: true,
-          optionsExpanded: true,
+          optionsExpanded: false,
           selectedOptions: [],
           visibleOptions: ALL_MULTI_OPTIONS.map((i) => i.label),
         });
