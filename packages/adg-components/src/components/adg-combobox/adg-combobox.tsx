@@ -380,7 +380,7 @@ export class AdgComboboxComponent {
 
   render() {
     return (
-      <Host onKeyDown={(ev) => this.handleKeyDown(ev)} class="adg-combobox">
+      <Host onKeyDown={(ev) => this.handleKeyDown(ev)} class={`adg-combobox adg-combobox--${this.multi ? 'multi' : 'single'}`}>
         {this.label ? (
           <label
             htmlFor={this._inputId}
