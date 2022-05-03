@@ -303,6 +303,29 @@ test.describe('ADG-Combobox (single)', () => {
           visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
         });
       });
+
+      test('Does not affect options dropdown visibility', async ({ page }) => {
+        await clickIntoFilter(page, 'colours'); // Click into the filter to expand options
+        await page.keyboard.press('ArrowDown'); // Press `Down` to set focus on first option
+        await page.keyboard.press('Space'); // Press `Space` to check option "Black"
+        await page.keyboard.press('Shift+Tab'); // Press `Shift+Tab` to focus "Clear selection" button
+        await expectSingleCombobox(page, {
+          selectionClearedButtonFocused: true,
+          filterValue: 'Black',
+          filterTerm: '',
+          optionsExpanded: true,
+          selectedOptions: ['Black'],
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
+        });
+
+        await page.keyboard.press('Enter'); // Press `Enter` to activate "Clear Selection" button
+        await expectSingleCombobox(page, {
+          filterFocused: true,
+          optionsExpanded: true,
+          selectedOptions: [],
+          visibleOptions: ALL_SINGLE_OPTIONS.map((i) => i.label),
+        });
+      });
     });
 
     test('Propagate Enter key', async ({ page }) => {
