@@ -191,12 +191,43 @@
     padding: 2 4px;
     width: 100%;
     box-sizing: border-box;
-    border-left: 4px solid transparent;
 
-    /* For high contrast mode */
+    .adg-combobox--multi & {
+      padding-left: 0.25em;
+    }
+
+    /* For high contrast mode: we need a visual cue! */
+    border-left: 4px solid transparent;
   }
 
   input {
+    margin-left: 0;
+    margin-right: 0;
+
+    + span {
+      margin-left: .25em;
+    }
+
+    &:checked {
+      + span {
+        font-weight: bold;
+    
+        .check {
+          .adg-combobox--multi & {
+            display: none;
+          }
+
+          content: ' ';
+          display: inline-block;
+          margin-left: 0.25em;
+          background-color: red;
+          width: 14px;
+          height: 14px;
+          background: url(./build/assets/check.svg);
+        }
+      }
+    }
+
     .adg-combobox--single & {
       @include visually-hidden
     }
@@ -215,20 +246,6 @@
       background-color: rgb(255, 167, 167);
       cursor: pointer;
       border-left-color: #000;
-    }
-  }
-
-  input:checked + span {
-    font-weight: bold;
-
-    .check {
-      content: ' ';
-      display: inline-block;
-      margin-left: 0.25em;
-      background-color: red;
-      width: 14px;
-      height: 14px;
-      background: url(./build/assets/check.svg);
     }
   }
 }
