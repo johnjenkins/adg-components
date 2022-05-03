@@ -49,7 +49,7 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 
 ### JavaScript variables
 
-Many of the HTML attributes above can also be set using JavaScript:
+Many of the HTML attributes above can also be set using JavaScript, ie.:
 
 ```js
 const hobbiesCombobox = document.querySelector('#my-cool-hobbies');
@@ -58,12 +58,12 @@ hobbiesCombobox.multi = true;
 
 In addition, the following can be set:
 
-| Attribute | Type       | Description                                                                          |
-| --------- | ---------- | ------------------------------------------------------------------------------------ |
-| `options` | `string[]` | Either an array of strings, ie. `['Green', 'Blue', 'Black']`.                        |
-|           | `{}[]`     | Or an array of objects in the following form: `[{label: 'Green', value: '008000'}]`. |
-| `value`   | `string`   | Either a single string, ie. `'Green'`.                                               |
-|           | `string[]` | Or an array of strings, ie. `['Green', 'Black']` (for multi selection).              |
+| Attribute  | Type       | Description                                                                          |
+| ---------- | ---------- | ------------------------------------------------------------------------------------ |
+| `options`  | `string[]` | Either an array of strings, ie. `['Green', 'Blue', 'Black']`.                        |
+|            | `{}[]`     | Or an array of objects in the following form: `[{label: 'Green', value: '008000'}]`. |
+| `selected` | `string`   | Either a single string, ie. `'Green'`.                                               |
+|            | `string[]` | Or an array of strings, ie. `['Green', 'Black']` (for multi selection).              |
 
 ### Custom events
 

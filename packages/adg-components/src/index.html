@@ -80,7 +80,7 @@
 
       if(window.location.search == '?preselectValues') {
         // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
-        hobbies.value = ['soccer', 'hiking', 'cooking'];
+        hobbies.selected = ['soccer', 'hiking', 'cooking'];
       }
 
       const colours = document.querySelector('#colours');
@@ -98,7 +98,7 @@
       ];
 
       if(window.location.search == '?preselectValues') {
-        colours.value = 'FFC0CB';
+        colours.selected = 'FFC0CB';
       }
 
       let eventCounter = 1;
