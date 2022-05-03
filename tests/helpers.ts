@@ -239,7 +239,7 @@ export const expectCombobox = async (
       options.filterlabel
     }: ${selectedOptions.join(', ')},`
   );
-  // TODO: No colon, no comma!
+  // TODO: No colon, no comma! Although: the button is hidden anyway when there is no option selected...
 
   const xSelectedLabels = xOptionSelectedVisuallyHidden.locator(
     '.adg-combobox--x-selected-labels'
@@ -303,7 +303,7 @@ export const expectCombobox = async (
     options.multi ? 'Hobbies' : 'Farben'
   }`;
   if (filterValue == '') {
-    // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO
+    // expectedXOfYForFilterTextValue += ' (empty filter)'; // TODO: don't know whether this is really helpful to (or even necessary for) screen readers.
   }
   if (filterTerm) {
     expectedXOfYForFilterTextValue += ` ${
@@ -344,7 +344,7 @@ export const expectCombobox = async (
   // UNCOMMENT
   // await expect(xOfYForFilterText).toHaveText(expectedXOfYForFilterTextValue);
 
-  // TODO: The whole live region thing is tricky and not final yet. Let's test it when it's done!
+  // TODO: The whole live region thing is tricky and not final yet. Let's test it when it's done! See https://github.com/NothingAG/adg-components/issues/42
   // const instructions = xOfYForFilterText.locator('.adg-combobox--instructions');
   // await expect(instructions).toHaveText('(enter question mark for help)');
 
@@ -403,7 +403,7 @@ export const assertAvailableOption = async (
   await expect(optionLabel).toHaveCSS('display', 'inline-block');
 
   const optionInput = optionLabel.locator('> input');
-  // await expect(optionInput).toHaveId(value); // TODO: Create a more generic ID!
+  // await expect(optionInput).toHaveId(value); // TODO: At the time being, no ID is needed, see https://github.com/NothingAG/adg-components/issues/49.
   await expect(optionInput).toHaveAttribute(
     'type',
     multi ? 'checkbox' : 'radio'
@@ -422,8 +422,7 @@ export const assertAvailableOption = async (
     await expect(optionInput).not.toBeChecked();
   }
 
-  // TODO: Put <input> outside of <label>, so devs can use input:checked + label!
-  // Also, I'm unsure whether we need the span.check!
+  // TODO: Put <input> outside of <label>, so devs can use input:checked + label! => No, we decided against this for the time being, see https://github.com/NothingAG/adg-components/issues/49.
 };
 
 export const tabIntoFilter = async (page: Page, id: string) => {
@@ -438,7 +437,6 @@ export const tabIntoFilter = async (page: Page, id: string) => {
 };
 
 export const clickIntoFilter = async (page: Page, id: string) => {
-  // TODO: We should refactor this into a separate method
   const filterInput = page.locator(
     `adg-combobox#${id} input.adg-combobox--filter-input`
   );

@@ -16,7 +16,7 @@ import { Translator } from '../../utils/locale';
 
 const textInputRegexp = /^(([a-zA-Z])|(Backspace)|(Delete))$/;
 
-let nextUniqueId = 0; // TODO: Require the user to pass an ID, or at least prefer any passed ID (as this results in race conditions when there are many instances of the component on the same page).
+let nextUniqueId = 0;
 
 @Component({
   tag: 'adg-combobox',
