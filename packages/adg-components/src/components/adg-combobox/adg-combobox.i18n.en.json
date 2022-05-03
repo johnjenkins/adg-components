@@ -1,11 +1,11 @@
 {
   "input_placeholder": "Enter filter term",
-  "close": "Close $(filterlabel) Options",
-  "open": "Open $(filterlabel) Options",
-  "results_title": "Available $(filterlabel)",
-  "results": "$(optionsTotal) $(filterlabel)",
-  "results_selected": "Selected $(filterlabel): ",
-  "results_filtered": "$(optionsShown) of $(optionsTotal) $(filterlabel) for filter \"$(filterTerm)\"",
+  "close": "Close $(optionslabel) Options",
+  "open": "Open $(optionslabel) Options",
+  "results_title": "Available $(optionslabel)",
+  "results": "$(optionsTotal) $(optionslabel)",
+  "results_selected": "Selected $(optionslabel): ",
+  "results_filtered": "$(optionsShown) of $(optionsTotal) $(optionslabel) for filter \"$(filterTerm)\"",
   "results_first": "starting with \"$(first)\"",
   "clear_selection": "clear selection"
 }

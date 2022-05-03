@@ -18,14 +18,14 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 <adg-combobox
   id="hobbies"
   name="hobbies"
-  label="Hobbies"
+  label="Please select your hobbies"
+  optionslabel="Hobbies"
+  multi="true"
   lang="de"
 ></adg-combobox>
 
 <script>
   const hobbies = document.querySelector('#hobbies');
-  hobbies.formControlName = 'hobbies';
-  hobbies.filterlabel = 'Hobbies';
   hobbies.options = [
     'Soccer',
     'Badminton',
@@ -38,14 +38,14 @@ It is based on HTML form controls, with which we prove that **accessibility is s
 
 ### HTML attributes
 
-| Attribute     | Type      | Description                                                                                                                                                                                                                                         |
-| ------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | `string`  | Provide an (optional) value, ie. `my-cool-hobbies`. Otherwise a unique value is generated, ie. `adg-combobox-0`.                                                                                                                                    |
-| `multi`       | `boolean` | If set to `true`, the combobox will allow selection of multiple values, ie. checkboxes will be created instead of radio buttons. Defaults to `false`.                                                                                               |
-| `label`       | `string`  | If given, a `<label>` element will be created automatically, with the given string as inner text. If you want to create a `<label>` yourself, attach it to the filter input using the `for` attribute, ie. `<label for="my-cool-hobbies--filter">`. |
-| `filterlabel` | `string`  | The "bare", natural name of the given options. For example, while the `label` might be something like `Please select your hobbies`, the `filterlabel` should be something like `Hobbies` alone.                                                     |
-| `name`        | `string`  | The value of the `name` attribute(s), as submitted by the form through `GET` or `POST`.                                                                                                                                                             |
-| `lang`        | `string`  | The language of the component. If none is given, the language will be detected from the document's `<html>` tag.                                                                                                                                    |
+| Attribute      | Type      | Description                                                                                                                                                                                                                                         |
+| -------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | `string`  | Provide an (optional) value, ie. `my-cool-hobbies`. Otherwise a unique value is generated, ie. `adg-combobox-0`.                                                                                                                                    |
+| `name`         | `string`  | The value of the `name` attribute(s), as submitted by the form through `GET` or `POST`.                                                                                                                                                             |
+| `label`        | `string`  | If given, a `<label>` element will be created automatically, with the given string as inner text. If you want to create a `<label>` yourself, attach it to the filter input using the `for` attribute, ie. `<label for="my-cool-hobbies--filter">`. |
+| `optionslabel` | `string`  | The "bare", natural name of the given options. For example, while the `label` might be something like `Please select your hobbies`, the `optionslabel` should be simply `Hobbies` alone.                                                            |
+| `multi`        | `boolean` | If set to `true`, the combobox will allow selection of multiple values, ie. checkboxes will be created instead of radio buttons. Defaults to `false`.                                                                                               |
+| `lang`         | `string`  | The language of the component. If none is given, the language will be detected from the document's `<html>` tag.                                                                                                                                    |
 
 ### JavaScript variables
 

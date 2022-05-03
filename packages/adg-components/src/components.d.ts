@@ -8,11 +8,11 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Option } from "./components/adg-combobox/adg-combobox";
 export namespace Components {
     interface AdgCombobox {
-        "filterlabel": string;
         "label": string;
         "multi": boolean;
         "name": string;
         "options": Option[];
+        "optionslabel": string;
         "roleAlert": boolean;
         "value"?: string[] | string;
     }
@@ -30,7 +30,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AdgCombobox {
-        "filterlabel"?: string;
         "label"?: string;
         "multi"?: boolean;
         "name"?: string;
@@ -40,6 +39,7 @@ declare namespace LocalJSX {
         "onOptionsDropdownOpened"?: (event: CustomEvent<never>) => void;
         "onSelectionCleared"?: (event: CustomEvent<never>) => void;
         "options"?: Option[];
+        "optionslabel"?: string;
         "roleAlert"?: boolean;
         "value"?: string[] | string;
     }
