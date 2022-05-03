@@ -124,9 +124,9 @@ export class AdgComboboxComponent {
 
   setupLiveRegion() {
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-      this.roleAlert = true;
-    } else {
       this.ariaLiveAssertive = true;
+    } else {
+      this.roleAlert = true;
     }
   }
 

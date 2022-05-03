@@ -339,7 +339,7 @@ export const expectCombobox = async (
     '.adg-combobox--x-of-y-for-filter-text'
   );
   await expect(xOfYForFilterText).toHaveAttribute('data-live-region', '');
-  await expect(xOfYForFilterText).toHaveAttribute('aria-live', 'assertive'); // TODO: Change to role="alert" for browsers other than FF!
+  await expect(xOfYForFilterText).toHaveAttribute('role', 'alert'); // TODO: Change to aria-live="polite" for FF (desktop)!
 
   // UNCOMMENT
   // await expect(xOfYForFilterText).toHaveText(expectedXOfYForFilterTextValue);
