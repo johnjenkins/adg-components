@@ -206,14 +206,14 @@ export const expectCombobox = async (
   if (options.multi) {
     // TODO: When there is no option selected, then there should be no colon and no comma!
     await expect(selectionClearedButton).toHaveText(
-      `${selectedOptions.length} ${
+      `${selectedOptions.length} Selected ${
         options.filterlabel
-      } selected: ${selectedOptions.join(', ')},`
+      }: ${selectedOptions.join(', ')},`
     );
   } else {
     await expect(selectionClearedButton).toHaveText(
-      `${options.filterlabel} ${
-        options.multi ? 'selected' : 'gewählt'
+      `${options.multi ? 'Selected' : 'Gewählte'} ${
+        options.filterlabel
       }: ${selectedOptions.join(', ')},`
     );
   }
@@ -235,8 +235,8 @@ export const expectCombobox = async (
   );
 
   await expect(xOptionSelectedVisuallyHidden).toHaveText(
-    `${options.filterlabel} ${
-      options.multi ? 'selected' : 'gewählt'
+    `${options.multi ? 'Selected' : 'Gewählte'} ${
+      options.filterlabel
     }: ${selectedOptions.join(', ')},`
   );
   // TODO: No colon, no comma!

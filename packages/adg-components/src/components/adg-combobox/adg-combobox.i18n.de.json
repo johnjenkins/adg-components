@@ -4,7 +4,7 @@
   "open": "$(filterlabel) Auswahl öffnen",
   "results_title": "Verfügbare $(filterlabel)",
   "results": "$(optionsTotal) $(filterlabel)",
-  "results_selected": "$(filterlabel) gewählt: ",
+  "results_selected": "Gewählte $(filterlabel): ",
   "results_filtered": "$(optionsShown) von $(optionsTotal) $(filterlabel) für Filter \"$(filterTerm)\"",
   "results_first": "beginnend mit \"$(first)\"",
   "clear_selection": "Auswahl löschen"
