@@ -1,13 +1,13 @@
 # ADG Combobox: A Searchable Single/Multi Select Dropdown
 
-An initiative of the [«Accessibility Developer Guide»](https://www.accessibility-developer-guide.com/) community to provide a **truly accessible** reusable **select dropdown** with the following features:
+An initiative of the [«Accessibility Developer Guide»](https://www.accessibility-developer-guide.com/) (ADG) community to provide a **truly accessible** reusable **select dropdown** with the following features:
 
 - It is **searchable** 🔍
 - It handles both ✅ **single** and ✅✅✅ **multi** selection
 - ~~Options can be loaded **async** 🧩~~ (not yet)
 - It is 100% **accessible** ♿️, based on [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
 
-It is based on HTML form controls, with which we prove that **accessibility is simple** by relying on rock-solid browser standard behaviour, instead of reinventing the wheel with the (up to this day) fragmentarily supported [ARIA Standard](https://www.w3.org/WAI/standards-guidelines/aria/).
+It is based on HTML form controls, which proves that **accessibility is simple** by relying on rock-solid browser standard behaviour. For more info, see [ADG: Widgets simply working for all](https://www.accessibility-developer-guide.com/knowledge/semantics/widgets/).
 
 ## Usage
 
@@ -87,6 +87,8 @@ Our components are based on [Stencil](https://stenciljs.com/).
 - `$ npm i` to install dependencies
 - `$ npm run start` starts a local server on <http://localhost:3333/> (with hot reload)
 
+We are happy to receive pull requests.
+
 ### Automated tests
 
 Our components are thoroughly tested using [Playwright](https://playwright.dev/).
@@ -103,6 +105,16 @@ You can also run Playwright tests from within VSCode with the [Playwright Test f
 
 - To debug the component's internals, simply add a `debugger` statement in a `*.tsx` file. This will trigger the debugging environment in your browser.
 - To debug Playwright tests, install [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright), then add a breakpoint in a `*.spec.ts` file. Now open the "Testing" tab on the left (below "Extensions"), and click "Debug Tests" or hover over a specific test and click "Debug Test"). This will run the test environment in headed mode and trigger the debugging environment in VSCode.
+
+## Accessibility
+
+This component was built with accessibility as core requirement. We test it thoroughly with the [most used screen reader / browser combos](https://webaim.org/projects/screenreadersurvey9/):
+
+- JAWS+Chrome
+- JAWS+FF
+- NVDA+Chrome
+- VoiceOver/iOS
+- Talkback
 
 ## Involved parties
 
