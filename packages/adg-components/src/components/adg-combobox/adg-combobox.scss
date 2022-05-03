@@ -202,6 +202,10 @@
   }
 
   input {
+    .adg-combobox--single & {
+      @include visually-hidden
+    }
+
     &:focus {
       outline: none;
     }
