@@ -396,6 +396,7 @@ export class AdgComboboxComponent {
           class={{
             'adg-combobox--filter-and-options-container': true,
             'adg-combobox--open': this.isOptionsContainerOpen,
+            'adg-combobox--closed': !this.isOptionsContainerOpen,
           }}
           ref={(el) => (this.filterAndOptionsContainerElementRef = el)}
         >

@@ -17,16 +17,16 @@
 .adg-combobox--filter-and-options-container {
   position: relative;
   display: inline-block;
-
-  &:not(.adg-combobox--open) .adg-combobox--filter-input {
-    border-bottom-left-radius: 6px;
-  }
 }
 .adg-combobox--filter-container {
   display: inline-block;
 }
 
 .adg-combobox--filter-input {
+  .adg-combobox--closed & {
+    border-bottom-left-radius: 6px;
+  }
+
   &:hover {
     outline: 1px solid red;
   }
@@ -113,7 +113,7 @@
   }
 }
 
-.adg-combobox--filter-and-options-container:not(.adg-combobox--open) .adg-combobox--toggle-available-options-button {
+.adg-combobox--closed .adg-combobox--toggle-available-options-button {
   border-bottom-right-radius: 6px;
 
   img {
@@ -166,7 +166,7 @@
   position: absolute;
   margin-top: -1px;
   background-color: #fff;
-  width: 189px;
+  width: 100%;
   box-sizing: border-box;
   box-shadow: 0px 0px 24px #0000007a;
   border-bottom-left-radius: 6px;
