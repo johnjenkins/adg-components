@@ -29,7 +29,7 @@ export class AdgComboboxComponent {
 
   private _inputId: string;
   private _optionsSelectedId: string;
-  private _componentWillLoadComplete = false;
+  // private _componentWillLoadComplete = false;
 
   selectedOptionModels: OptionModel[] = [];
   lastArrowSelectedElem = 0;
@@ -119,7 +119,7 @@ export class AdgComboboxComponent {
       }
       return { ...optionModel, checked };
     });
-    this._componentWillLoadComplete = true;
+    // this._componentWillLoadComplete = true;
   }
 
   setupLiveRegion() {
