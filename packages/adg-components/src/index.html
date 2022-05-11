@@ -30,18 +30,23 @@
 
     <form action="/" method="get">
       <label for="hobbies--filter">My cool hobbies:</label>
-      <adg-combobox id="hobbies"
-                    name="hobbies"
-                    optionslabel="Hobbies"
-                    multi="true"></adg-combobox>
+      <adg-combobox
+        id="hobbies"
+        name="hobbies"
+        options='[ "Soccer", "Badminton", "Movies", "Gardening", "Kickboxing", "Hiking", "Dancing", "Painting", "Cooking", "Reading", "Sleeping", "Programming" ]'
+        optionslabel="Hobbies"
+        multi="true"
+      ></adg-combobox>
 
-      <hr>
+      <hr />
 
-      <adg-combobox id="colours"
-                    label="Farben wählen"
-                    optionslabel="Farben"
-                    name="colours"
-                    lang="de"></adg-combobox>
+      <adg-combobox
+        id="colours"
+        label="Farben wählen"
+        optionslabel="Farben"
+        name="colours"
+        lang="de"
+      ></adg-combobox>
 
       <button type="submit">submit</button>
     </form>
@@ -59,26 +64,7 @@
     <div id="events"></div>
 
     <script>
-      const hobbies = document.querySelector('#hobbies');
-      // Instead of using HTML attributes, you can set some variables also here, ie.:
-      // hobbies.multi = true;
-      // hobbies.optionslabel = 'Hobbies';
-      hobbies.options = [
-        'Soccer',
-        'Badminton',
-        'Movies',
-        'Gardening',
-        'Kickboxing',
-        'Hiking',
-        'Dancing',
-        'Painting',
-        'Cooking',
-        'Reading',
-        'Sleeping',
-        'Programming',
-      ];
-
-      if(window.location.search == '?preselectValues') {
+      if (window.location.search == '?preselectValues') {
         // TODO: Implement as soon as we know how to set up different test cases (not only localhost:3333/index.html), where we can then test the feature!
         hobbies.selected = ['soccer', 'hiking', 'cooking'];
       }
@@ -97,20 +83,28 @@
         { value: 'FFFF00', label: 'Yellow' },
       ];
 
-      if(window.location.search == '?preselectValues') {
+      if (window.location.search == '?preselectValues') {
         colours.selected = 'FFC0CB';
       }
 
       let eventCounter = 1;
       let events = document.querySelector('#events');
       [hobbies, colours].forEach((combobox) => {
-        ['optionChanged', 'selectionCleared', 'filterTermChanged', 'optionsDropdownOpened', 'optionsDropdownClosed'].forEach((eventName) => {
+        [
+          'optionChanged',
+          'selectionCleared',
+          'filterTermChanged',
+          'optionsDropdownOpened',
+          'optionsDropdownClosed',
+        ].forEach((eventName) => {
           combobox.addEventListener(eventName, (event) => {
-            events.innerHTML += `<p>${eventCounter}: ${eventName}, ${JSON.stringify(event.detail)}</p>`;
+            events.innerHTML += `<p>${eventCounter}: ${eventName}, ${JSON.stringify(
+              event.detail
+            )}</p>`;
             eventCounter++;
-          })
-        })
-      })
+          });
+        });
+      });
 
       const buttonAfter = document.querySelector('#buttonAfter');
       buttonAfter.addEventListener('click', () => {

@@ -29,7 +29,6 @@ export class AdgComboboxComponent {
 
   private _inputId: string;
   private _optionsSelectedId: string;
-  // private _componentWillLoadComplete = false;
 
   selectedOptionModels: OptionModel[] = [];
   lastArrowSelectedElem = 0;
@@ -50,7 +49,7 @@ export class AdgComboboxComponent {
   @Prop() label: string = null;
   @Prop() optionslabel: string = this.label || 'Options';
 
-  @Prop() options: Option[] = [];
+  @Prop() options: Option[] | string = [];
   @Prop() selected?: string[] | string;
   @Prop() name: string = this.optionslabel.replace(/\W+/g, '-');
   @Prop() multi: boolean = false;
@@ -61,6 +60,7 @@ export class AdgComboboxComponent {
   @State() numberOfShownOptions: number = 0;
   @State() filteredOptionsStartingWith: string = '';
   @State() isOptionsContainerOpen: boolean = false;
+  @State() optionsAsArray: Option[] = [];
 
   connectedCallback() {
     const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
@@ -88,15 +88,19 @@ export class AdgComboboxComponent {
   @Event() optionsDropdownClosed: EventEmitter<never>;
 
   @Watch('options')
-  watchOptionsHandler(newValue: Option[]) {
+  watchOptionsHandler(newValue: Option[] | string) {
+    console.log('newValue', newValue);
+    this.optionsAsArray = Array.isArray(newValue)
+      ? newValue
+      : JSON.parse(newValue);
     this.numberOfShownOptions = newValue.length;
-    this.optionModels = newValue.map((option: Option) => ({
+    this.optionModels = this.optionsAsArray.map((option: Option) => ({
       value: typeof option === 'string' ? option.toLowerCase() : option.value,
       label: typeof option === 'string' ? option : option.label,
       checked: false,
       hidden: false,
     }));
-    this.filteredOptionsStartingWith = this.optionModels[0].label;
+    this.filteredOptionsStartingWith = this.optionModels[0]?.label || '';
   }
 
   @State() optionModels: OptionModel[] = [];
@@ -123,9 +127,11 @@ export class AdgComboboxComponent {
   }
 
   setupLiveRegion() {
-    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ||
-        navigator.platform.toLowerCase() === 'iphone' ||
-        navigator.platform.toLowerCase() === 'ipad') {
+    if (
+      navigator.userAgent.toLowerCase().indexOf('firefox') > -1 ||
+      navigator.platform.toLowerCase() === 'iphone' ||
+      navigator.platform.toLowerCase() === 'ipad'
+    ) {
       this.ariaLiveAssertive = true;
     } else {
       this.roleAlert = true;
@@ -155,7 +161,7 @@ export class AdgComboboxComponent {
   handleFilterInputKeyDown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       event.preventDefault();
-      
+
       this.closeOptionsContainer();
     }
 
@@ -188,7 +194,7 @@ export class AdgComboboxComponent {
   }
 
   handleFilterInputChange(event: Event) {
-    if(!this.applyFilterOnTermChange) {
+    if (!this.applyFilterOnTermChange) {
       return;
     }
 
@@ -212,7 +218,7 @@ export class AdgComboboxComponent {
 
     this.filterTermChanged.emit({ previousFilterTerm, filterTerm });
 
-    if(filterTerm !== '') {
+    if (filterTerm !== '') {
       this.openOptionsContainer(false);
     }
   }
@@ -383,12 +389,12 @@ export class AdgComboboxComponent {
 
   render() {
     return (
-      <Host onKeyDown={(ev) => this.handleKeyDown(ev)} class={`adg-combobox adg-combobox--${this.multi ? 'multi' : 'single'}`}>
+      <Host
+        onKeyDown={(ev) => this.handleKeyDown(ev)}
+        class={`adg-combobox adg-combobox--${this.multi ? 'multi' : 'single'}`}
+      >
         {this.label ? (
-          <label
-            htmlFor={this._inputId}
-            class="adg-combobox--filter-label"
-          >
+          <label htmlFor={this._inputId} class="adg-combobox--filter-label">
             {this.label}:&nbsp;
           </label>
         ) : null}
@@ -444,7 +450,10 @@ export class AdgComboboxComponent {
                 ,
               </span>
             </span>
-            <img src={getAssetPath(`./assets/clear.svg`)} alt={this.$t('clear_selection')} />
+            <img
+              src={getAssetPath(`./assets/clear.svg`)}
+              alt={this.$t('clear_selection')}
+            />
           </button>
           <button
             class="adg-combobox--toggle-available-options-button"
@@ -482,7 +491,7 @@ export class AdgComboboxComponent {
                 {this.$t(this.filterTerm ? 'results_filtered' : 'results', {
                   optionslabel: this.optionslabel,
                   optionsShown: this.numberOfShownOptions,
-                  optionsTotal: this.options.length,
+                  optionsTotal: this.optionsAsArray.length,
                   filterTerm: this.filterTerm,
                 })}
 
