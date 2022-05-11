@@ -89,10 +89,20 @@ export class AdgComboboxComponent {
 
   @Watch('options')
   watchOptionsHandler(newValue: Option[] | string) {
-    console.log('newValue', newValue);
-    this.optionsAsArray = Array.isArray(newValue)
-      ? newValue
-      : JSON.parse(newValue);
+    if (Array.isArray(newValue)) {
+      this.optionsAsArray = newValue;
+    } else if (typeof newValue === 'string') {
+      let optionsAsArray = [];
+      try {
+        optionsAsArray = JSON.parse(newValue);
+      } catch (e) {
+        console.error(
+          'Invalid options. Expected an serialised as a string. The following error was thrown by JSON.parse():\n',
+          e
+        );
+      }
+      this.optionsAsArray = optionsAsArray;
+    }
     this.numberOfShownOptions = newValue.length;
     this.optionModels = this.optionsAsArray.map((option: Option) => ({
       value: typeof option === 'string' ? option.toLowerCase() : option.value,
@@ -123,7 +133,6 @@ export class AdgComboboxComponent {
       }
       return { ...optionModel, checked };
     });
-    // this._componentWillLoadComplete = true;
   }
 
   setupLiveRegion() {
