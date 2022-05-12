@@ -82,7 +82,7 @@ The following events will be fired upon interaction with a combobox:
 The component's CSS will automatically inserted into the page's `<head>`, namely before the first `<link rel="stylesheet">` element. You can then easily override any styles:
 
 ```css
-.adg-combobox--filter-input {
+.adg-combobox--search-input {
   border-color: blue;
 }
 ```

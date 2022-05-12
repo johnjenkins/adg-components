@@ -420,7 +420,7 @@ export class AdgComboboxComponent {
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <input
-              class="adg-combobox--filter-input"
+              class="adg-combobox--search-input"
               id={this._inputId}
               type="text"
               role="combobox"

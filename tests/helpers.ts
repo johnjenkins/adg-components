@@ -162,7 +162,7 @@ export const expectCombobox = async (
   await expect(searchContainer).toHaveCSS('display', 'inline-block');
 
   const filterInput = searchContainer.locator(
-    'input.adg-combobox--filter-input'
+    'input.adg-combobox--search-input'
   );
   options.label && (await expect(filterInput).toHaveId(filterInputId));
   await expect(filterInput).toHaveAttribute('type', 'text');
@@ -439,7 +439,7 @@ export const tabIntoFilter = async (page: Page, id: string) => {
 
 export const clickIntoFilter = async (page: Page, id: string) => {
   const filterInput = page.locator(
-    `adg-combobox#${id} input.adg-combobox--filter-input`
+    `adg-combobox#${id} input.adg-combobox--search-input`
   );
   await filterInput.click();
 };

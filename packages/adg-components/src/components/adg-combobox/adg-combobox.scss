@@ -6,7 +6,7 @@
   display: inline-block;
 }
 
-.adg-combobox--filter-input {
+.adg-combobox--search-input {
   box-sizing: border-box;
   width: 160px;
   border: 1px solid #000;
@@ -26,7 +26,7 @@
   display: inline-block;
 }
 
-.adg-combobox--filter-input {
+.adg-combobox--search-input {
   .adg-combobox--closed & {
     border-bottom-left-radius: 6px;
   }
@@ -41,7 +41,7 @@
   }
 }
 
-.adg-combobox--filter-and-options-container:focus-within .adg-combobox--filter-input {
+.adg-combobox--filter-and-options-container:focus-within .adg-combobox--search-input {
   outline: 1px solid red;
 }
 
