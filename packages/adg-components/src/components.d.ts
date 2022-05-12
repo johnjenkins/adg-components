@@ -11,7 +11,7 @@ export namespace Components {
         "label": string;
         "multi": boolean;
         "name": string;
-        "options": Option[];
+        "options": Option[] | string;
         "optionslabel": string;
         "roleAlert": boolean;
         "selected"?: string[] | string;
@@ -38,7 +38,7 @@ declare namespace LocalJSX {
         "onOptionsDropdownClosed"?: (event: CustomEvent<never>) => void;
         "onOptionsDropdownOpened"?: (event: CustomEvent<never>) => void;
         "onSelectionCleared"?: (event: CustomEvent<never>) => void;
-        "options"?: Option[];
+        "options"?: Option[] | string;
         "optionslabel"?: string;
         "roleAlert"?: boolean;
         "selected"?: string[] | string;
