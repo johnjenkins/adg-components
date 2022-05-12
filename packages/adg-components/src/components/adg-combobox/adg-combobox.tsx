@@ -407,7 +407,7 @@ export class AdgComboboxComponent {
             {this.label}:&nbsp;
           </label>
         ) : null}
-        <span
+        <div
           class={{
             'adg-combobox--filter-and-options-container': true,
             'adg-combobox--open': this.isOptionsContainerOpen,
@@ -415,7 +415,7 @@ export class AdgComboboxComponent {
           }}
           ref={(el) => (this.filterAndOptionsContainerElementRef = el)}
         >
-          <span
+          <div
             class="adg-combobox--filter-container"
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
@@ -477,7 +477,7 @@ export class AdgComboboxComponent {
                 })}
               />
             </button>
-          </span>
+          </div>
           <fieldset
             ref={(el) => (this.fieldsetElementRef = el)}
             class="adg-combobox--available-options-container"
@@ -543,7 +543,7 @@ export class AdgComboboxComponent {
               ))}
             </ol>
           </fieldset>
-        </span>
+        </div>
 
         {this.multi ? (
           <fieldset

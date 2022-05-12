@@ -156,7 +156,7 @@ export const expectCombobox = async (
   await expect(filterAndOptionsContainer).toHaveCSS('display', 'inline-block');
 
   const filterContainer = filterAndOptionsContainer.locator(
-    'span.adg-combobox--filter-container'
+    '.adg-combobox--filter-container'
   );
   await expect(filterContainer).toHaveCSS('display', 'inline-block');
 
