@@ -556,9 +556,9 @@ export class AdgComboboxComponent {
               })}
             </legend>
 
-            <ol class="adg-combobox--selected-options-list">
+            <ol class="adg-combobox--selected-options-items">
               {this.selectedOptionModels.map((option, i) => (
-                <li key={option.value}>
+                <li key={option.value} class="adg-combobox--selected-options-item">
                   <button
                     class="adg-combobox--selected-options-button"
                     type="button"
