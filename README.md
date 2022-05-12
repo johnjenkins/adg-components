@@ -77,6 +77,18 @@ The following events will be fired upon interaction with a combobox:
 | `optionsDropdownOpened` | Fired when options were opened.                                                                                          |
 | `optionsDropdownClosed` | Fired when options were closed.                                                                                          |
 
+### Overriding styles
+
+The component's CSS will automatically inserted into the page's `<head>`, namely before the first `<link rel="stylesheet">` element. You can then easily override any styles:
+
+```css
+.adg-combobox--filter-input {
+  border-color: blue;
+}
+```
+
+**Warning:** If you only use inline `<style>` elements in your `<head>`, then the component's CSS will be inserted at the very end of `<head>`, which makes it hard to override any styles.
+
 ## Development
 
 Our components are based on [Stencil](https://stenciljs.com/).
