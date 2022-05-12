@@ -547,7 +547,7 @@ export class AdgComboboxComponent {
 
         {this.multi ? (
           <fieldset
-            class="adg-combobox--selected-options-container"
+            class="adg-combobox--selected-options"
             hidden={this.selectedOptionModels.length == 0}
           >
             <legend class="adg--visually-hidden">
