@@ -281,12 +281,13 @@ export const expectCombobox = async (
   }
 
   const availableOptionsContainer = filterAndOptionsContainer.locator(
-    'fieldset.adg-combobox--available-options-container'
+    'fieldset.adg-combobox--options'
   );
   await expect(availableOptionsContainer).toHaveAttribute('hidden', '');
 
-  const availableOptionsContainerLegend =
-    availableOptionsContainer.locator('legend');
+  const availableOptionsContainerLegend = availableOptionsContainer.locator(
+    'legend.adg-combobox--options-legend'
+  );
 
   let expectedXOfYForFilterTextValue = '';
   let allOptions = [];

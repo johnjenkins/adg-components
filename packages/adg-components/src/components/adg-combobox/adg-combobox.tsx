@@ -480,11 +480,11 @@ export class AdgComboboxComponent {
           </div>
           <fieldset
             ref={(el) => (this.fieldsetElementRef = el)}
-            class="adg-combobox--available-options-container"
+            class="adg-combobox--options"
             hidden={!this.isOptionsContainerOpen}
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
-            <legend class="adg-combobox--available-options-legend">
+            <legend class="adg-combobox--options-legend">
               <span class="adg--visually-hidden">
                 {this.$t('results_title', {
                   optionslabel: this.optionslabel,
