@@ -122,7 +122,7 @@ export class AdgComboboxComponent {
   }
 
   async componentWillLoad(): Promise<void> {
-    this.$t = await Translator(this.el);
+    this.$t = await Translator(this.el, getAssetPath(`./assets/`));
     this.optionModels = this.optionModels.map((optionModel) => {
       let checked = false;
       if (this.multi && Array.isArray(this.selected)) {

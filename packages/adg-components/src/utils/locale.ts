@@ -1,6 +1,5 @@
 // https://github.com/UniversalViewer/uv-components/blob/master/src/utils/locale.ts
-
-
+import { getAssetPath } from '@stencil/core';
 
 function getComponentClosestLanguage(element: HTMLElement): string {
   let closestElement = element.closest('[lang]') as HTMLElement;
@@ -9,10 +8,12 @@ function getComponentClosestLanguage(element: HTMLElement): string {
 
 function fetchLocaleStringsForComponent(
   componentName: string,
-  locale: string
+  locale: string,
+  assetsPath?: string,
 ): Promise<any> {
   return new Promise((resolve, reject): void => {
-    fetch(`/i18n/${componentName}.i18n.${locale}.json`).then(
+    const localBase = assetsPath || getAssetPath('');
+    fetch(localBase + `${componentName}.i18n.${locale}.json`).then(
       (result) => {
         if (result.ok) resolve(result.json());
         else reject();
@@ -23,7 +24,8 @@ function fetchLocaleStringsForComponent(
 }
 
 async function getLocaleComponentStrings(
-  element: HTMLElement
+  element: HTMLElement,
+  assetsPath?: string,
 ): Promise<any> {
   let componentName = element.tagName.toLowerCase();
   let componentLanguage = getComponentClosestLanguage(element);
@@ -31,13 +33,14 @@ async function getLocaleComponentStrings(
   try {
     strings = await fetchLocaleStringsForComponent(
       componentName,
-      componentLanguage
+      componentLanguage,
+      assetsPath,
     );
   } catch (e) {
     console.warn(
       `no locale for ${componentName} (${componentLanguage}) loading default locale en.`
     );
-    strings = await fetchLocaleStringsForComponent(componentName, 'en');
+    strings = await fetchLocaleStringsForComponent(componentName, 'en', assetsPath);
   }
   return strings;
 }
@@ -52,8 +55,8 @@ function TemplateEngine(
   };
 
 
-export async function Translator(el: HTMLElement) {
-  const strings = await getLocaleComponentStrings(el);
+export async function Translator(el: HTMLElement, assetsPath?: string) {
+  const strings = await getLocaleComponentStrings(el, assetsPath);
   return (str, ...args) => {
     str = strings[str] || str;
 

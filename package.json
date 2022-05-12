@@ -6,7 +6,7 @@
   "scripts": {
     "build": "nx build adg-components",
     "prod": "nx build adg-components --prod",
-    "start": "nx serve adg-components --dev --port 3333",
+    "start": "nx serve adg-components --port 3333",
     "test:run": "playwright test",
     "test:gui": "playwright test --headed"
   },

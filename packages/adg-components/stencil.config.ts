@@ -13,6 +13,9 @@ export const config: Config = {
     },
     {
       type: 'dist-custom-elements',
+      externalRuntime: false,
+      includeGlobalScripts: true,
+      autoDefineCustomElements: true,
     },
     {
       type: 'docs-readme',
@@ -22,8 +25,8 @@ export const config: Config = {
       serviceWorker: null, // disable service workers,
       copy: [
         {
-          src: '**/*.i18n.*.json',
-          dest: 'i18n',
+          src: '../../../dist/packages/adg-components/dist/components',
+          dest: 'components',
         },
       ],
     },
