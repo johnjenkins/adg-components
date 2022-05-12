@@ -514,11 +514,11 @@ export class AdgComboboxComponent {
                 ) : null}
               </span>
             </legend>
-            <ol class="adg-combobox--available-options-list">
+            <ol class="adg-combobox--options-items">
               {this.optionModels.map((option) => (
                 <li
                   key={option.value}
-                  class="adg-combobox--available-options-list-item"
+                  class="adg-combobox--options-item"
                   hidden={option.hidden}
                   ref={(el) => this.availableOptionsListItems.push(el)}
                 >

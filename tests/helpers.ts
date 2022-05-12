@@ -351,7 +351,7 @@ export const expectCombobox = async (
   // await expect(instructions).toHaveText('(enter question mark for help)');
 
   const availableOptionsList = availableOptionsContainer.locator(
-    '> ol.adg-combobox--available-options-list'
+    '> ol.adg-combobox--options-items'
   );
 
   await Promise.all(
@@ -386,7 +386,7 @@ export const assertAvailableOption = async (
   checked: boolean,
   multi: boolean
 ) => {
-  const optionListItemSelector = `> li.adg-combobox--available-options-list-item:nth-child(${nthChild})`;
+  const optionListItemSelector = `> li.adg-combobox--options-item:nth-child(${nthChild})`;
   const optionListItem = availableOptionsList.locator(optionListItemSelector);
   await expect(optionListItem).toHaveText(label);
 
@@ -459,7 +459,7 @@ export const clickOpenCloseButton = async (page: Page, id: string) => {
 
 export const clickOption = async (page: Page, label: string, id: string) => {
   const option = page.locator(
-    `adg-combobox#${id} .adg-combobox--available-options-list-item:has-text("${label}")`
+    `adg-combobox#${id} .adg-combobox--options-item:has-text("${label}")`
   );
   await option.click();
 };
