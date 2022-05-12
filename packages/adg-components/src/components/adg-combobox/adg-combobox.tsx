@@ -64,7 +64,7 @@ export class AdgComboboxComponent {
 
   connectedCallback() {
     const internalId = this.el.id || `adg-combobox-${nextUniqueId++}`;
-    this._inputId = `${internalId}--filter`;
+    this._inputId = `${internalId}--search`;
     this._optionsSelectedId = `${internalId}--options-selected`;
 
     this.setupLiveRegion();
@@ -403,13 +403,13 @@ export class AdgComboboxComponent {
         class={`adg-combobox adg-combobox--${this.multi ? 'multi' : 'single'}`}
       >
         {this.label ? (
-          <label htmlFor={this._inputId} class="adg-combobox--filter-label">
+          <label htmlFor={this._inputId} class="adg-combobox--search-label">
             {this.label}:&nbsp;
           </label>
         ) : null}
         <div
           class={{
-            'adg-combobox--filter-and-options-container': true,
+            'adg-combobox--search-and-options-container': true,
             'adg-combobox--open': this.isOptionsContainerOpen,
             'adg-combobox--closed': !this.isOptionsContainerOpen,
           }}

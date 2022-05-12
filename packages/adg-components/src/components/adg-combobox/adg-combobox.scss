@@ -2,7 +2,7 @@
   display: inline-block;
 }
 
-.adg-combobox--filter-label {
+.adg-combobox--search-label {
   display: inline-block;
 }
 
@@ -18,7 +18,7 @@
   caret-color: red;
 }
 
-.adg-combobox--filter-and-options-container {
+.adg-combobox--search-and-options-container {
   position: relative;
   display: inline-block;
 }
@@ -41,7 +41,7 @@
   }
 }
 
-.adg-combobox--filter-and-options-container:focus-within .adg-combobox--search-input {
+.adg-combobox--search-and-options-container:focus-within .adg-combobox--search-input {
   outline: 1px solid red;
 }
 
