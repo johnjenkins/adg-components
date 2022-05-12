@@ -142,6 +142,7 @@ export const expectCombobox = async (
   const xOptionsSelectedId = `${options.internalId}--options-selected`;
 
   await expect(combobox).toHaveClass(/hydrated/); // TODO: Where does this come from an what's it for actually?
+  await expect(combobox).toHaveCSS('display', 'inline-block');
 
   const filterlabel = combobox.locator('label.adg-combobox--filter-label');
   if (options.label) {
