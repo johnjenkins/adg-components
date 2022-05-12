@@ -435,49 +435,49 @@ export class AdgComboboxComponent {
               ref={(el) => (this.filterInputElementRef = el)}
               value={this.filterTerm}
             />
-          </span>
-          <button
-            class="adg-combobox--clear-selection-button"
-            type="button"
-            ref={(el) => (this.selectionClearedButtonElementRef = el)}
-            onClick={() => this.handleSelectionClearedButtonClick()}
-            hidden={this.selectedOptionModels.length === 0}
-          >
-            <span id={this._optionsSelectedId}>
-              {this.multi ? (
-                <span class="adg-combobox--x-selected-count">
-                  {this.selectedOptionModels.length}&nbsp;
+            <button
+              class="adg-combobox--clear-selection-button"
+              type="button"
+              ref={(el) => (this.selectionClearedButtonElementRef = el)}
+              onClick={() => this.handleSelectionClearedButtonClick()}
+              hidden={this.selectedOptionModels.length === 0}
+            >
+              <span id={this._optionsSelectedId}>
+                {this.multi ? (
+                  <span class="adg-combobox--x-selected-count">
+                    {this.selectedOptionModels.length}&nbsp;
+                  </span>
+                ) : null}
+                <span class="adg--visually-hidden">
+                  {this.$t('results_selected', {
+                    optionslabel: this.optionslabel,
+                  })}
+                  <span class="adg-combobox--x-selected-labels">
+                    {this.selectedOptionModels.map((a) => a.label).join(', ')}
+                  </span>
+                  ,
                 </span>
-              ) : null}
-              <span class="adg--visually-hidden">
-                {this.$t('results_selected', {
+              </span>
+              <img
+                src={getAssetPath(`./assets/clear.svg`)}
+                alt={this.$t('clear_selection')}
+              />
+            </button>
+            <button
+              class="adg-combobox--toggle-available-options-button"
+              type="button"
+              tabindex="-1"
+              onClick={() => this.handleToggleAvailableOptionsButtonClicked()}
+            >
+              <img
+                src={getAssetPath(`./assets/close.svg`)}
+                class="adg-combobox--toggle-available-options-button-icon"
+                alt={this.$t(this.isOptionsContainerOpen ? 'close' : 'open', {
                   optionslabel: this.optionslabel,
                 })}
-                <span class="adg-combobox--x-selected-labels">
-                  {this.selectedOptionModels.map((a) => a.label).join(', ')}
-                </span>
-                ,
-              </span>
-            </span>
-            <img
-              src={getAssetPath(`./assets/clear.svg`)}
-              alt={this.$t('clear_selection')}
-            />
-          </button>
-          <button
-            class="adg-combobox--toggle-available-options-button"
-            type="button"
-            tabindex="-1"
-            onClick={() => this.handleToggleAvailableOptionsButtonClicked()}
-          >
-            <img
-              src={getAssetPath(`./assets/close.svg`)}
-              class="adg-combobox--toggle-available-options-button-icon"
-              alt={this.$t(this.isOptionsContainerOpen ? 'close' : 'open', {
-                optionslabel: this.optionslabel,
-              })}
-            />
-          </button>
+              />
+            </button>
+          </span>
           <fieldset
             ref={(el) => (this.fieldsetElementRef = el)}
             class="adg-combobox--available-options-container"

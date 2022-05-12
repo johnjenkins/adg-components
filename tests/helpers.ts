@@ -191,7 +191,7 @@ export const expectCombobox = async (
     xOptionsSelectedId
   );
 
-  const selectionClearedButton = filterAndOptionsContainer.locator(
+  const selectionClearedButton = filterContainer.locator(
     'button.adg-combobox--clear-selection-button'
   );
   await expect(selectionClearedButton).toHaveAttribute('type', 'button');
@@ -259,7 +259,7 @@ export const expectCombobox = async (
     options.multi ? 'clear selection' : 'Auswahl löschen'
   );
 
-  const toggleAvailableOptionsButton = filterAndOptionsContainer.locator(
+  const toggleAvailableOptionsButton = filterContainer.locator(
     'button.adg-combobox--toggle-available-options-button'
   );
   await expect(toggleAvailableOptionsButton).toHaveAttribute('type', 'button');
