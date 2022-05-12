@@ -156,12 +156,12 @@ export const expectCombobox = async (
   );
   await expect(filterAndOptionsContainer).toHaveCSS('display', 'inline-block');
 
-  const filterContainer = filterAndOptionsContainer.locator(
-    '.adg-combobox--filter-container'
+  const searchContainer = filterAndOptionsContainer.locator(
+    '.adg-combobox--search'
   );
-  await expect(filterContainer).toHaveCSS('display', 'inline-block');
+  await expect(searchContainer).toHaveCSS('display', 'inline-block');
 
-  const filterInput = filterContainer.locator(
+  const filterInput = searchContainer.locator(
     'input.adg-combobox--filter-input'
   );
   options.label && (await expect(filterInput).toHaveId(filterInputId));
@@ -192,7 +192,7 @@ export const expectCombobox = async (
     xOptionsSelectedId
   );
 
-  const selectionClearedButton = filterContainer.locator(
+  const selectionClearedButton = searchContainer.locator(
     'button.adg-combobox--clear-selection-button'
   );
   await expect(selectionClearedButton).toHaveAttribute('type', 'button');
@@ -260,7 +260,7 @@ export const expectCombobox = async (
     options.multi ? 'clear selection' : 'Auswahl löschen'
   );
 
-  const toggleAvailableOptionsButton = filterContainer.locator(
+  const toggleAvailableOptionsButton = searchContainer.locator(
     'button.adg-combobox--toggle-available-options-button'
   );
   await expect(toggleAvailableOptionsButton).toHaveAttribute('type', 'button');

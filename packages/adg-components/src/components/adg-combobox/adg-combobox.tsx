@@ -416,7 +416,7 @@ export class AdgComboboxComponent {
           ref={(el) => (this.filterAndOptionsContainerElementRef = el)}
         >
           <div
-            class="adg-combobox--filter-container"
+            class="adg-combobox--search"
             onKeyUp={(ev) => this.handleKeyUpForPageUpAndPageDown(ev)}
           >
             <input
